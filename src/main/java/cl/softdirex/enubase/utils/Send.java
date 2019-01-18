@@ -207,7 +207,7 @@ public class Send {
     }
     
     public void sendReportSalesMail(SalesVentasJasperReport salesReport,String mail, String title){
-        if(NetWrk.isOnline() && GC.licenciaIsEnableToSendMails()){
+        if(NetWrk.isOnline() && GV.licenciaIsEnableToSendMails()){
             width = 25;
             height = 50;
             color1 =  color_turquesa;
@@ -223,7 +223,7 @@ public class Send {
     }
     
     public void sendReportItemsMail(String mail, String title){
-        if(NetWrk.isOnline() && GC.licenciaIsEnableToSendMails()){
+        if(NetWrk.isOnline() && GV.licenciaIsEnableToSendMails()){
             width = 25;
             height = 50;
             color1 =  color_turquesa;
@@ -256,15 +256,15 @@ public class Send {
                     "  </tr>\n" +
                     "  <tr>\n" +
                     "    <td>En inventario</td>\n" +
-                    "    <td>"+GC.strToPrice(compra)+"</td>\n" +
+                    "    <td>"+GV.strToPrice(compra)+"</td>\n" +
                     "  </tr>\n" +
                     "  <tr>\n" +
                     "    <td>Monto de venta</td>\n" +
-                    "    <td>"+GC.strToPrice(venta)+"</td>\n" +
+                    "    <td>"+GV.strToPrice(venta)+"</td>\n" +
                     "  </tr>\n" +
                     "  <tr>\n" +
                     "    <td><strong>Retorno</strong></td>\n" +
-                    "    <td><strong>"+GC.strToPrice((venta-compra))+"</strong></td>\n" +
+                    "    <td><strong>"+GV.strToPrice((venta-compra))+"</strong></td>\n" +
                     "  </tr>\n" +
                     "</table>"
                 + "</br><small>El monto calculado en inventario corresponde al precio de referencia ingresado por item.</small>";
@@ -285,7 +285,7 @@ public class Send {
             String subject, String message) throws AddressException,
             MessagingException,
             GeneralSecurityException {
-        if(GC.getStr(toAddress).isEmpty())
+        if(GV.getStr(toAddress).isEmpty())
             return;
         // sets SMTP server properties
         Properties p = new Properties();
@@ -345,7 +345,7 @@ public class Send {
             if(directorio1 != null){
                 if(!directorio1.equals("")){
                     adjunto1.setDataHandler(new DataHandler(new FileDataSource(directorio1)));
-                    adjunto1.setFileName(GC.getToName(directorio1.substring(directorio1.lastIndexOf(File.separator)+1)));
+                    adjunto1.setFileName(GV.getToName(directorio1.substring(directorio1.lastIndexOf(File.separator)+1)));
 
                 }
             }

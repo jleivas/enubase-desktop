@@ -5,7 +5,7 @@
  */
 package cl.softdirex.enubase.view.notifications.panels;
 
-import cl.softdirex.enubase.utils.UI;
+import cl.softdirex.enubase.utils.PanelUtils;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
@@ -16,7 +16,7 @@ import java.io.File;
  */
 public class OPanel extends javax.swing.JFrame {
     private static String SLB = File.separator;
-    private static String ICON_PATH = UI.ICON_LOGO;
+    private static String ICON_PATH = PanelUtils.ICON_LOGO;
     /**
      * Creates new form OPanel
      */

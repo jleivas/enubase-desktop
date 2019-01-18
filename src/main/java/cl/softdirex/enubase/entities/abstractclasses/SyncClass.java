@@ -5,7 +5,7 @@
  */
 package cl.softdirex.enubase.entities.abstractclasses;
 
-import cl.softdirex.enubase.utils.GC;
+import cl.softdirex.enubase.utils.GV;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +43,7 @@ public abstract class SyncClass {
     public void setLastHour(int hour) {
         if(hour < 1){
             if(lastUpdate != null)
-                this.lastHour = GC.hourToInt(lastUpdate);
+                this.lastHour = GV.hourToInt(lastUpdate);
             else{
                 this.lastHour = 0;
             }

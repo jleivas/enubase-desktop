@@ -33,9 +33,8 @@ public class Venta extends SyncCodClass{
     public Venta(String cod,User vendedor, Cliente cliente, 
             Date fecha, Date fechaEntrega, String lugarEntrega, String horaEntrega, 
             String observacion, int valorTotal, int descuento, int saldo, Despacho despacho,
-            List<Detalle> detalles, int estado, Date lastUpdate, int lastHour) {
+            int estado, Date lastUpdate, int lastHour) {
         setCod(cod);
-        setDetalles(detalles);
         setVendedor(vendedor);
         setCliente(cliente);
         setFecha(fecha);

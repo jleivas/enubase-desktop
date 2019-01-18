@@ -5,8 +5,8 @@
  */
 package cl.softdirex.enubase.view.notifications;
 
-import cl.softdirex.enubase.utils.GC;
-import cl.softdirex.enubase.utils.UI;
+import cl.softdirex.enubase.utils.GV;
+import cl.softdirex.enubase.utils.PanelUtils;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 
@@ -22,18 +22,18 @@ public class OpanelMessage extends javax.swing.JPanel {
      */
     public OpanelMessage() {
         initComponents();
-        switch (GC.msgStatus()){
+        switch (GV.msgStatus()){
             case JOptionPane.INFORMATION_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(GC.iconInfo())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(GV.iconInfo())));
                 break;
             case JOptionPane.WARNING_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(GC.iconWarn())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(GV.iconWarn())));
                 break;
             case JOptionPane.ERROR_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(GC.iconError())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(GV.iconError())));
                 break;
             case JOptionPane.ERROR:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(GC.iconError())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(GV.iconError())));
                 break;
         }
     }
@@ -161,11 +161,11 @@ public class OpanelMessage extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAceptarMouseClicked
 
     private void btnAceptarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseEntered
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.getEnteredIcon(btnAceptar.getIcon().toString()))));
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnAceptar.getIcon().toString()))));
     }//GEN-LAST:event_btnAceptarMouseEntered
 
     private void btnAceptarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseExited
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.getExitedIcon(btnAceptar.getIcon().toString()))));
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnAceptar.getIcon().toString()))));
     }//GEN-LAST:event_btnAceptarMouseExited
 
     private void btnAceptarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMousePressed
@@ -178,39 +178,39 @@ public class OpanelMessage extends javax.swing.JPanel {
 
     public static void updateMsg(String title, String msg, int currentStatus){
         //comprobar si el msgStatus tiene un valor por defecto para actualizar
-        int status = (GC.msgStatus() == JOptionPane.ABORT) ? currentStatus:GC.msgStatus();
-        String temp = "<" + GC.getStr(title.toUpperCase()) + ">\n" + GC.getStr(msg);
-        UI.setMsgStatus(status);
-        if(GC.getStr(MSG).isEmpty()){
-            MSG = "<" + GC.getStr(title.toUpperCase()) + ">\n" + GC.getStr(msg);
+        int status = (GV.msgStatus() == JOptionPane.ABORT) ? currentStatus:GV.msgStatus();
+        String temp = "<" + GV.getStr(title.toUpperCase()) + ">\n" + GV.getStr(msg);
+        PanelUtils.setMsgStatus(status);
+        if(GV.getStr(MSG).isEmpty()){
+            MSG = "<" + GV.getStr(title.toUpperCase()) + ">\n" + GV.getStr(msg);
         }else{
             switch(status){
                 case 1:
                     lblTitle.setText(title);
-                    UI.mpanel().lblTitle.setText("Revise la siguiente información");
+                    PanelUtils.mpanel().lblTitle.setText("Revise la siguiente información");
                     break;
                 case 2:
                     lblTitle.setText(title);
-                    UI.mpanel().lblTitle.setText("El sistema ha lanzado algunas advertencias");
+                    PanelUtils.mpanel().lblTitle.setText("El sistema ha lanzado algunas advertencias");
                     lblTitle.setForeground(Color.blue);
                     break;
                 case 3:
                     lblTitle.setText(title);
-                    UI.mpanel().lblTitle.setText("Notificación de problemas");
+                    PanelUtils.mpanel().lblTitle.setText("Notificación de problemas");
                     lblTitle.setForeground(Color.red);
                     break;
                 default:
                     lblTitle.setText(title);
-                    UI.mpanel().lblTitle.setText("Revise la siguiente información");
+                    PanelUtils.mpanel().lblTitle.setText("Revise la siguiente información");
                     break;
             }
-            MSG = (!GC.getStr(MSG).toLowerCase().equals(GC.getStr(temp).toLowerCase()))?  temp + "\n\n" + MSG:MSG;
+            MSG = (!GV.getStr(MSG).toLowerCase().equals(GV.getStr(temp).toLowerCase()))?  temp + "\n\n" + MSG:MSG;
         }
         lblMessage.setText(MSG.replaceAll("<"+title.toUpperCase()+">", ""));
     }
     
     private void cleanMsg(){
-        UI.setMsgStatus(0);
+        PanelUtils.setMsgStatus(0);
         MSG = "";
     }
     

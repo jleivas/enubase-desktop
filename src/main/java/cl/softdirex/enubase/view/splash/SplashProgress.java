@@ -5,9 +5,9 @@
  */
 package cl.softdirex.enubase.view.splash;
 
-import cl.softdirex.enubase.utils.GC;
+import cl.softdirex.enubase.utils.GV;
 import cl.softdirex.enubase.utils.StVars;
-import cl.softdirex.enubase.utils.UI;
+import cl.softdirex.enubase.utils.PanelUtils;
 import com.sun.awt.AWTUtilities;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,16 +87,16 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
-        GC.stopSincronizacion();
+        GV.stopSincronizacion();
         this.dispose();
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnCancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseEntered
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.getEnteredIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseEntered
 
     private void btnCancelarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseExited
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.getExitedIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseExited
 
     private void btnCancelarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMousePressed
@@ -166,7 +166,7 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
         while(tiempo != null){
             try {
                 Thread.sleep(1000);
-                while (!GC.sincronizacionIsStopped()){
+                while (!GV.sincronizacionIsStopped()){
                     txtPorcentaje.setText(StVars.getPorc()+"%");
                     txtDescritption.setText("Sincronización en curso, espere a que finalice para seguir trabajado...");
                 }

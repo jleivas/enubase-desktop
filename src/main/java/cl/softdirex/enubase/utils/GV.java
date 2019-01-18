@@ -5,8 +5,20 @@
  */
 package cl.softdirex.enubase.utils;
 
+import cl.softdirex.enubase.dao.Dao;
+import cl.softdirex.enubase.entities.Equipo;
+import cl.softdirex.enubase.entities.abstractclasses.SyncIntId;
+import cl.softdirex.enubase.entities.abstractclasses.SyncIntIdValidaName;
+import cl.softdirex.enubase.entities.abstractclasses.SyncStringId;
+import cl.softdirex.enubase.sync.entities.Local;
+import cl.softdirex.enubase.sync.entities.Remote;
+import static cl.softdirex.enubase.utils.StEntities.getTipoUsuario;
 import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.panels.input.OpanelCompanyData;
+import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetLicencia;
+import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetToken;
 import java.security.MessageDigest;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -18,6 +30,8 @@ import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
@@ -29,11 +43,245 @@ import org.apache.commons.codec.binary.Base64;
  *
  * @author sdx
  */
-public class GC {
+public class GV {
     /*  Sincronizacion */
     public static Local LOCAL_SYNC = new Local();
     public static Remote REMOTE_SYNC = new Remote();
+    private static Dao load = new Dao();
     /*********************BEGIN FUNCTIONS****************************/
+    public static void startSystem(){
+        BDUtils.initDB();
+        boolean error = false;
+        try{XmlUtils.checkXmlFiles();}catch(Exception e){error = true;licenciaRegistrar();}
+//        if(!error){
+//            initValues();
+//        }
+    }
+    /*BEGIN LICENCIA*/
+    public static void licenciaRegistrar(){
+        Notification.showOptionPanel(new OpanelSetLicencia(), Notification.titleRegistrarLicencia());
+    }
+    
+    public static boolean licenciaComprobateOnline(String arg) {
+        if(!KeyValid(arg)){licMsg("Debe ingresar una licencia válida.",2);return false;}
+        if(!NetWrk.isOnline()){licMsg("No tienes conexión, debes conectarte a internet primero.", 2);return false;}
+        String licencia = XmlUtils.getLicenciaOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg)));
+        if(licencia == null){licMsg("Los datos ingresados son erróneos, consulte con su proveedor.", 2);return false;}
+        try {
+            if(load.get(licencia, 0, new Equipo())!=null){licMsg("Los datos ingresados son erróneos, Licencia duplicada.", 3);return false;}
+                
+        } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(GV.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        validaToken(XmlUtils.getTipoPlanOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))),licencia,arg);
+        
+        return true;
+    }
+    
+    private static void validaToken(int tipoPlan,String licencia,String key) {
+        if(tipoPlan != StVars.licenciaTipoFree() && 
+           tipoPlan != StVars.licenciaTipoLocal()){
+            Notification.showOptionPanel(new OpanelSetToken(key), Notification.titleRegistrarToken());
+        }else{
+            setLicenciaAsignarValoresPaso1(licencia, key);
+        }
+    }
+    
+    private static void setLicenciaAsignarValoresPaso1(String licencia,String arg){
+        StVars.setSyncCount(0);
+        
+        StVars.setUserName("admin");
+        StVars.setLicenciaTipoPlan(XmlUtils.getTipoPlanOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
+        
+        StVars.setLicenceCode(licencia);
+        StVars.setExpDate(XmlUtils.getExpDateOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
+        StVars.setCurrentEquipo(licencia+"_"+dateToString(new Date(), "yyyymmddhhmmss"));
+        StVars.setApiUriLicence(keyGetUrl(dsC(arg)));
+        StVars.setApiUriPort(keyGetPass(dsC(arg)));
+        StVars.setLastUpdateFromXml(stringToDate(StVars.getFechaDefault()));
+        Notification.closeOptionPanel();
+        Notification.showOptionPanel(new OpanelCompanyData(1), Notification.titleCompanyDataCreate());
+    }
+    
+    public static void asignarToken(String token,String key){
+        if(GV.getStr(token).isEmpty())return;
+        String licencia = keyGetLicencia(dsC(key));
+        String bd = tokenGetBd(dsC(token));
+        String bdUser = tokenGetBdUser(dsC(token));
+        String bdPass = tokenGetBdPass(dsC(token));
+        String bdUrl = tokenGetBdUrl(dsC(token));
+        BDUtils.BD_NAME_REMOTE = bd;
+        BDUtils.BD_USER_REMOTE = bdUser;
+        BDUtils.BD_PASS_REMOTE = bdPass;
+        BDUtils.BD_URL_REMOTE = bdUrl;
+        setLicenciaAsignarValoresPaso1(licencia, key);
+    }
+    
+    private static boolean KeyValid(String key){
+        String unKey = dsC(key);
+        String[] parts = unKey.split("=");
+        int cont = 0;
+        for (String part : parts) {
+            cont++;
+            if(getStr(part).isEmpty())
+                return false;
+        }
+        return (cont == 3)?true:false;
+    }
+    
+    private static String keyGetLicencia(String unKey){
+        return unKey.substring(unKey.indexOf("=")+1,unKey.lastIndexOf("="));
+    }
+    
+    private static String keyGetPass(String unKey){
+        return unKey.substring(unKey.lastIndexOf("=")+1);
+    }
+    
+    public static String tokenGetBdPass(String unKey){
+        return unKey.substring(unKey.lastIndexOf("=")+1,unKey.lastIndexOf("<"));
+    }
+    
+    public static String tokenGetBdUrl(String unKey){
+        return unKey.substring(unKey.lastIndexOf("<")+1);
+    }
+    
+    private static String keyGetUrl(String unKey){
+        return unKey.substring(0,unKey.indexOf("="));
+    }
+    
+    public static String tokenGetBd(String unKey){
+        return unKey.substring(0,unKey.indexOf("="));
+    }
+    
+    public static String tokenGetBdUser(String unKey){
+        return unKey.substring(unKey.indexOf("=")+1,unKey.lastIndexOf("="));
+    }
+    
+    /*END LICENCIA*/
+    
+    /**
+     * Retorna true si es Jefe administrativo o Sistema
+     * @return 
+     */
+    public static boolean tipoUserSuperAdmin(){
+        int tipoUsuario = getTipoUsuario();
+        if(tipoUsuario == 1 || tipoUsuario == 7){
+            return true;
+        }
+        return false;
+    }
+    
+    
+    /**
+     * Retorna true si es Jefe administrativo, Administrador o Sistema
+     * @return 
+     */
+    public static boolean tipoUserAdmin(){
+        int tipoUsuario = getTipoUsuario();
+        if(tipoUsuario == 1 || tipoUsuario == 2 || tipoUsuario == 7){
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Retorna true si es Jefe administrativo, Administrador, inventario o Sistema
+     * @return 
+     */
+    public static boolean tipoUserIventario(){
+        int tipoUsuario = getTipoUsuario();
+        if(tipoUsuario == 1 || tipoUsuario == 2 || tipoUsuario == 4 || tipoUsuario == 7){
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * retorna true si la fecha ingresada por parametros es inferior
+     * a la fecha actual
+     * @param date
+     * @return 
+     */
+    public static boolean fechaPasada(Date date){
+        if(dateToString(date, "ddmmyyyy")
+                .equals(dateToString(new Date(), "ddmmyyyy"))){
+            return false;
+        }
+        return fechaActualOPasada(date);
+    }
+    
+    /**
+     * retorna true si la fecha ingresada por parametros es 
+     * pasada o igual a la fecha actual
+     * @param date
+     * @return 
+     */
+    public static boolean fechaActualOPasada(Date date){
+        return date.before(new Date());
+    }
+    
+    public static boolean licenciaLocal() {
+        return (StVars.getLicenciaTipoPlan() == StVars.licenciaTipoFree() ||
+                StVars.getLicenciaTipoPlan() == StVars.licenciaTipoLocal());
+    }
+    
+    public static Object searchInList(String code , List<Object> list, Object classType) {
+        if(getStr(code).isEmpty()){
+            return null;
+        }
+        if(list !=null){
+            if(list.size() == 0){
+                return null;
+            }
+            if(classType instanceof SyncIntIdValidaName){
+                Optional<Object> objectFound = list.stream()
+                .filter(p -> ((SyncIntIdValidaName)p).getNombre().equals(code))
+                .findFirst();
+                return objectFound.isPresent() ? objectFound.get() : null;
+            }
+            if(classType instanceof SyncIntId){
+                Optional<Object> objectFound = list.stream()
+                .filter(p -> ((SyncIntId)p).getId() == strToNumber(code))
+                .findFirst();
+                return objectFound.isPresent() ? objectFound.get() : null;
+            }
+            if(classType instanceof SyncStringId){
+                Optional<Object> objectFound = list.stream()
+                .filter(p -> ((SyncStringId)p).getCod().toLowerCase().equals(code.toLowerCase()))
+                .findFirst();
+                return objectFound.isPresent() ? objectFound.get() : null;
+            }
+        }
+        return null;
+    }
+    
+    public static boolean isNumeric(String cadena) {
+
+        boolean resultado;
+
+        try {
+            Integer.parseInt(cadena);
+            resultado = true;
+        } catch (NumberFormatException excepcion) {
+            resultado = false;
+        }
+
+        return resultado;
+    }
+    
+    public static int strToNumber(String arg){
+        arg = getStr(arg).replaceAll("[^0-9-]", "");
+        boolean isNegative = (arg.startsWith("-"))? true:false;
+        arg = arg.replaceAll("-", "").trim();
+        if(arg.isEmpty())
+            return 0;
+        if(isNegative){
+            return -Integer.parseInt(arg);
+        }
+        return Integer.parseInt(arg);
+    }
+    
     public static String getStr(String arg){
         if(arg == null || arg.replaceAll(" ", "").isEmpty())
             return "";
@@ -164,7 +412,7 @@ public class GC {
             
             return dias; 
         } catch (ParseException ex) {
-            Logger.getLogger(GC.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GV.class.getName()).log(Level.SEVERE, null, ex);
             Notification.showMsg("Error al calcular dias", "Ocurrió un error inesperado...", 3);
         }
         return 0;
@@ -406,22 +654,47 @@ public class GC {
                 type.getClass().getName().substring(type.getClass().getName().lastIndexOf(".")+1):type.getClass().getName();
         return name;
     }
+    
+    public static String strToRut(String rut) {
+        if(rut == null || rut.isEmpty()){
+            return "";
+        }
+        int cont = 0;
+        String format;
+        rut = rut.replace(".", "");
+        rut = rut.replace("-", "");
+        format = "-" + rut.substring(rut.length() - 1);
+        for (int i = rut.length() - 2; i >= 0; i--) {
+            format = rut.substring(i, i + 1) + format;
+            cont++;
+            if (cont == 3 && i != 0) {
+                format = "." + format;
+                cont = 0;
+            }
+        }
+        return format;
+    }
     /*********************END FUNCTIONS****************************/
     /*********************BEGIN UI PROPERTIES****************************/
     public static int msgStatus(){
-        return UI.getMsgStatus();
+        return PanelUtils.getMsgStatus();
     }
     
     public static String iconInfo(){
-        return UI.iconInfo();
+        return PanelUtils.iconInfo();
     }
     
     public static String iconWarn(){
-        return UI.iconWarn();
+        return PanelUtils.iconWarn();
     }
     
     public static String iconError(){
-        return UI.iconError();
+        return PanelUtils.iconError();
     }
     /*********************END UI PROPERTIES****************************/
+    /*BEGIN NOTIFICATIONS*/
+    private static void licMsg(String msg,int status) {
+        Notification.showMsg("Error de licencia", msg, status);
+    }
+    /*END NOTIFICATIONS*/
 }

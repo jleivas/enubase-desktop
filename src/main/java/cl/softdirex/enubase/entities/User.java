@@ -6,7 +6,7 @@
 package cl.softdirex.enubase.entities;
 
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntId;
-import cl.softdirex.enubase.utils.GC;
+import cl.softdirex.enubase.utils.GV;
 import java.util.Date;
 
 /**
@@ -84,7 +84,7 @@ public class User extends SyncIntId{
                 " - EMAIL: "+this.email+
                 " - PASS: "+this.pass+
                 " - TIPO:"+this.tipo+
-                " - LAST_UPDATE:"+GC.dateToString(getLastUpdate(), "dd-mm-yyyy")+
+                " - LAST_UPDATE:"+GV.dateToString(getLastUpdate(), "dd-mm-yyyy")+
                 " - Estado:"+getEstado();
     }
     

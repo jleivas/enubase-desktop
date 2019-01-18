@@ -9,7 +9,7 @@ import cl.softdirex.enubase.utils.SubProcess;
 import static cl.softdirex.enubase.view.notifications.panels.MPanel.MpanelContent;
 import static cl.softdirex.enubase.view.notifications.panels.OPanel.OpanelContent;
 import cl.softdirex.enubase.view.notifications.panels.OpanelConfirm;
-import cl.softdirex.enubase.utils.UI;
+import cl.softdirex.enubase.utils.PanelUtils;
 import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
 
@@ -46,8 +46,8 @@ public class Notification {
     private static String REGISTRAR_TOKEN = "Ingrese un token";
     
     public static void showOptionPanel(javax.swing.JPanel p1, String title){
-        UI.opanel().lblTitle.setText(title);
-        UI.opanel().setVisible(true);
+        PanelUtils.opanel().lblTitle.setText(title);
+        PanelUtils.opanel().setVisible(true);
         p1.setSize(ancho, alto);
         p1.setLocation(locat, locat);
         OpanelContent.removeAll();
@@ -70,15 +70,15 @@ public class Notification {
         if(statusMsg == JOptionPane.ERROR || statusMsg == JOptionPane.ERROR_MESSAGE || statusMsg == 3){
             SubProcess.report(title, message);
         }
-        UI.setMsgStatus(statusMsg);
+        PanelUtils.setMsgStatus(statusMsg);
         OpanelMessage p1 = new OpanelMessage();
-        UI.mpanel().lblTitle.setText(title);
+        PanelUtils.mpanel().lblTitle.setText(title);
         if(p1 instanceof OpanelMessage){
             ((OpanelMessage) p1).lblTitle.setText(title);
             ((OpanelMessage) p1).updateMsg(title, message,statusMsg);
         }
         
-        UI.mpanel().setVisible(true);
+        PanelUtils.mpanel().setVisible(true);
         p1.setSize(ancho, alto);
         p1.setLocation(locat, locat);
         
@@ -89,11 +89,11 @@ public class Notification {
     }
 
     public static void closeInfoPanel() {
-        UI.mpanel().setVisible(false);
+        PanelUtils.mpanel().setVisible(false);
     }
     
     public static void closeOptionPanel() {
-        UI.opanel().setVisible(false);
+        PanelUtils.opanel().setVisible(false);
     }
 
     public static boolean getConfirmation(String title, String message, int statusMsg){
@@ -114,15 +114,15 @@ public class Notification {
             message = title.toUpperCase()+"\n\n"+message;
             title = title.substring(0,38)+"...";
         }
-        UI.setMsgStatus(statusMsg);
+        PanelUtils.setMsgStatus(statusMsg);
         OpanelConfirm p1 = new OpanelConfirm();
-        UI.mpanel().lblTitle.setText(title);
+        PanelUtils.mpanel().lblTitle.setText(title);
         if(p1 instanceof OpanelConfirm){
             ((OpanelConfirm) p1).lblTitle.setText(title);
             ((OpanelConfirm) p1).lblMessage.setText(message);
         }
         
-        UI.mpanel().setVisible(true);
+        PanelUtils.mpanel().setVisible(true);
         p1.setSize(ancho, alto);
         p1.setLocation(locat, locat);
         

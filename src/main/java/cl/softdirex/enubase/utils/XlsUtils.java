@@ -5,6 +5,7 @@
  */
 package cl.softdirex.enubase.utils;
 
+import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Cliente;
 import cl.softdirex.enubase.entities.Inventario;
 import cl.softdirex.enubase.entities.Item;
@@ -119,7 +120,7 @@ public class XlsUtils {
                 //[filas][columnas]
                 int filas = lista.size()+6;
                 String [][] entrada = new String[filas][4];
-                entrada[0][1] = "Orden de compra generada el "+GC.dateToString(new Date(), "dd/mm/yyyy")+"";
+                entrada[0][1] = "Orden de compra generada el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
                 entrada[1][1] = StVars.getCompanyName();
                 entrada[2][0] = "Sistema:";
@@ -176,7 +177,7 @@ public class XlsUtils {
                 //[filas][columnas]
                 int filas = lista.size()+6;
                 String [][] entrada = new String[filas][6];
-                entrada[0][1] = "Registro de inventario generado el "+GC.dateToString(new Date(), "dd/mm/yyyy")+"";
+                entrada[0][1] = "Registro de inventario generado el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
                 entrada[1][1] = StVars.getCompanyName();
                 entrada[2][0] = "Sistema:";
@@ -240,7 +241,7 @@ public class XlsUtils {
                 //[filas][columnas]
                 int filas = lista.size()+6;
                 String [][] entrada = new String[filas][7];
-                entrada[0][1] = "Documento generado el "+GC.dateToString(new Date(), "dd de mm del yyyy").replaceFirst("de", "del")+"";
+                entrada[0][1] = "Documento generado el "+GV.dateToString(new Date(), "dd de mm del yyyy").replaceFirst("de", "del")+"";
                 entrada[1][0] = "Empresa:";
                 entrada[1][1] = StVars.getCompanyName();
                 entrada[2][0] = "Sistema:";
@@ -282,7 +283,7 @@ public class XlsUtils {
                     }
                     contFilas++;
                 }
-                String ruta = String.valueOf(archivo.getSelectedFile().toString())+"-["+GC.dateToString(new Date(), "dd-mm-yyyy")+"].xls";
+                String ruta = String.valueOf(archivo.getSelectedFile().toString())+"-["+GV.dateToString(new Date(), "dd-mm-yyyy")+"].xls";
                 generarExcel(entrada, ruta);
                 msgDone();
                 return true;
@@ -317,7 +318,7 @@ public class XlsUtils {
                 int filas = ventas.size()+6;
                 int columns = 19;
                 String [][] entrada = new String[filas][columns];
-                entrada[0][1] = "Documento generado el "+GC.dateToString(new Date(), "dd/mm/yyyy")+"";
+                entrada[0][1] = "Documento generado el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
                 entrada[1][1] = StVars.getCompanyName();
                 entrada[2][0] = "Sistema:";
@@ -395,7 +396,7 @@ public class XlsUtils {
                 }
                 String ruta = String.valueOf(archivo.getSelectedFile().toString())+".xls";
                 if(ruta.startsWith(".xls")){
-                    ruta = "Report"+GC.dateToString(new Date(), "dd-mm-yyyy")+ruta;
+                    ruta = "Report"+GV.dateToString(new Date(), "dd-mm-yyyy")+ruta;
                 }
                 generarExcel(entrada, ruta);
                 msgDone();

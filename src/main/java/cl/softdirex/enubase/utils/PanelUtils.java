@@ -5,19 +5,18 @@
  */
 package cl.softdirex.enubase.utils;
 
-import cl.softdirex.enubase.utils.StVars;
-import cl.softdirex.enubase.utils.NetWrk;
-import cl.softdirex.enubase.utils.GC;
 import cl.softdirex.enubase.view.notifications.Notification;
 import cl.softdirex.enubase.view.notifications.panels.MPanel;
 import cl.softdirex.enubase.view.notifications.panels.OPanel;
+import javax.swing.Icon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author sdx
  */
-public class UI {
+public class PanelUtils {
     /* Joption Pane del sistema */
     public static MPanel INFOPANEL = new MPanel();
     public static OPanel OPTIONPANEL = new OPanel();
@@ -98,7 +97,7 @@ public class UI {
         String pagar = "Para evitar este mensaje:\nEntre al sistema y en el menú superior diríjase a \"Herramientas\", seleccione \"Renovar Licencia\"\n"
                 + "y renueve su licencia con el medio de pago que más le acomode.\n"
                 + "Si usted ya había efectuado el pago correspondiente, póngase en contacto con su proveedor.";
-        int expDias = GC.fechaDiferencia(GC.stringToDate(StVars.getExpDate())); 
+        int expDias = GV.fechaDiferencia(GV.stringToDate(StVars.getExpDate())); 
         if(expDias <= 5){
             if(expDias > 1){
                 Notification.showMsg("Renueve su licencia", "Su licencia expirará dentro de "+expDias+" días."+pagar, 2);

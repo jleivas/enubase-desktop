@@ -5,7 +5,7 @@
  */
 package cl.softdirex.enubase.view.notifications.panels;
 
-import cl.softdirex.enubase.utils.UI;
+import cl.softdirex.enubase.utils.PanelUtils;
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -20,7 +20,7 @@ public class MPanel extends javax.swing.JFrame {
      */
     public MPanel() {
         initComponents();
-        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(UI.ICON_LOGO));
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(PanelUtils.ICON_LOGO));
         setIconImage(icon);
         this.setLocationRelativeTo(null);
         this.setAlwaysOnTop(true);

@@ -6,6 +6,7 @@
 package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.bd.LcBd;
+import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Equipo;
 import cl.softdirex.enubase.view.notifications.Notification;
 import cl.softdirex.enubase.view.splash.SplashProgress;
@@ -135,7 +136,7 @@ public class StVars {
     }
     
     public static String getCompanyDescription(){
-        return GC.getStr(COMPANY_DESCRIPTION);
+        return GV.getStr(COMPANY_DESCRIPTION);
     }
     
     public static void setCompanyDescription(String companyDescription){
@@ -143,7 +144,7 @@ public class StVars {
     }
     
     public static String getCompanyRut(){
-        return GC.getStr(COMPANY_RUT);
+        return GV.getStr(COMPANY_RUT);
     }
     
     public static void setCompanyRut(String companyRut){
@@ -151,7 +152,7 @@ public class StVars {
     }
     
     public static String getCompanyGiro(){
-        return GC.getStr(COMPANY_GIRO);
+        return GV.getStr(COMPANY_GIRO);
     }
     
     public static void setCompanyGiro(String companyGiro){
@@ -159,7 +160,7 @@ public class StVars {
     }
     
     public static String getMessageFile(){
-        return GC.getStr(MESSAGE_FILE);
+        return GV.getStr(MESSAGE_FILE);
     }
     
     public static void setMessageFile(String messageFile){
@@ -167,7 +168,7 @@ public class StVars {
     }
     
     public static void setInventarioLocal(String inventario){
-        INVENTARIO_NAME = GC.getStr(inventario);
+        INVENTARIO_NAME = GV.getStr(inventario);
     }
     
     public static int estadoFichaDeleted(){
@@ -191,20 +192,20 @@ public class StVars {
     }
     
     public static void setCompanyName(String nombre) {
-        COMPANY_NAME = GC.getToName(nombre);
+        COMPANY_NAME = GV.getToName(nombre);
     }
     
     public static String getCompanyName(){
-        String value = (GC.getStr(COMPANY_NAME).isEmpty())?"[Empresa no ingresada]":GC.getStr(COMPANY_NAME);
+        String value = (GV.getStr(COMPANY_NAME).isEmpty())?"[Empresa no ingresada]":GV.getStr(COMPANY_NAME);
         return value;
     }
 
     public static String getProjectName() {
-        return GC.getStr(PROJECTNAME);
+        return GV.getStr(PROJECTNAME);
     }
     
     public static String getVersion(){
-        return GC.getStr(VERSION);
+        return GV.getStr(VERSION);
     }
     
     public static int getLicenciaTipoPlan(){
@@ -212,15 +213,15 @@ public class StVars {
     }
     
     public static String getLicenceCode(){
-        return GC.getStr(LICENCE_CODE);
+        return GV.getStr(LICENCE_CODE);
     }
     
     public static String getExpDate(){
-        return GC.getStr(EXP_DATE);
+        return GV.getStr(EXP_DATE);
     }
 
     public static String getInventarioName() {
-        return GC.getStr(INVENTARIO_NAME);
+        return GV.getStr(INVENTARIO_NAME);
     }
     
     public static Date getDateFrom(){
@@ -240,17 +241,17 @@ public class StVars {
     }
     
     public static String getSalt(){
-        return GC.getStr(SALT);
+        return GV.getStr(SALT);
     }
     
     public static String getEquipo(){
-        return GC.getToName(EQUIPO);
+        return GV.getToName(EQUIPO);
     }
     
     public static void setCurrentEquipo(String equipo){
         try {
             LcBd.cerrar();
-            EQUIPO = GC.getToName(equipo);
+            EQUIPO = GV.getToName(equipo);
             
             if(LICENCE_CODE != null){
                 Dao load = new Dao();
@@ -272,17 +273,17 @@ public class StVars {
                         }
                     }
                     e = new Equipo(0, EQUIPO, LICENCE_CODE,
-                        GC.enC(BDUtils.BD_NAME_REMOTE),
-                        GC.enC(BDUtils.BD_USER_REMOTE),
-                        GC.enC(BDUtils.BD_PASS_REMOTE),
-                        GC.enC(BDUtils.BD_URL_REMOTE),
+                        GV.enC(BDUtils.BD_NAME_REMOTE),
+                        GV.enC(BDUtils.BD_USER_REMOTE),
+                        GV.enC(BDUtils.BD_PASS_REMOTE),
+                        GV.enC(BDUtils.BD_URL_REMOTE),
                         1, null, 0);
                     load.add(e);
                 }else{
-                    BDUtils.BD_NAME_REMOTE = GC.dsC(e.getBd());
-                    BDUtils.BD_USER_REMOTE = GC.dsC(e.getBdUser());
-                    BDUtils.BD_PASS_REMOTE = GC.dsC(e.getBdPass());
-                    BDUtils.BD_URL_REMOTE  = GC.dsC(e.getBdUrl());
+                    BDUtils.BD_NAME_REMOTE = GV.dsC(e.getBd());
+                    BDUtils.BD_USER_REMOTE = GV.dsC(e.getBdUser());
+                    BDUtils.BD_PASS_REMOTE = GV.dsC(e.getBdPass());
+                    BDUtils.BD_URL_REMOTE  = GV.dsC(e.getBdUrl());
                 }
             }
         } catch (InstantiationException | IllegalAccessException | SQLException | ClassNotFoundException ex) {
@@ -291,7 +292,7 @@ public class StVars {
     }
     
     public static void setEquipo(String equipo){
-        EQUIPO = GC.getStr(equipo)+"_"+GC.dateToString(new Date(),"yyyymmddss");
+        EQUIPO = GV.getStr(equipo)+"_"+GV.dateToString(new Date(),"yyyymmddss");
     }
 
     public static void setLicenciaTipoPlan(int value) {
@@ -299,7 +300,7 @@ public class StVars {
     }
     
     public static void setLicenceCode(String licenceCode){
-       LICENCE_CODE = GC.getStr(licenceCode);
+       LICENCE_CODE = GV.getStr(licenceCode);
     }
     
     public static String apiUriLicence(){
@@ -311,23 +312,23 @@ public class StVars {
     }
 
     public static void setUserName(String userName) {
-        USERNAME = GC.getStr(userName);
+        USERNAME = GV.getStr(userName);
     }
 
     public static String getUserName() {
-        return GC.getStr(USERNAME);
+        return GV.getStr(USERNAME);
     }
 
     public static void setExpDate(String date) {
-        EXP_DATE = GC.getStr(date);
+        EXP_DATE = GV.getStr(date);
     }
 
     public static void setApiUriLicence(String uri) {
-        API_URI = GC.getStr(uri);
+        API_URI = GV.getStr(uri);
     }
     
     public static void setApiUriPort(String port) {
-        PORT_KEY = GC.getStr(port);
+        PORT_KEY = GV.getStr(port);
     }
     
 
@@ -477,33 +478,33 @@ public class StVars {
     }
     
     public static String getReport(){
-        return GC.getStr(REPORT);
+        return GV.getStr(REPORT);
     }
     
     public static void setReport(String report){
-        REPORT = GC.getStr(report);
+        REPORT = GV.getStr(report);
     }
     /*END PORCENTAJE*/
     /*BREGIN MAIL PROPERTIES*/
     public static String getMailSystemName() {
-        return GC.getStr(MAIL_ADDRES).toLowerCase();
+        return GV.getStr(MAIL_ADDRES).toLowerCase();
     }
     
     public static String getMailSystemPass() {
-        return GC.getStr(MAIL_PASS);
+        return GV.getStr(MAIL_PASS);
     }
     
     public static String getMailReport(){
-        return GC.getStr(MAIL_REPORT).toLowerCase();
+        return GV.getStr(MAIL_REPORT).toLowerCase();
     }
     
     public static String getMailLog(){
-        return GC.getStr(MAIL_LOG);
+        return GV.getStr(MAIL_LOG);
     }
     
     public static void setMailLog(String className, String mailLog){
-        className = GC.getStr(className);
-        mailLog = GC.getStr(mailLog);
+        className = GV.getStr(className);
+        mailLog = GV.getStr(mailLog);
         if(MAIL_LOG.length() < 2)
             MAIL_LOG = "Registro del sistema:\n"+className+mailLog;
         else
@@ -535,5 +536,38 @@ public class StVars {
     
     public static String convertVentaIdToVentaList(String arg){
         return ID_PARAM_IS_VENTA_LIST+arg;
+    }
+    
+    public static boolean ventaIdParamIsVentaList(String arg) {
+        return GV.getStr(arg).startsWith(ID_PARAM_IS_VENTA_LIST);
+    }
+    
+    public static boolean ventaIdParamIsIdVenta(String arg){
+        List<String> filter = filterList();
+        for (String str : filter) {
+            if(arg.contains(str)){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static String cleanIdParam(String arg){
+        if(ventaIdParamIsVentaList(arg)){
+        /*
+            No se agrega diecto al filterList porque en una validacion del Local.java
+            debe pasar inadvertido para listar entidades de tipo Ficha
+        */
+            return GV.getStr(arg).replaceAll(ID_PARAM_IS_VENTA_LIST, "");
+        }
+        List<String> filter = filterList();
+        for (String clean : filter) {
+            arg = GV.getStr(arg).replaceAll(clean, "");
+        }
+        return GV.getStr(arg).trim();
+    }
+    
+    public static int estadoVentaPaid(){
+        return PAID;
     }
 }

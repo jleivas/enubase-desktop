@@ -6,6 +6,7 @@
 package cl.softdirex.enubase.entities;
 
 import cl.softdirex.enubase.entities.abstractclasses.SyncCodClass;
+import cl.softdirex.enubase.utils.GV;
 import java.util.Date;
 
 /**
@@ -25,6 +26,25 @@ public class VentaDTO extends SyncCodClass{
     private int saldo;
 
     public VentaDTO() {
+    }
+    
+    public VentaDTO(Venta venta){
+        setCod(venta.getCod());
+        int idVendedor = (venta.getVendedor()!=null)?venta.getVendedor().getId():0;
+        setIdVendedor(idVendedor);
+        String rutCliente = (venta.getCliente()!=null)?(GV.getStr(venta.getCliente().getCod())):"";
+        setRutCliente(rutCliente);
+        setFecha(venta.getFecha());
+        setFechaEntrega(venta.getFechaEntrega());
+        setLugarEntrega(venta.getLugarEntrega());
+        setHoraEntrega(venta.getHoraEntrega());
+        setObservacion(venta.getObservacion());
+        setValorTotal(venta.getValorTotal());
+        setDescuento(venta.getDescuento());
+        setSaldo(venta.getSaldo());
+        setEstado(venta.getEstado());
+        setLastUpdate(venta.getLastUpdate());
+        setLastHour(venta.getLastHour());
     }
 
     public VentaDTO(String cod,int idVendedor, String rutCliente, 

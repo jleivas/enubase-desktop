@@ -6,6 +6,7 @@
 package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.bd.LcBd;
+import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Cliente;
 import cl.softdirex.enubase.entities.Descuento;
 import cl.softdirex.enubase.entities.Despacho;
@@ -22,6 +23,8 @@ import cl.softdirex.enubase.entities.TipoPago;
 import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.entities.Venta;
 import cl.softdirex.enubase.entities.VentaDTO;
+import cl.softdirex.enubase.sync.entities.Migrar;
+import cl.softdirex.enubase.sync.entities.Remote;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.io.File;
 import java.sql.Connection;
@@ -110,7 +113,7 @@ public class BDUtils {
 " VEN_LAST_HOUR INTEGER";
     private static String DETALLE = "DET_ID VARCHAR(25) not null primary key," +
 " VENTA_VEN_ID VARCHAR(25)," +
-" ITEM_ITM_ID VARCHAR(100)," +
+" ITEM_ITM_ID VARCHAR(45)," +
 " DET_CANTIDAD INTEGER," +
 " DET_PRECIO_UNIT INTEGER," +
 " DET_ESTADO INTEGER," +
@@ -138,7 +141,7 @@ public class BDUtils {
 " HP_FECHA DATE," +
 " HP_ABONO INTEGER," +
 " TIPO_PAGO_TP_ID INTEGER," +
-" FICHA_FCH_ID VARCHAR(25)," +
+" VENTA_VEN_ID VARCHAR(25)," +
 " HP_ESTADO INTEGER," +
 " HP_LAST_UPDATE DATE," +
 " HP_LAST_HOUR INTEGER";
@@ -221,7 +224,7 @@ public class BDUtils {
 " US_LAST_HOUR INTEGER";
     private static String COL_VENTA = "VEN_ID," +
 " USUARIO_US_ID," +
-" CLIENTE_CLI_RUT," +
+" CLIENTE_CLI_RUT," +   
 " VEN_FECHA," +
 " VEN_FECHA_ENTREGA," +
 " VEN_LUGAR_ENTREGA," +
@@ -291,7 +294,7 @@ public class BDUtils {
     private static String COL_PROVEEDOR = "PRO_ID," +
 " PRO_NOMBRE," +
 " PRO_TELEFONO," +
-" PRO_MAIL," +
+" PRO_EMAIL," +
 " PRO_WEB," +
 " PRO_DIRECCION," +
 " PRO_COMUNA," +
@@ -379,12 +382,12 @@ public class BDUtils {
     }
     
     public static void sincronizarTodo(){
-        if(GC.syncEnabled()){
+        if(GV.syncEnabled()){
             //si la ultima fecha de actualizacion corresponde al dia actual
             //restamos un dia a LastUpdate para validar actualización
             StVars.resetAllPorcentaje();
-            if(GC.isCurrentDate(StVars.getLastUpdate())){
-                StVars.setLastUpdate(GC.dateSumaResta(StVars.getLastUpdate(), -1, "DAYS"));
+            if(GV.isCurrentDate(StVars.getLastUpdate())){
+                StVars.setLastUpdate(GV.dateSumaResta(StVars.getLastUpdate(), -1, "DAYS"));
             }
             if(sincronizar(allEntitiesForRemoteSync())){
                 StVars.setLastUpdate(new Date());
@@ -428,7 +431,7 @@ public class BDUtils {
                 error = true;
                 break;
             }
-            StVars.calcularPorcentaje(listaObjetos.size(), "Sincronizando entidades [Tipo de datos:"+GC.getClassName(type).trim()+"]...");
+            StVars.calcularPorcentaje(listaObjetos.size(), "Sincronizando entidades [Tipo de datos:"+GV.getClassName(type).trim()+"]...");
         }
         StVars.resetAllPorcentaje();
         setSincronizar(false);
@@ -443,7 +446,7 @@ public class BDUtils {
     
     public static boolean sincronizeObject(Object object){
         if(NetWrk.isOnline()){
-            if(!GC.sincronizacionIsStopped()){
+            if(!GV.sincronizacionIsStopped()){
                 
                 Dao.sincronize(object);
                 
@@ -647,7 +650,7 @@ public class BDUtils {
      */
     public static List<Object> listarVentas(Date dateTo, Date dateFrom,String idUser, String codClient, String idVenta){
         Dao load = new Dao();
-        String idParam = GC.getWhereFromVentas(dateTo, dateFrom, idUser, codClient, idVenta);
+        String idParam = GV.getWhereFromVentas(dateTo, dateFrom, idUser, codClient, idVenta);
         idParam = StVars.convertVentaIdToVentaList(idParam);
         return load.listar(idParam, new Venta());
     }
@@ -665,7 +668,7 @@ public class BDUtils {
      */
     public static List<Object> listarAllVentas(Date dateTo, Date dateFrom,String idUser, String codClient, String idVenta){
         Dao load = new Dao();
-        String idParam = GC.getWhereFromAllVentas(dateTo, dateFrom, idUser, codClient, idVenta);
+        String idParam = GV.getWhereFromAllVentas(dateTo, dateFrom, idUser, codClient, idVenta);
         idParam = StVars.convertVentaIdToVentaList(idParam);
         return load.listar(idParam, new Venta());
     }
@@ -676,7 +679,7 @@ public class BDUtils {
 //                "¿Estas seguro que deseas borrar todos los datos?", 2)){
             XmlUtils.cargarRegistroLocal();
 //            backUpLocalBd();
-            GC.setLastUpdate(GC.stringToDate("01-01-2001"));
+            GV.setLastUpdate(GV.stringToDate("01-01-2001"));
             BDUtils.dropDB();
             BDUtils.initDB();
             XmlUtils.cargarRegistroLocal();
@@ -893,7 +896,7 @@ public class BDUtils {
                 Despacho temp = (Despacho)object;
                 stList[i][0]=""+temp.getCod();
                 stList[i][1]=""+temp.getRut();
-                stList[i][2]=GC.getToName(temp.getNombre());
+                stList[i][2]=GV.getToName(temp.getNombre());
                 stList[i][3]=getSqlDate(temp.getFecha());
                 stList[i][4]=""+temp.getIdVenta();
                 stList[i][5]=""+temp.getEstado();
@@ -926,6 +929,490 @@ public class BDUtils {
     }
     
     private static String getSqlDate(Date date){
-        return GC.dateToString(date, "yyyy-mm-dd");
+        return GV.dateToString(date, "yyyy-mm-dd");
+    }
+
+    public static String getSqlInsert(Object objectParam) {
+        if(objectParam instanceof Cliente){
+            Cliente object = (Cliente)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getNacimiento().getTime());//la transforma a sql.Date
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO cliente VALUES('"
+                    + object.getCod() + "','"
+                    + object.getNombre() + "','"
+                    + object.getTelefono1() + "','"
+                    + object.getTelefono2() + "','"
+                    + object.getEmail() + "','"
+                    + object.getDireccion() + "','"
+                    + object.getComuna() + "','"
+                    + object.getCiudad() + "',"
+                    + object.getSexo() + ",'"
+                    + sqlfecha1 + "',"
+                    + object.getEstado() + ",'"
+                    + sqlfecha2 + "',"
+                    + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof Descuento){
+            Descuento object = (Descuento)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO descuento VALUES("
+                    + object.getId() + ",'"
+                    + object.getNombre() + "','"
+                    + object.getDescripcion() + "',"
+                    + object.getPorcetange() + ","
+                    + object.getMonto() + ","
+                    + object.getEstado() + ",'"
+                    + sqlfecha + "',"
+                    + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof Detalle){
+            Detalle object = (Detalle)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO detalle VALUES('"
+                    + object.getCod()+ "','"
+                    + object.getIdVenta()+ "','"
+                    + object.getIdItem()+ "',"
+                    + object.getCantidad()  + ","
+                    + object.getPrecioUnitario()+ ","
+                    + object.getEstado() + ",'"
+                    + sqlfecha + "',"
+                    + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof Despacho){
+            Despacho object = (Despacho)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO despacho VALUES('"
+                    + object.getCod()+ "','"
+                    + object.getRut()+ "','"
+                    + object.getNombre()+ "','"
+                    + sqlfecha1 + "','"
+                    + object.getIdVenta()+ "',"
+                    + object.getEstado() + ",'"
+                    + sqlfecha2 + "',"
+                    + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof Equipo){
+            Equipo object = (Equipo)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO equipo VALUES("
+                            + object.getId()+ ",'"
+                            + object.getNombre() + "','"
+                            + object.getLicencia()+ "','"
+                            + object.getBd()+ "','"
+                            + object.getBdUser()+ "','"
+                            + object.getBdPass()+ "','"
+                            + object.getBdUrl()+ "',"
+                            + object.getEstado() + ",'"
+                            + sqlfecha + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof HistorialPago){
+            HistorialPago object = (HistorialPago)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO historial_pago VALUES('"
+                            + object.getCod()+ "','"
+                            + sqlfecha1 + "',"
+                            + object.getAbono()+ ","
+                            + object.getIdTipoPago()+ ",'"
+                            + object.getIdVenta()+ "',"
+                            + object.getEstado() + ",'"
+                            + sqlfecha2 + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof Inventario){
+            Inventario object = (Inventario)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO inventario VALUES("
+                            + object.getId()+ ",'"
+                            + object.getNombre() + "','"
+                            + object.getDescripcion()+ "',"
+                            + object.getEstado() + ",'"
+                            + sqlfecha + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof Item){
+            Item object = (Item)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO item VALUES('"
+                            + object.getCod()+ "','"
+                            + object.getFoto()+ "','"
+                            + object.getMarca()+ "',"
+                            + object.getClasificacion()+ ",'"
+                            + object.getDescripcion()+ "',"
+                            + object.getPrecioRef()+ ","
+                            + object.getPrecioAct()+ ","
+                            + object.getStock()+ ","
+                            + object.getStockMin()+ ","
+                            + object.getInventario()+ ","
+                            + object.getEstado() + ",'"
+                            + sqlfecha + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof InternMail){
+            InternMail object = (InternMail)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());//la transforma a sql.Date
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            int idRemitente = (object.getRemitente()!= null)?object.getRemitente().getId():0;
+            int idDestinatario = (object.getDestinatario() != null)?object.getDestinatario().getId():0;
+            return  "INSERT INTO message VALUES("
+                            + object.getId()+ ","
+                            + idRemitente + ","
+                            + idDestinatario+ ",'"
+                            + object.getAsunto()+ "','"
+                            + object.getContenido()+ "','"
+                            + sqlfecha1+ "','"
+                            + object.getHora() + "',"
+                            + object.getEstado()+ ",'"
+                            + sqlfecha2 + "',"
+                            + object.getLastHour()+ ")";
+        }
+        if(objectParam instanceof Oficina){
+            Oficina object = (Oficina)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO oficina VALUES("
+                            + object.getId() + ",'"
+                            + object.getNombre() + "','"
+                            + object.getDireccion() + "','"
+                            + object.getCiudad() + "','"
+                            + object.getTelefono1() + "','"
+                            + object.getTelefono2() + "','"
+                            + object.getEmail() + "','"
+                            + object.getWeb() + "',"
+                            + object.getEstado() + ",'"
+                            + sqlfecha + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof Proveedor){
+            Proveedor object = (Proveedor)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO proveedor VALUES('"
+                            + object.getCod()+ "','"
+                            + object.getNombre() + "','"
+                            + object.getTelefono() + "','"
+                            + object.getEmail() + "','"
+                            + object.getWeb() + "','"
+                            + object.getDireccion() + "','"
+                            + object.getComuna()+ "','"
+                            + object.getCiudad() + "',"
+                            + object.getEstado() + ",'"
+                            + sqlfecha + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof RegistroBaja){
+            RegistroBaja object = (RegistroBaja)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());//la transforma a sql.Date
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO registro_bajas VALUES('"
+                            + object.getCod()+ "','"
+                            + sqlfecha1 + "','"
+                            + object.getIdItem()+ "',"
+                            + object.getCantidad()+ ",'"
+                            + object.getObs()+ "',"
+                            + object.getEstado() + ",'"
+                            + sqlfecha2 + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof TipoPago){
+            TipoPago object = (TipoPago)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO tipo_pago VALUES("
+                            + object.getId()+ ",'"
+                            + object.getNombre() + "',"
+                            + object.getEstado() + ",'"
+                            + sqlfecha + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof User){
+            User object = (User)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO usuario VALUES("
+                            + object.getId() + ",'"
+                            + object.getNombre() + "','"
+                            + object.getUsername() + "','"
+                            + object.getEmail() + "','"
+                            + object.getPass() + "',"
+                            + object.getTipo() + ","
+                            + object.getEstado() + ",'"
+                            + sqlfecha + "',"
+                            + object.getLastHour() + ")";
+        }
+        if(objectParam instanceof Venta){
+            objectParam = new VentaDTO((Venta)objectParam);
+        }
+        if(objectParam instanceof VentaDTO){
+            VentaDTO object = (VentaDTO)objectParam;
+            java.sql.Date fecha = new java.sql.Date(object.getFecha().getTime());//la transforma a sql.Date
+            java.sql.Date fechaEntrega = new java.sql.Date(object.getFechaEntrega().getTime());//la transforma a sql.Date
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "INSERT INTO venta VALUES('"
+                    + object.getCod() + "',"
+                    + object.getIdVendedor()+ ",'"
+                    + object.getRutCliente()+ "','"
+                    + fecha+ "','"
+                    + fechaEntrega+ "','"
+                    + object.getLugarEntrega()+ "','"
+                    + object.getHoraEntrega()+ "','"
+                    + object.getObservacion()+ "',"
+                    + object.getValorTotal()+ ","
+                    + object.getDescuento()+ ","
+                    + object.getSaldo()+ ","
+                    + object.getEstado()+ ",'"
+                    + sqlfecha1 + "',"
+                    + object.getLastHour() + ")";
+        }
+        return null;
+    }
+
+    public static String getSqlUpdate(Object objectParam) {
+        if(objectParam instanceof Cliente){
+            Cliente object = (Cliente)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getNacimiento().getTime());//la transforma a sql.Date
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return "UPDATE cliente set cli_nombre = '" + object.getNombre()
+                        + "', cli_telefono1 = '" + object.getTelefono1()
+                        + "', cli_telefono2 = '" + object.getTelefono2()
+                        + "', cli_email = '" + object.getEmail()
+                        + "', cli_direccion = '" + object.getDireccion()
+                        + "', cli_comuna = '" + object.getComuna()
+                        + "', cli_ciudad = '" + object.getCiudad()
+                        + "', cli_sexo = " + object.getSexo()
+                        + ", cli_nacimiento = '" + sqlfecha1
+                        + "', cli_estado = " + object.getEstado()
+                        + ", cli_last_update = '" + sqlfecha2
+                        + "', cli_last_hour = " + object.getLastHour()
+                        + " WHERE cli_rut = '" + object.getCod() 
+                        + "' AND ((cli_last_update < '"+sqlfecha2+"')OR"
+                        + "(cli_last_update = '"+sqlfecha2+"' AND cli_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof Descuento){
+            Descuento object = (Descuento)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE descuento set des_nombre = '" + object.getNombre()
+                        + "', des_descripcion = '" + object.getDescripcion()
+                        + "', des_porc = " + object.getPorcetange()
+                        + ", des_monto = " + object.getMonto()
+                        + ", des_estado = " + object.getEstado()
+                        + ", des_last_update = '" + sqlfecha
+                        + "', des_last_hour = " + object.getLastHour()
+                        + " WHERE des_id = " + object.getId() 
+                        + " AND ((des_last_update < '"+sqlfecha+"')OR"
+                        + "(des_last_update = '"+sqlfecha+"' AND des_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof Detalle){
+            Detalle object = (Detalle)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE detalle set venta_ven_id = '" + object.getIdVenta()
+                        + "', item_itm_id = '" + object.getIdItem()
+                        + "', det_cantidad = " + object.getCantidad()
+                        + ", det_precio_unit = " + object.getPrecioUnitario()
+                        + ", det_estado = " + object.getEstado()
+                        + ", det_last_update = '" + sqlfecha
+                        + "', det_last_hour = " + object.getLastHour()
+                        + " WHERE det_id = '" + object.getCod()
+                        + "' AND ((det_last_update < '"+sqlfecha+"')OR"
+                        + "(det_last_update = '"+sqlfecha+"' AND det_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof Despacho){
+            Despacho object = (Despacho)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE despacho set dsp_rut = '" + object.getRut()
+                        + "', dsp_nombre = '" + object.getNombre()
+                        + "', dsp_fecha = '" + sqlfecha1
+                        + "', venta_ven_id = '" + object.getIdVenta()
+                        + "', dsp_estado = " + object.getEstado()
+                        + ", dsp_last_update = '" + sqlfecha2
+                        + "', dsp_last_hour = " + object.getLastHour()
+                        + " WHERE dsp_id = '" + object.getCod()
+                        + "' AND ((dsp_last_update < '"+sqlfecha2+"')OR"
+                        + "(dsp_last_update = '"+sqlfecha2+"' AND dsp_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof Equipo){
+            Equipo object = (Equipo)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE equipo set eq_nombre = '" + object.getNombre()
+                        + "', eq_licencia = '" + object.getLicencia()
+                        + "', eq_bd = '" + object.getBd()
+                        + "', eq_bd_user = '" + object.getBdUser()
+                        + "', eq_bd_pass = '" + object.getBdPass()
+                        + "', eq_bd_url = '" + object.getBdUrl()
+                        + "', eq_estado = " + object.getEstado()
+                        + ", eq_last_update = '" + sqlfecha
+                        + "', eq_last_hour = " + object.getLastHour()
+                        + " WHERE eq_id = " + object.getId()    
+                        + " AND ((eq_last_update < '"+sqlfecha+"')OR"
+                        + "(eq_last_update = '"+sqlfecha+"' AND eq_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof HistorialPago){
+            HistorialPago object = (HistorialPago)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE historial_pago set hp_fecha = '" + sqlfecha1
+                        + "', hp_abono = " + object.getAbono()
+                        + ", tipo_pago_tp_id = " + object.getIdTipoPago()
+                        + ", venta_ven_id = '"+object.getIdVenta()
+                        + "', hp_estado = "+object.getEstado()
+                        + ", hp_last_update = '" + sqlfecha2
+                        + "', hp_last_hour = " + object.getLastHour()
+                        + " WHERE hp_id = '" + object.getCod()
+                        + "' AND ((hp_last_update < '"+sqlfecha2+"')OR"
+                        + "(hp_last_update = '"+sqlfecha2+"' AND hp_last_hour < "+object.getLastHour()+"))";
+        }
+        
+        if(objectParam instanceof Inventario){
+            Inventario object = (Inventario)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE inventario set inv_nombre = '" + object.getNombre()
+                        + "', inv_descripcion = '" + object.getDescripcion()
+                        + "', inv_estado = " + object.getEstado()
+                        + ", inv_last_update = '" + sqlfecha
+                        + "', inv_last_hour = " + object.getLastHour()
+                        + " WHERE inv_id = " + object.getId()
+                        + " AND ((inv_last_update < '"+sqlfecha+"')OR"
+                        + "(inv_last_update = '"+sqlfecha+"' AND inv_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof Item){
+            Item object = (Item)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE item set itm_foto = '" + object.getFoto()
+                        + "', itm_marca = '" + object.getMarca()
+                        + "', itm_clasificacion = " + object.getClasificacion()
+                        + ", itm_descripcion = '" + object.getDescripcion()
+                        + "', itm_precio_ref = " + object.getPrecioRef()
+                        + ", itm_precio_act = " + object.getPrecioAct()
+                        + ", itm_stock = " + object.getStock()
+                        + ", itm_stock_min = " + object.getStockMin()
+                        + ", inventario_inv_id = " + object.getInventario()
+                        + ", itm_estado = " + object.getEstado()
+                        + ", itm_last_update = '" + sqlfecha
+                        + "', itm_last_hour = " + object.getLastHour()
+                        + " WHERE itm_id = '" + object.getCod()
+                        + "' AND ((itm_last_update < '"+sqlfecha+"')OR"
+                        + "(itm_last_update = '"+sqlfecha+"' AND itm_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof InternMail){
+            InternMail object = (InternMail)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());//la transforma a sql.Date
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE message set us_id_remitente = " + object.getRemitente().getId()
+                        + ", us_id_destinatario = " + object.getDestinatario().getId()
+                        + ", msg_asunto = '" + object.getAsunto()
+                        + "', msg_content = '" + object.getContenido()
+                        + "', msg_fecha = '" + sqlfecha1
+                        + "', msg_hora = '" + object.getHora()
+                        + "', msg_estado = " + object.getEstado()
+                        + ", msg_last_update = '" + sqlfecha2
+                        + "', msg_last_hour = " + object.getLastHour()
+                        + " WHERE msg_id = " + object.getId()
+                        + " AND ((msg_last_update < '"+sqlfecha2+"')OR"
+                        + "(msg_last_update = '"+sqlfecha2+"' AND msg_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof Oficina){
+            Oficina object = (Oficina)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE oficina set of_nombre = '" + object.getNombre()
+                        + "', of_direccion = '" + object.getDireccion()
+                        + "', of_ciudad = '" + object.getCiudad()
+                        + "', of_telefono1 = '" + object.getTelefono1()
+                        + "', of_telefono2 = '" + object.getTelefono2()
+                        + "', of_email = '" + object.getEmail()
+                        + "', of_web = '" + object.getWeb()
+                        + "', of_estado = " + object.getEstado()
+                        + ", of_last_update = '" + sqlfecha
+                        + "', of_last_hour = " + object.getLastHour()
+                        + " WHERE of_id = " + object.getId() 
+                        + " AND ((of_last_update < '"+sqlfecha+"')OR"
+                        + "(of_last_update = '"+sqlfecha+"' AND of_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof Proveedor){
+            Proveedor object = (Proveedor)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE proveedor set pro_nombre = '" + object.getNombre()
+                        + "', pro_telefono = '" + object.getTelefono()
+                        + "', pro_email = '" + object.getEmail()
+                        + "', pro_web = '" + object.getWeb()
+                        + "', pro_direccion = '" + object.getDireccion()
+                        + "', pro_comuna = '" + object.getComuna()
+                        + "', pro_ciudad = '" + object.getCiudad()
+                        + "', pro_estado = " + object.getEstado()
+                        + ", pro_last_update = '" + sqlfecha
+                        + "', pro_last_hour = " + object.getLastHour()
+                        + " WHERE pro_id = '" + object.getCod()
+                        + "' AND ((pro_last_update < '"+sqlfecha+"')OR"
+                        + "(pro_last_update = '"+sqlfecha+"' AND pro_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof RegistroBaja){
+            RegistroBaja object = (RegistroBaja)objectParam;
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());//la transforma a sql.Date
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE registro_bajas set rb_fecha = '" + sqlfecha1
+                        + "', item_itm_id = '" + object.getIdItem()
+                        + "', rb_cantidad = " + object.getCantidad()
+                        + ", rb_obs = '" + object.getObs()
+                        + "', rb_estado = " + object.getEstado()
+                        + ", rb_last_update = '" + sqlfecha2
+                        + "', rb_last_hour = " + object.getLastHour()
+                        + " WHERE rb_id = '" + object.getCod()
+                        + "' AND ((rb_last_update < '"+sqlfecha2+"')OR"
+                        + "(rb_last_update = '"+sqlfecha2+"' AND rb_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof TipoPago){
+            TipoPago object = (TipoPago)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE tipo_pago set tp_nombre = '" + object.getNombre()
+                        + "', tp_estado = " + object.getEstado()
+                        + ", tp_last_update = '" + sqlfecha
+                        + "', tp_last_hour = " + object.getLastHour()
+                        + " WHERE tp_id = " + object.getId()
+                        + " AND ((tp_last_update < '"+sqlfecha+"')OR"
+                        + "(tp_last_update = '"+sqlfecha+"' AND tp_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof User){
+            User object = (User)objectParam;
+            String mail = "', us_email = '" + object.getEmail();
+            if(object.getUsername().equals("admin")){
+                mail = (GV.getStr(object.getEmail()).isEmpty())? "":"', us_email = '" + object.getEmail();
+            }
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
+            return  "UPDATE usuario set us_nombre = '" + object.getNombre()
+                        + "', us_username = '" + object.getUsername()
+                        + mail
+                        + "', us_pass = '" + object.getPass()
+                        + "', us_tipo = " + object.getTipo()
+                        + ", us_estado = " + object.getEstado()
+                        + ", us_last_update = '" + sqlfecha
+                        + "', us_last_hour = " + object.getLastHour()
+                        + " WHERE us_id = " + object.getId()
+                        + " AND ((us_last_update < '"+sqlfecha+"')OR"
+                        + "(us_last_update = '"+sqlfecha+"' AND us_last_hour < "+object.getLastHour()+"))";
+        }
+        if(objectParam instanceof Venta){
+            objectParam = new VentaDTO((Venta)objectParam);
+        }
+        if(objectParam instanceof VentaDTO){
+            VentaDTO object = (VentaDTO)objectParam;
+            java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());
+            java.sql.Date sqlfecha1 = new java.sql.Date(object.getFecha().getTime());
+            java.sql.Date sqlfecha2 = new java.sql.Date(object.getFechaEntrega().getTime());//la transforma a sql.Date
+            return "UPDATE venta set usuario_us_id = " + object.getIdVendedor()
+                        + ", cliente_cli_rut = '" + object.getRutCliente()
+                        + "', ven_fecha = '" + sqlfecha1
+                        + "', ven_fecha_entrega = '" + sqlfecha2
+                        + "', ven_lugar_entrega = '" + object.getLugarEntrega()
+                        + "', ven_hora_entrega = '" + object.getHoraEntrega()
+                        + "', ven_obs = '" + object.getObservacion()
+                        + "', ven_valor_total = " + object.getValorTotal()
+                        + ", ven_descuento = " + object.getDescuento()
+                        + ", ven_saldo = " + object.getSaldo()
+                        + ", ven_estado = " + object.getEstado()
+                        + ", ven_last_update = '" + sqlfecha
+                        + "', ven_last_hour = " + object.getLastHour()
+                        + " WHERE ven_id = '" + object.getCod() 
+                        + "' AND ((ven_last_update < '"+sqlfecha+"')OR"
+                        + "(ven_last_update = '"+sqlfecha+"' AND ven_last_hour < "+object.getLastHour()+"))";
+        }
+        return null;
     }
 }

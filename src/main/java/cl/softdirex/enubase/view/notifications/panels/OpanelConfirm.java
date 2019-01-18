@@ -6,7 +6,7 @@
 package cl.softdirex.enubase.view.notifications.panels;
 
 import cl.softdirex.enubase.view.notifications.Notification;
-import cl.softdirex.enubase.utils.UI;
+import cl.softdirex.enubase.utils.PanelUtils;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,18 +21,18 @@ public class OpanelConfirm extends javax.swing.JPanel {
      */
     public OpanelConfirm() {
         initComponents();
-        switch (UI.getMsgStatus()){
+        switch (PanelUtils.getMsgStatus()){
             case JOptionPane.INFORMATION_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.iconInfo())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.iconInfo())));
                 break;
             case JOptionPane.WARNING_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.iconWarn())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.iconWarn())));
                 break;
             case JOptionPane.ERROR_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.iconError())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.iconError())));
                 break;
             case JOptionPane.ERROR:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.iconError())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.iconError())));
                 break;
         }
     }
@@ -55,7 +55,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/show_info_50px.png"))); // NOI18N
+        imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/info_50px.png"))); // NOI18N
         imgIconMessage.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 imgIconMessageMouseClicked(evt);
@@ -71,7 +71,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
             }
         });
 
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Cancel_50px.png"))); // NOI18N
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/cancel_50px.png"))); // NOI18N
         btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCancelarMouseClicked(evt);
@@ -97,19 +97,19 @@ public class OpanelConfirm extends javax.swing.JPanel {
         lblMessage.setRows(5);
         jScrollPane1.setViewportView(lblMessage);
 
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/btn_Ok_50px.png"))); // NOI18N
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/accept_50px.png"))); // NOI18N
         btnAceptar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnAceptarMousePressed(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAceptarMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAceptarMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnAceptarMouseExited(evt);
             }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                btnAceptarMousePressed(evt);
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAceptarMouseEntered(evt);
             }
         });
 
@@ -124,7 +124,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
                         .addComponent(imgIconMessage)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 40, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -133,7 +133,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
                 .addGap(18, 18, 18))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(427, Short.MAX_VALUE)
+                    .addContainerGap(393, Short.MAX_VALUE)
                     .addComponent(btnAceptar)
                     .addGap(79, 79, 79)))
         );
@@ -146,12 +146,12 @@ public class OpanelConfirm extends javax.swing.JPanel {
                     .addComponent(imgIconMessage))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCancelar)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(179, Short.MAX_VALUE)
+                    .addContainerGap(173, Short.MAX_VALUE)
                     .addComponent(btnAceptar)
                     .addGap(8, 8, 8)))
         );
@@ -179,11 +179,11 @@ public class OpanelConfirm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnCancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseEntered
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.getEnteredIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseEntered
 
     private void btnCancelarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseExited
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.getExitedIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseExited
 
     private void btnCancelarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMousePressed
@@ -196,11 +196,11 @@ public class OpanelConfirm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAceptarMouseClicked
 
     private void btnAceptarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseEntered
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.getEnteredIcon(btnAceptar.getIcon().toString()))));
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnAceptar.getIcon().toString()))));
     }//GEN-LAST:event_btnAceptarMouseEntered
 
     private void btnAceptarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseExited
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(UI.getExitedIcon(btnAceptar.getIcon().toString()))));
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnAceptar.getIcon().toString()))));
     }//GEN-LAST:event_btnAceptarMouseExited
 
     private void btnAceptarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMousePressed

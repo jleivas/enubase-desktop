@@ -21,7 +21,7 @@ public class DirectoryUtils {
     
     
     public static String getFilesPath(){
-        return GC.getStr(FILES_PATH);
+        return GV.getStr(FILES_PATH);
     }
     
     public static String getFilesReportsPath(){
@@ -29,14 +29,14 @@ public class DirectoryUtils {
     }
     
     public static String getLocalPath(){
-        return GC.getStr(LOCAL_PATH);
+        return GV.getStr(LOCAL_PATH);
     }
 
     public static String getReportViewPath() {
-        return GC.getStr(REPORT_VIEW_PATH);
+        return GV.getStr(REPORT_VIEW_PATH);
     }
     
     public static String getReportExcelPath() {
-        return GC.getStr(REPORT_EXCEL_PATH);
+        return GV.getStr(REPORT_EXCEL_PATH);
     }
 }

@@ -5,6 +5,7 @@
  */
 package cl.softdirex.enubase.utils;
 
+import cl.softdirex.enubase.view.notifications.Notification;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -59,9 +60,9 @@ public class XmlUtils {
             Element code= document.createElement("code");
             Element date= document.createElement("date");
             //Ingresamos la info. 
-            Text vSt = document.createTextNode(GC.enC(""+StVars.getLicenciaTipoPlan()));
-            Text vCode = document.createTextNode(GC.enC(StVars.getLicenceCode()));
-            Text vDate = document.createTextNode(GC.enC(StVars.getExpDate())); 
+            Text vSt = document.createTextNode(GV.enC(""+StVars.getLicenciaTipoPlan()));
+            Text vCode = document.createTextNode(GV.enC(StVars.getLicenceCode()));
+            Text vDate = document.createTextNode(GV.enC(StVars.getExpDate())); 
             /**************************NETWORK******************************/
             Element network = document.createElement("network"); 
             //creamos un nuevo elemento. lic contiene st y date
@@ -69,9 +70,9 @@ public class XmlUtils {
             Element uri= document.createElement("uri");
             Element port= document.createElement("port");
             //Ingresamos la info. 
-            Text vEquipo = document.createTextNode(GC.enC(StVars.getEquipo()));
-            Text vUri = document.createTextNode(GC.enC(StVars.apiUriLicence()));
-            Text vPort = document.createTextNode(GC.enC(StVars.urlUriPort()));
+            Text vEquipo = document.createTextNode(GV.enC(StVars.getEquipo()));
+            Text vUri = document.createTextNode(GV.enC(StVars.apiUriLicence()));
+            Text vPort = document.createTextNode(GV.enC(StVars.urlUriPort()));
             
              /**************************REGISTRY******************************/
             Element registry = document.createElement("registry"); 
@@ -85,14 +86,14 @@ public class XmlUtils {
             Element companyGiro = document.createElement("company_giro");
             Element msgFile = document.createElement("message_file");
             //Ingresamos la info. 
-            Text vOffice = document.createTextNode(GC.enC(StVars.get()));
-            Text vCompany = document.createTextNode(GC.enC(GC.companyName()));
-            Text vInventary = document.createTextNode(GC.enC(GC.inventarioName()));
-            Text vLastUpdate = document.createTextNode(GC.enC(GC.dateToString(GC.LAST_UPDATE, "dd-mm-yyyy")));
-            Text vCompanyDesc = document.createTextNode(GC.enC(GC.getCompanyDescription()));
-            Text vCompanyRut = document.createTextNode(GC.enC(GC.getCompanyRut()));
-            Text vCompanyGiro = document.createTextNode(GC.enC(GC.getCompanyGiro()));
-            Text vMsgMessage = document.createTextNode(GC.enC(GC.getMessageFile()));
+            Text vOffice = document.createTextNode(GV.enC(StEntities.getNombreOficina()));
+            Text vCompany = document.createTextNode(GV.enC(StVars.getCompanyName()));
+            Text vInventary = document.createTextNode(GV.enC(StVars.getInventarioName()));
+            Text vLastUpdate = document.createTextNode(GV.enC(GV.dateToString(StVars.getLastUpdate(), "dd-mm-yyyy")));
+            Text vCompanyDesc = document.createTextNode(GV.enC(StVars.getCompanyDescription()));
+            Text vCompanyRut = document.createTextNode(GV.enC(StVars.getCompanyRut()));
+            Text vCompanyGiro = document.createTextNode(GV.enC(StVars.getCompanyGiro()));
+            Text vMsgMessage = document.createTextNode(GV.enC(StVars.getMessageFile()));
             
             /**************USER*******************************************/
             //Asignamos la versión de nuestro XML
@@ -151,7 +152,7 @@ public class XmlUtils {
             registry.appendChild(msgFile); 
             msgFile.appendChild(vMsgMessage);
             
-            guardaConFormato(document,GC.directoryFilesPath()+"local.xml");
+            guardaConFormato(document,DirectoryUtils.getFilesPath()+"local.xml");
             
          }catch(Exception e){
              System.err.println("Class RegistroGlobal: Error");
@@ -194,8 +195,10 @@ public class XmlUtils {
     }
     }
     
-    public static void checkXmlFiles() throws ParserConfigurationException, SAXException, IOException{
-        File archivo = new File(GC.directoryFilesPath()+"local.xml");
+    public static void checkXmlFiles() throws ParserConfigurationException, SAXException, 
+            IOException
+    {
+        File archivo = new File(DirectoryUtils.getFilesPath()+"local.xml");
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document documento = db.parse(archivo);
@@ -203,7 +206,7 @@ public class XmlUtils {
     
     public static void cargarRegistroLocal(){
         try{
-            File archivo = new File(GC.directoryFilesPath()+"local.xml");
+            File archivo = new File(DirectoryUtils.getFilesPath()+"local.xml");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document documento = db.parse(archivo);
@@ -215,7 +218,8 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    GC.username(element.getElementsByTagName("name").item(0).getTextContent());
+                    StVars.setUserName(element.getElementsByTagName("name").item(0)
+                            .getTextContent());
                 }
             }
             
@@ -227,11 +231,11 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    String fInteger = GC.dsC(element.getElementsByTagName("st").item(0).getTextContent());
-                    st = Integer.parseInt((GC.getStr(fInteger).isEmpty())?"0":fInteger);
-                    GC.licenciaTipoPlan(st);
-                    GC.setLicenceCode(GC.dsC(element.getElementsByTagName("code").item(0).getTextContent()));
-                    GC.expDate(GC.dsC(element.getElementsByTagName("date").item(0).getTextContent()));
+                    String fInteger = GV.dsC(element.getElementsByTagName("st").item(0).getTextContent());
+                    st = Integer.parseInt((GV.getStr(fInteger).isEmpty())?"0":fInteger);
+                    StVars.setLicenciaTipoPlan(st);
+                    StVars.setLicenceCode(GV.dsC(element.getElementsByTagName("code").item(0).getTextContent()));
+                    StVars.setExpDate(GV.dsC(element.getElementsByTagName("date").item(0).getTextContent()));
                 }
             }
             
@@ -242,9 +246,12 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    GC.setCurrentEquipo(GC.dsC(element.getElementsByTagName("equipo").item(0).getTextContent()));
-                    GC.setUri(GC.dsC(element.getElementsByTagName("uri").item(0).getTextContent()));
-                    GC.setPort(GC.dsC(element.getElementsByTagName("port").item(0).getTextContent()));
+                    StVars.setCurrentEquipo(GV.dsC(element.getElementsByTagName("equipo")
+                            .item(0).getTextContent()));
+                    StVars.setApiUriLicence(GV.dsC(element.getElementsByTagName("uri")
+                            .item(0).getTextContent()));
+                    StVars.setApiUriPort(GV.dsC(element.getElementsByTagName("port")
+                            .item(0).getTextContent()));
                 }
             }
             
@@ -256,14 +263,14 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    GC.setOficinaFromXml(GC.dsC(element.getElementsByTagName("office").item(0).getTextContent()));
-                    GC.setCompanyNameFromXml(GC.dsC(element.getElementsByTagName("company").item(0).getTextContent()));
-                    GC.setInventarioLocalFromXml(GC.dsC(element.getElementsByTagName("inventary").item(0).getTextContent()));
-                    GC.setLastUpdateFromXml(GC.strToDate(GC.dsC(element.getElementsByTagName("last_update_bd").item(0).getTextContent())));
-                    GC.setCompanyDescriptionFromXml(GC.dsC(element.getElementsByTagName("company_description").item(0).getTextContent()));
-                    GC.setCompanyRutFromXml(GC.dsC(element.getElementsByTagName("company_rut").item(0).getTextContent()));
-                    GC.setCompanyGiroFromXml(GC.dsC(element.getElementsByTagName("company_giro").item(0).getTextContent()));
-                    GC.setMessageFileFromXml(GC.dsC(element.getElementsByTagName("message_file").item(0).getTextContent()));
+                    StEntities.setOficina(GV.dsC(element.getElementsByTagName("office").item(0).getTextContent()));
+                    StVars.setCompanyName(GV.dsC(element.getElementsByTagName("company").item(0).getTextContent()));
+                    StVars.setInventarioLocal(GV.dsC(element.getElementsByTagName("inventary").item(0).getTextContent()));
+                    StVars.setLastUpdateFromXml(GV.stringToDate(GV.dsC(element.getElementsByTagName("last_update_bd").item(0).getTextContent())));
+                    StVars.setCompanyDescription(GV.dsC(element.getElementsByTagName("company_description").item(0).getTextContent()));
+                    StVars.setCompanyRut(GV.dsC(element.getElementsByTagName("company_rut").item(0).getTextContent()));
+                    StVars.setCompanyGiro(GV.dsC(element.getElementsByTagName("company_giro").item(0).getTextContent()));
+                    StVars.setMessageFile(GV.dsC(element.getElementsByTagName("message_file").item(0).getTextContent()));
                 }
             }
         } catch (Exception e) {
@@ -274,7 +281,7 @@ public class XmlUtils {
     
     public static void loadSyncCount(){
         try{
-            File archivo = new File(GC.directoryFilesPath()+"reg.xml");
+            File archivo = new File(DirectoryUtils.getFilesPath()+"reg.xml");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document documento = db.parse(archivo);
@@ -286,18 +293,20 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    String fInteger = GC.dsC(element.getElementsByTagName("cont").item(0).getTextContent());
-                    Date vReg = GC.fechaPorDefectoDate();
-                    vReg = GC.strToDate(GC.dsC(element.getElementsByTagName("reg").item(0).getTextContent()));
+                    String fInteger = GV.dsC(element.getElementsByTagName("cont")
+                            .item(0).getTextContent());
+                    Date vReg = GV.stringToDate(StVars.getFechaDefault());
+                    vReg = GV.stringToDate(GV.dsC(element.getElementsByTagName("reg")
+                            .item(0).getTextContent()));
                     int value =0;
                     try{value = Integer.parseInt(fInteger);}catch(Exception e){value = -1;}
                     value=compobarSyncCount(value,vReg);
-                    GlobalValuesVariables.setSyncCount(value);
+                    StVars.setSyncCount(value);
                 }
             }
         } catch (Exception e) {
             System.out.println("Class RegistroGlobal: Error al cargar xml local");
-            GC.setSyncCount(-1);
+            GV.setSyncCount(-1);
             return;
         }
     }
@@ -314,8 +323,9 @@ public class XmlUtils {
             Element upt = document.createElement("upt"); 
             Element cont= document.createElement("cont");
             Element reg= document.createElement("reg");
-            Text vCont = document.createTextNode(GC.enC(""+GlobalValuesVariables.getSyncCount())); 
-            Text vReg = document.createTextNode(GC.enC(GC.dateToString(new Date(), "dd-mm-yyyy"))); 
+            Text vCont = document.createTextNode(GV.enC(""+StVars.getSyncCount())); 
+            Text vReg = document.createTextNode(GV.enC(GV.dateToString(new Date(), 
+                    "dd-mm-yyyy"))); 
             
             /**************************NETWORK******************************/
              /**************************REGISTRY******************************/
@@ -330,7 +340,7 @@ public class XmlUtils {
             cont.appendChild(vCont); 
             reg.appendChild(vReg);
             
-            guardaConFormato(document,GC.directoryFilesPath()+"reg.xml");
+            guardaConFormato(document,DirectoryUtils.getFilesPath()+"reg.xml");
             
          }catch(Exception e){
              System.err.println("Class RegistroGlobal: Error");
@@ -339,7 +349,7 @@ public class XmlUtils {
     
     public static void cargarDatosLicencia(){
         try{
-            File archivo = new File(GC.directoryFilesPath()+"local.xml");
+            File archivo = new File(DirectoryUtils.getFilesPath()+"local.xml");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document documento = db.parse(archivo);
@@ -352,10 +362,13 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    st = Integer.parseInt(GC.dsC(element.getElementsByTagName("st").item(0).getTextContent()));
-                    GC.licenciaTipoPlan(st);
-                    GC.setLicenceCode(GC.dsC(element.getElementsByTagName("code").item(0).getTextContent()));
-                    GC.expDate(GC.dsC(element.getElementsByTagName("date").item(0).getTextContent()));
+                    st = Integer.parseInt(GV.dsC(element.getElementsByTagName("st")
+                            .item(0).getTextContent()));
+                    StVars.setLicenciaTipoPlan(st);
+                    StVars.setLicenceCode(GV.dsC(element.getElementsByTagName("code")
+                            .item(0).getTextContent()));
+                    StVars.setExpDate(GV.dsC(element.getElementsByTagName("date")
+                            .item(0).getTextContent()));
                 }
             }
             
@@ -369,7 +382,9 @@ public class XmlUtils {
             try{
                 URL url = new URL(stUrl);
                 //URLConnection conn = url.openConnection();
-                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        url.openStream())
+                );
 
                 String entrada;
                 String cadena="";
@@ -418,12 +433,14 @@ public class XmlUtils {
     
     public static boolean readXMLOnline() {
         cargarDatosLicencia();
-        if(GC.licenciaTipoPlan()!=GlobalValuesVariables.licenciaTipoFree()){
+        if(StVars.getLicenciaTipoPlan()!=StVars.licenciaTipoFree()){
             try{
                 int cont=0;
-                URL url = new URL(GC.uri());
+                URL url = new URL(GV.getStr(StVars.apiUriLicence()));
                 //URLConnection conn = url.openConnection();
-                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(url.openStream())
+                );
 
                 String entrada;
                 String cadena="";
@@ -460,7 +477,7 @@ public class XmlUtils {
                                         (Element) primerNombreElementoLista.item(0);
                         NodeList primerNombre = primerNombreElemento.getChildNodes();
                         id = ((Node) primerNombre.item(0)).getNodeValue().toString();
-                        if(id.equals(GC.licenceCode())){
+                        if(id.equals(StVars.getLicenceCode())){
                             cont++;
                             NodeList segundoNombreElementoLista =
                                         primerElemento.getElementsByTagName("st");
@@ -468,23 +485,26 @@ public class XmlUtils {
                                         (Element) segundoNombreElementoLista.item(0);
                             NodeList segundoNombre = segundoNombreElemento.getChildNodes();
 
-                            st = Integer.parseInt(((Node) segundoNombre.item(0)).getNodeValue().toString());
+                            st = Integer.parseInt(((Node) segundoNombre.item(0))
+                                    .getNodeValue().toString());
 
                             NodeList tercerNombreElementoLista =
                                         primerElemento.getElementsByTagName("date");
                             Element tercerNombreElemento =
                                             (Element) tercerNombreElementoLista.item(0);
                             NodeList tercerNombre = tercerNombreElemento.getChildNodes();
-                            GC.licenciaTipoPlan(st);
-                            GC.expDate(((Node) tercerNombre.item(0)).getNodeValue().toString());
+                            StVars.setLicenciaTipoPlan(st);
+                            StVars.setExpDate(((Node) tercerNombre.item(0)).getNodeValue()
+                                    .toString());
                             crearRegistroLocal();
                         }
                     }
                 }
                 if(cont == 0){
-                    OptionPane.showMsg("Error de licencia", "Esta es una copia fraudulenta del software original.",2);
-                    GC.licenciaTipoPlan(0);
-                    GC.setLicenceCode("free");
+                    Notification.showMsg("Error de licencia", 
+                            "Esta es una copia fraudulenta del software original.",2);
+                    StVars.setLicenciaTipoPlan(0);
+                    StVars.setLicenceCode("free");
                     crearRegistroLocal();
                 }
                 return true;
@@ -504,8 +524,12 @@ public class XmlUtils {
      */
     private static int compobarSyncCount(int value, Date vReg) {
         if(value<0)return -1;
-        if(GC.dateToString(vReg, "dd-mm-yyyy").equals(GC.fechaPorDefectoString()))return -1;
-        if(GC.fechaPasada(vReg))return 0;
+        if(GV.dateToString(vReg, "dd-mm-yyyy").equals(
+                GV.stringToDate(StVars.getFechaDefault())))
+        {
+            return -1;
+        }
+        if(GV.fechaPasada(vReg))return 0;
         return value;
     }
 
@@ -513,7 +537,9 @@ public class XmlUtils {
         try{
                 URL url = new URL(stUrl);
                 //URLConnection conn = url.openConnection();
-                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        url.openStream())
+                );
 
                 String entrada;
                 String cadena="";
@@ -555,7 +581,8 @@ public class XmlUtils {
                                         (Element) segundoNombreElementoLista.item(0);
                             NodeList segundoNombre = segundoNombreElemento.getChildNodes();
 
-                            return Integer.parseInt(((Node) segundoNombre.item(0)).getNodeValue().toString());
+                            return Integer.parseInt(((Node) segundoNombre.item(0))
+                                    .getNodeValue().toString());
                         }
                     }
                 }
@@ -570,7 +597,9 @@ public class XmlUtils {
         try{
                 URL url = new URL(stUrl);
                 //URLConnection conn = url.openConnection();
-                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        url.openStream())
+                );
 
                 String entrada;
                 String cadena="";
@@ -625,34 +654,34 @@ public class XmlUtils {
     
     public static String imprimirDatosLeidos(){
         return "\n"+
-        "Username: "+GC.username()+"\n"+
-        "tp: "+GC.licenciaTipoPlan()+"\n"+
-        "code: "+GC.licenceCode()+"\n"+
-        "expdate: "+GC.expDate()+"\n"+
-        "equipo: "+GC.equipo()+"\n"+
-        "uri: "+GC.uri()+"\n"+
-        "port: "+GC.port()+"\n"+
-        "lastupdate: "+GC.dateToString(GC.LAST_UPDATE, "dd-mm-yyyy")+"\n"+
+        "Username: "+StVars.getUserName()+"\n"+
+        "tp: "+StVars.getLicenciaTipoPlan()+"\n"+
+        "code: "+StVars.getLicenceCode()+"\n"+
+        "expdate: "+StVars.getExpDate()+"\n"+
+        "equipo: "+StVars.getEquipo()+"\n"+
+        "uri: "+StVars.apiUriLicence()+"\n"+
+        "port: "+StVars.urlUriPort()+"\n"+
+        "lastupdate: "+GV.dateToString(StVars.getLastUpdate(), "dd-mm-yyyy")+"\n"+
         
-        "companyname: "+GC.companyName()+"\n"+
-        "companyrut: "+GC.getCompanyRut()+"\n"+
-        "companydescription: "+GC.getCompanyDescription()+"\n"+
-        "companyGiro: "+GC.getCompanyGiro()+"\n"+
-        "officename: "+GC.getNombreOficina()+"\n"+
-        "inventary: "+GC.inventarioName()+"\n"+
-        "messagefile: "+GC.getMessageFile();
+        "companyname: "+StVars.getCompanyName()+"\n"+
+        "companyrut: "+StVars.getCompanyRut()+"\n"+
+        "companydescription: "+StVars.getCompanyDescription()+"\n"+
+        "companyGiro: "+StVars.getCompanyGiro()+"\n"+
+        "officename: "+StEntities.getNombreOficina()+"\n"+
+        "inventary: "+StVars.getInventarioName()+"\n"+
+        "messagefile: "+StVars.getMessageFile();
     }
 
     public static void deleteXmlFiles() {
         
-        File fichero = new File(GC.directoryFilesPath()+"local.xml");
+        File fichero = new File(DirectoryUtils.getFilesPath()+"local.xml");
 
         if (fichero.delete())
             System.out.println("El fichero local.xml ha sido borrado satisfactoriamente");
         else
             System.out.println("El fichero local.xml no pudó ser borrado");
         
-        fichero = new File(GC.directoryFilesPath()+"reg.xml");
+        fichero = new File(DirectoryUtils.getFilesPath()+"reg.xml");
 
         if (fichero.delete())
             System.out.println("El fichero reg.xml ha sido borrado satisfactoriamente");

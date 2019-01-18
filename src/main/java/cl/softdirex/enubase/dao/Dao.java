@@ -5,14 +5,34 @@
  */
 package cl.softdirex.enubase.dao;
 
+import cl.softdirex.enubase.entities.Cliente;
+import cl.softdirex.enubase.entities.Descuento;
+import cl.softdirex.enubase.entities.Despacho;
+import cl.softdirex.enubase.entities.Detalle;
+import cl.softdirex.enubase.entities.Equipo;
+import cl.softdirex.enubase.entities.HistorialPago;
 import cl.softdirex.enubase.entities.InternMail;
+import cl.softdirex.enubase.entities.Inventario;
+import cl.softdirex.enubase.entities.Item;
+import cl.softdirex.enubase.entities.Oficina;
+import cl.softdirex.enubase.entities.Proveedor;
+import cl.softdirex.enubase.entities.RegistroBaja;
+import cl.softdirex.enubase.entities.TipoPago;
+import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.entities.Venta;
+import cl.softdirex.enubase.entities.VentaDTO;
 import cl.softdirex.enubase.entities.abstractclasses.SyncClass;
 import cl.softdirex.enubase.entities.abstractclasses.SyncCodClass;
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntId;
-import cl.softdirex.enubase.utils.GC;
+import cl.softdirex.enubase.entities.abstractclasses.SyncIntIdValidaName;
+import cl.softdirex.enubase.entities.abstractclasses.SyncStringId;
+import cl.softdirex.enubase.sync.Sync;
+import cl.softdirex.enubase.sync.entities.LocalInventario;
+import cl.softdirex.enubase.utils.GV;
 import cl.softdirex.enubase.utils.NetWrk;
 import cl.softdirex.enubase.utils.Send;
+import cl.softdirex.enubase.utils.StEntities;
+import cl.softdirex.enubase.utils.StVars;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -49,7 +69,7 @@ public class Dao{
         }
         if(object instanceof SyncClass){
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(GC.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
         }
         if(object instanceof SyncCodClass){
             if(!(object instanceof Venta)){
@@ -57,11 +77,11 @@ public class Dao{
             }
         }
         if(object instanceof SyncIntId)//se pueden agregar solo si tienen conexion a internet
-            ((SyncIntId)object).setId(GC.LOCAL_SYNC.getMaxId(object));
+            ((SyncIntId)object).setId(GV.LOCAL_SYNC.getMaxId(object));
 
         if(GV.LOCAL_SYNC.exist(object)){
             if(object instanceof SyncIntId){
-                if(!GC.isCurrentDate(((SyncIntId)object).getLastUpdate())){
+                if(!GV.isCurrentDate(((SyncIntId)object).getLastUpdate())){
                     Notification.showMsg("No se puede crear nuevo registro", "El nombre ya se encuentra utilizado,\n"
                         + "Para poder ingresar un nuevo registro debes cambiar el nombre.", 2);
                 }
@@ -70,7 +90,7 @@ public class Dao{
             }
         }else{
             try {
-                return sync.Sync.add(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
+                return Sync.add(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(Dao.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -95,7 +115,7 @@ public class Dao{
         }
         if(object instanceof SyncClass){
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(GC.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
         }
         if(object instanceof SyncCodClass){
             if(!(object instanceof Venta)){
@@ -126,10 +146,10 @@ public class Dao{
             }else{
                 try {
                     if(object instanceof InternMail){
-                        return (sync.Sync.addLocalSync(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object) &&
-                                sync.Sync.addRemoteSync(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object));
+                        return (Sync.addLocalSync(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object) &&
+                                Sync.addRemoteSync(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object));
                     }else{
-                        return sync.Sync.add(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
+                        return Sync.add(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
                     }
                 } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(Dao.class.getName()).log(Level.SEVERE, null, ex);
@@ -141,7 +161,7 @@ public class Dao{
                     return update(object);
                 }else{
                     try {
-                        return sync.Sync.add(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
+                        return Sync.add(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
                     } catch (SQLException | ClassNotFoundException ex) {
                         Logger.getLogger(Dao.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -154,13 +174,13 @@ public class Dao{
     }
 
     public boolean update(Object object) {
-        Log.setLog(className,Log.getReg());
+        
         if(object instanceof SyncClass){
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(Cmp.hourToInt(new Date()));
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));
         }
         try {
-            return sync.Sync.add(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
+            return Sync.add(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Dao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -180,9 +200,9 @@ public class Dao{
         return false;
     }
     
-    public boolean decreaseStock(String idLente, int cantidad)  {
+    public boolean decreaseStock(String idItem, int cantidad)  {
         try{
-            Lente temp = (Lente) get(idLente, 0, new Lente());
+            Item temp = (Item) get(idItem, 0, new Item());
             int newStock = 0;
             if(temp != null){
                 newStock = temp.getStock() - cantidad;
@@ -190,7 +210,7 @@ public class Dao{
                     /**
                      * Se inserta un registro temporal con las cantidades a reducir
                      */
-                    if(LocalInventario.insert(idLente,cantidad)){
+                    if(LocalInventario.insert(idItem,cantidad)){
                         return true;
                     }
                 }else{
@@ -203,20 +223,20 @@ public class Dao{
         }
     }
     
-    public boolean increaseStock(String idLente, int cantidad)  {
-        if(GV.getStr(idLente).isEmpty()){
+    public boolean increaseStock(String idItem, int cantidad)  {
+        if(GV.getStr(idItem).isEmpty()){
             return false;
         }
         if(cantidad < 0){
             return false;
         }
         try{
-            Lente temp = (Lente) get(idLente, 0, new Lente());
+            Item temp = (Item) get(idItem, 0, new Item());
             int newStock = 0;
             if(temp != null){
                 newStock = temp.getStock() + cantidad;
                 if(newStock >= 0){
-                    return LocalInventario.insert(idLente, (cantidad * -1));
+                    return LocalInventario.insert(idItem, (cantidad * -1));
                 }else{
                     Notification.showMsg("No se pudo modificar el stock", "El nuevo stock no es disponible,\n"
                             + "debe ser mayor que cero", 2);
@@ -240,13 +260,13 @@ public class Dao{
             }
         }
         if(object instanceof Inventario){
-            if(((Inventario)object).getNombre().equals(GV.inventarioName())){
+            if(((Inventario)object).getNombre().equals(StVars.getInventarioName())){
                 Notification.showMsg("No se puede eliminar", "Este inventario se encuentra en uso, no se puede eliminar.",3);
                 return false;
             }
         }
         if(object instanceof User){
-            if(((User)object).getId() == GV.user().getId()){
+            if(((User)object).getId() == StEntities.USER.getId()){
                 Notification.showMsg("No es posible realizar esta operación", "No puedes eliminar tu propio usuario.", 2);
                 return false;
             }
@@ -261,7 +281,7 @@ public class Dao{
     }
     
     public boolean delete(String cod,int id, Object type) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Log.setLog(className,Log.getReg());
+        
         Object temp =  GV.LOCAL_SYNC.getElement(cod,id, type);
         if(temp != null){
             if(type instanceof SyncClass){
@@ -272,36 +292,15 @@ public class Dao{
                         return false;
                     }
                     ((SyncClass)temp).setEstado(((((SyncClass)temp).getEstado())*-1));
-                    String idCerca = null;
-                    String idLejos = null;
-                    if(((Venta)temp).getCerca()!=null){
-                        idCerca = ((Venta)temp).getCerca().getMarca();
-                        increaseStock(idCerca, 1);
-                    }
-                    if(((Venta)temp).getLejos()!=null){
-                        idLejos = ((Venta)temp).getLejos().getMarca();
-                        increaseStock(idLejos, 1);
-                    }
-                    if(((Venta)temp).getConvenio()!=null){
-                        int idConv = ((Venta)temp).getConvenio().getId();
-                        if(idConv != 0){
-                            Convenio cnvLoad = (Convenio)get(null, idConv, new Convenio());
-                            if(cnvLoad.getEstado() == 2){
-                                Notification.showMsg("No se puede anular", "Este registro se encuentra relacionado con un convenio que ya fué generado,\n"
-                                        + " por lo tanto es imposible eliminar", 2);
-                                return false;
-                            }else{
-                                Convenio cnv = new Convenio(((idConv) * -1), null, null, null, 0, null, 0, 0, 0, 0, 0, null, 0, null, 0);
-                                ((Venta)temp).setConvenio(cnv);
-                            }
-                            
-                        }
+                    String idDetail = null;
+                    for (Detalle det : ((Venta)temp).getDetalles()) {
+                        increaseStock(det.getCod(), det.getCantidad());
                     }
                 }else{
                     ((SyncClass)temp).setEstado(0);
                 }
                 ((SyncClass)temp).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-                ((SyncClass)temp).setLastHour(Cmp.hourToInt(new Date()));
+                ((SyncClass)temp).setLastHour(GV.hourToInt(new Date()));
                 
                 if(NetWrk.isOnline()){
                     GV.REMOTE_SYNC.update(temp);
@@ -318,7 +317,7 @@ public class Dao{
     }
 
     public boolean restore(String cod,int id,Object type) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Log.setLog(className,Log.getReg());
+        
         Object temp =  GV.LOCAL_SYNC.getElement(cod,id, type);
         if(temp != null){
             if(type instanceof SyncClass){
@@ -330,7 +329,7 @@ public class Dao{
                     ((SyncClass)temp).setEstado(1);
                 }
                 ((SyncClass)temp).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-                ((SyncClass)temp).setLastHour(Cmp.hourToInt(new Date()));
+                ((SyncClass)temp).setLastHour(GV.hourToInt(new Date()));
                 
                 if(NetWrk.isOnline()){
                     GV.REMOTE_SYNC.update(temp);
@@ -358,53 +357,53 @@ public class Dao{
      * @throws IllegalAccessException 
      */
     public Object get(String cod,int id, Object type) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Log.setLog(className,Log.getReg());
-        if(type instanceof Lente){
-            Inventario inv = (Inventario)get(GV.inventarioName(), 0, new Inventario());
+        
+        if(type instanceof Item){
+            Inventario inv = (Inventario)get(StVars.getInventarioName(), 0, new Inventario());
             if(inv != null){
-                GV.setInventarioSeleccionado(inv.getId());
+                StVars.setInventaryChooser(inv.getId());
             }
-            Object lente =  LocalInventario.getLente(cod);
-            GV.setInventarioSeleccionado(0);
-            return lente;
+            Object item =  LocalInventario.getItem(cod);
+            StVars.setInventaryChooser(0);
+            return item;
         }
         return GV.LOCAL_SYNC.getElement(cod,id,type);
     }
     
-    public Lente getLente(String idLente, String inventarioName){
+    public Item getItem(String idItem, String inventarioName){
         Inventario inv = new Inventario();
         try {
             inv = (Inventario)get(inventarioName, 0, new Inventario());
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Dao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        GV.setInventarioSeleccionado(inv.getId());
-        Lente lente = LocalInventario.getLente(idLente);
-        GV.setInventarioSeleccionado(0);
-        return lente;
+        StVars.setInventaryChooser(inv.getId());
+        Item item = LocalInventario.getItem(idItem);
+        StVars.setInventaryChooser(0);
+        return item;
     }
 
         public static void sincronize(Object type) {
-        Log.setLog(className,Log.getReg());
+        
         if(type instanceof Venta){
-            type = new EtiquetVenta();
+            type = new VentaDTO();
         }
-        boolean esLente = (type instanceof Lente);
-            //System.out.println(esLente);
-        if(GV.isCurrentDate(GV.LAST_UPDATE)){//validar plan de licencia
+        boolean esItem = (type instanceof Item);
+            //System.out.println(esItem);
+        if(GV.isCurrentDate(StVars.getLastUpdate())){//validar plan de licencia
             return;//solo hace una actualizacion por día.
         }
         try {
             if(NetWrk.isOnline()){
                 if(type instanceof Venta){
-                    type = new EtiquetVenta();
+                    type = new VentaDTO();
                 }
                 ArrayList<Object> remoteObjectList= GV.REMOTE_SYNC.listar("-2",type);
                 ArrayList<Object> localObjectList= GV.LOCAL_SYNC.listar("-2",type);
                 /*LISTA1 SE DEBE CARGAR CON UN RETRASO DE DOS MESES PARA RESCATAR ULTIMOS REGISTROS SUBIDOS*/
-                ArrayList<Object> lista1= GV.REMOTE_SYNC.listar(GV.dateSumaResta(GV.LAST_UPDATE, -2, "MONTHS"),type);
+                ArrayList<Object> lista1= GV.REMOTE_SYNC.listar(GV.dateSumaResta(StVars.getLastUpdate(), -2, "MONTHS"),type);
                 int size1 = lista1.size();
-                ArrayList<Object> lista2= GV.LOCAL_SYNC.listar(GV.LAST_UPDATE,type);
+                ArrayList<Object> lista2= GV.LOCAL_SYNC.listar(StVars.getLastUpdate(),type);
                 
                 int size2 = lista2.size();
                 if(size1 > 0){
@@ -413,15 +412,15 @@ public class Dao{
                         //System.out.println("lista1");
                         if(object instanceof SyncIntId){
                             //System.out.println("INT");
-                            local = GV.buscarPorIdEnLista(""+((SyncIntId)object).getId(), localObjectList, type);
+                            local = GV.searchInList(""+((SyncIntId)object).getId(), localObjectList, type);
                         }else if(object instanceof SyncStringId){
                             //System.out.println("STRING");
-                            local = GV.buscarPorIdEnLista(((SyncStringId)object).getCod(), localObjectList, type);
+                            local = GV.searchInList(((SyncStringId)object).getCod(), localObjectList, type);
                         }else{
                             //System.out.println("XXX");
                             return;
                         }
-                        GV.porcentajeSubCalcular(size1+size2);
+                        StVars.calcularSubPorcentaje(size1+size2);
                         if(local == null){
                             /*CREAR SQL PARA INSERTAR TODOS LOS REGISTROS EN UNA SOLA CONSULTA*/
                             //System.out.println("INSERT");
@@ -431,7 +430,7 @@ public class Dao{
                             if(object instanceof User){
                                 if(((User)object).getUsername().equals("admin")){
                                     if(GV.getStr(((User)object).getEmail()).isEmpty()){
-                                        Object remoto = GV.buscarPorIdEnLista(""+((SyncIntId)object).getId(), remoteObjectList, type);
+                                        Object remoto = GV.searchInList(""+((SyncIntId)object).getId(), remoteObjectList, type);
                                         /*SE OBTIENE EMAIL EXISTENTE SI ES QUE SE ENCUENTRA REGISTRADO*/
                                         if(remoto != null){
                                             ((User)object).setEmail(((User)remoto).getEmail());
@@ -439,7 +438,7 @@ public class Dao{
                                                 ((User)object).setPass(((User)remoto).getPass());
                                             }
                                             ((User)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-                                            ((User)object).setLastHour(Cmp.hourToInt(new Date()));
+                                            ((User)object).setLastHour(GV.hourToInt(new Date()));
                                         }
                                     }
                                 }
@@ -447,7 +446,7 @@ public class Dao{
                             /*VALIDAR SI YA ESTÁ INSERTADO PARA UPDATEAR*/
                             if(object instanceof SyncClass){
                                 /*VALIDAR SI LA FECHA DEL OBJETO LOCAL ES NUEVA O IGUAL*/
-                                if(Cmp.localIsNewOrEqual(((SyncClass)object).getLastUpdate(), ((SyncClass)local).getLastUpdate())){
+                                if(GV.localIsNewOrEqual(((SyncClass)object).getLastUpdate(), ((SyncClass)local).getLastUpdate())){
                                     /*VALIDAR SI LA FECHA ES LA MISMA*/
                                     if(GV.dateToString(((SyncClass)object).getLastUpdate(), "ddmmyyyy").equals(GV.dateToString(((SyncClass)local).getLastUpdate(), "ddmmyyyy"))){
                                         /*VALIDAR SI LA HORA ES MAS RECIENTE*/
@@ -468,7 +467,7 @@ public class Dao{
                     String sql2 = "";
                     for (Object object : lista2) {
                         //System.out.println("lista2");
-                        GV.porcentajeSubCalcular(size1+size2);
+                        StVars.calcularSubPorcentaje(size1+size2);
                         if(!NetWrk.isOnline()){
                             GV.stopSincronizacion();
                         }
@@ -478,10 +477,12 @@ public class Dao{
                         Object remote;
                         if(object instanceof SyncIntId){
                             //System.out.println("INT");
-                            remote = GV.buscarPorIdEnLista(""+((SyncIntId)object).getId(), remoteObjectList, type);
+                            remote = GV.searchInList(""+((SyncIntId)object).getId(), 
+                                    remoteObjectList, type);
                         }else if(object instanceof SyncStringId){
                             //System.out.println("STRING");
-                            remote = GV.buscarPorIdEnLista(((SyncStringId)object).getCod(), remoteObjectList, type);
+                            remote = GV.searchInList(((SyncStringId)object).getCod(), 
+                                    remoteObjectList, type);
                         }else{
                             //System.out.println("XXX");
                             return;
@@ -494,11 +495,18 @@ public class Dao{
                             /*VALIDAR SI YA ESTÁ INSERTADO PARA UPDATEAR*/
                             if(object instanceof SyncClass){
                                 /*VALIDAR SI LA FECHA DEL OBJETO LOCAL ES NUEVA O IGUAL*/
-                                if(Cmp.localIsNewOrEqual(((SyncClass)object).getLastUpdate(), ((SyncClass)remote).getLastUpdate())){
+                                if(GV.localIsNewOrEqual(((SyncClass)object).getLastUpdate(), 
+                                        ((SyncClass)remote).getLastUpdate())){
                                     /*VALIDAR SI LA FECHA ES LA MISMA*/
-                                    if(GV.dateToString(((SyncClass)object).getLastUpdate(), "ddmmyyyy").equals(GV.dateToString(((SyncClass)remote).getLastUpdate(), "ddmmyyyy"))){
+                                    if(GV.dateToString(((SyncClass)object).getLastUpdate(), 
+                                            "ddmmyyyy").equals(GV.dateToString(
+                                                    ((SyncClass)remote).getLastUpdate(), 
+                                                    "ddmmyyyy")))
+                                    {
                                         /*VALIDAR SI LA HORA ES MAS RECIENTE*/
-                                        if(((SyncClass)object).getLastHour() > ((SyncClass)remote).getLastHour()){
+                                        if(((SyncClass)object).getLastHour() > 
+                                                ((SyncClass)remote).getLastHour())
+                                        {
                                             GV.REMOTE_SYNC.updateFromDao(object);
                                             //System.out.println("UPD1");
                                         }
@@ -515,17 +523,17 @@ public class Dao{
                         GV.REMOTE_SYNC.insertFromDao(sql2);
                     }
                 }
-                if(esLente){
+                if(esItem){
                     /**
                      * actualizar stock
                      */
                     //se obtiene una lista recien descargada procesada con los stocks actualizados
-                    lista2 = LocalInventario.listarLentesForSync();
+                    lista2 = LocalInventario.listarItemsForSync();
                     int tam1 = lista2.size();
                     for (Object object : lista2) {
-                        GV.porcentajeSubCalcular(tam1);
-                        //System.out.println("lentes");
-                        sync.Sync.addRemoteSync(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
+                        StVars.calcularSubPorcentaje(tam1);
+                        //System.out.println("items");
+                        Sync.addRemoteSync(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
                         GV.LOCAL_SYNC.updateFromDao(object);
                     }
                     LocalInventario.deleteAllRegistry("-2");
@@ -537,10 +545,11 @@ public class Dao{
     }
     
     public ArrayList<Object> listar(String param, Object type){
-        if(type instanceof Lente){
+        if(type instanceof Item){
             try {
-                return LocalInventario.listarLentes(param);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
+                return LocalInventario.listarItems(param);
+            } catch (ClassNotFoundException | InstantiationException | 
+                    IllegalAccessException | SQLException ex) {
                 return new ArrayList<>();
             }
         }
@@ -554,12 +563,16 @@ public class Dao{
      * @param estado 0: todos, 1: no leidos, 2 leidos
      * @return 
      */
-    public ArrayList<InternMail> mensajes(int remitente, int destinatario, int estado) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException{
+    public ArrayList<InternMail> mensajes(int remitente, int destinatario, int estado) 
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException, 
+            SQLException
+    {
         return GV.LOCAL_SYNC.mensajes(remitente, destinatario, estado);
     }
 
     /**
-     * Retorna el id actual de las entidades Armazon, Despacho, Venta, HistorialPago y RegistroBaja
+     * Retorna el id actual de las entidades Armazon, Despacho, Venta, HistorialPago y 
+     * RegistroBaja
      * @param type tipo de clase a consultar
      * @return 
      */
@@ -567,7 +580,9 @@ public class Dao{
         if(type instanceof SyncCodClass){
             return GV.LOCAL_SYNC.getMaxId(type)+"-"+GV.LOCAL_SYNC.getIdEquipo();
         }else{
-            Notification.showMsg("Instancia de datos errónea", "El tipo de datos ingresado no es válido para obtener el identificador.", 3);
+            Notification.showMsg("Instancia de datos errónea", 
+                    "El tipo de datos ingresado no es válido para obtener el identificador.", 
+                    3);
             return null;
         }
         
@@ -578,27 +593,23 @@ public class Dao{
         setLastUpdates(venta.getCliente());
         setLastUpdates(venta);
         
-        int maxIdArmazon = GV.LOCAL_SYNC.getMaxId(new Armazon());
-        venta.getLejos().setCod(maxIdArmazon + "-" + GV.getIdEquipo());
-        venta.getCerca().setCod((maxIdArmazon + 1) + "-" + GV.getIdEquipo());
+        int maxIdDetalle = GV.LOCAL_SYNC.getMaxId(new Detalle());
+        for (Detalle det : venta.getDetalles()) {
+            det.setCod(maxIdDetalle+ "-" + StVars.getIdEquipo());
+            if(LocalInventario.addObject(det)){
+                String idItem = det.getIdItem();
+                if(!idItem.isEmpty()){
+                    decreaseStock(idItem, det.getCantidad());
+                }
+            }
+            maxIdDetalle++;
+        }
         
         if(venta.getCliente() != null){
             if(!GV.getStr(venta.getCliente().getCod()).isEmpty()){
                 GV.LOCAL_SYNC.add(venta.getCliente());
             }  
         }
-        if(LocalInventario.addObject(venta.getCerca())){
-            String idLente = venta.getCerca().getMarca();
-            if(!idLente.isEmpty()){
-                decreaseStock(idLente, 1);
-            }
-        }
-        if(LocalInventario.addObject(venta.getLejos())){
-            String idLente = venta.getLejos().getMarca();
-            if(!idLente.isEmpty()){
-                decreaseStock(idLente, 1);
-            }
-        }  
         LocalInventario.addObject(venta);
         if(hp != null){
             if(hp.getAbono() > 0){
@@ -613,13 +624,13 @@ public class Dao{
         Date lastDate = new Date();
         if(object != null){
             (object).setLastUpdate(lastDate);//actualizamos la ultima fecha de modificacion
-            (object).setLastHour(Cmp.hourToInt(lastDate));
+            (object).setLastHour(GV.hourToInt(lastDate));
         }
     }
 
     public boolean usernameYaExiste(String username) {
-        if(GV.licenciaTipoPlan() == GlobalValuesVariables.licenciaTipoFree() ||
-           GV.licenciaTipoPlan() == GlobalValuesVariables.licenciaTipoLocal()){
+        if(StVars.getLicenciaTipoPlan() == StVars.licenciaTipoFree() ||
+           StVars.getLicenciaTipoPlan() == StVars.licenciaTipoLocal()){
             return (GV.LOCAL_SYNC.getElement(username, 0, new User())!=null);
         }else{
             return (GV.REMOTE_SYNC.getElement(username, 0, new User())!=null);
@@ -642,7 +653,7 @@ public class Dao{
     private void addLocal(Object object) {
         if(object instanceof SyncIntId){
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(Cmp.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
             if(object instanceof SyncIntIdValidaName){
                 addSyncIntIdValidaNameLocal(object);
             }else{
@@ -651,33 +662,43 @@ public class Dao{
         }
         if(object instanceof SyncStringId){
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(Cmp.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
             addSyncStringIdLocal(object);
         }
-        Notification.showMsg("No se puede insertar registro", "La entidad enviada no tiene un formato válido\n"
+        Notification.showMsg("No se puede insertar registro", 
+                "La entidad enviada no tiene un formato válido\n"
                 + "\n"
                 + "Detalle: " + object.getClass().getName(), 2);
     }
 
     private void addRemote(Object object) {
-        if(object instanceof SyncCodClass){
-            if(!(object instanceof Venta)){
+        if(object instanceof SyncCodClass)
+        {
+            if(!(object instanceof Venta))
+            {
                 ((SyncCodClass) object).setCod(getCurrentCod(object));
             }
         }
-        if(object instanceof SyncIntId){
-            if(!NetWrk.isOnline()){
-                Notification.showMsg("No se puede crear nuevo registro", "Para poder ingresar un nuevo registro debes tener acceso a internet.", 2);
+        if(object instanceof SyncIntId)
+        {
+            if(!NetWrk.isOnline())
+            {
+                Notification.showMsg("No se puede crear nuevo registro", 
+                        "Para poder ingresar un nuevo registro debes tener acceso "
+                                + "a internet.", 2);
                 return;
             }
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(Cmp.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
             ((SyncIntId)object).setId(GV.LOCAL_SYNC.getMaxId(object));
-            if(((SyncIntId)object).getId() < 0){
-                Notification.showMsg("Error de conexión", "No se pudo obtener conexión desde la base de datos remota.", 2);
+            if(((SyncIntId)object).getId() < 0)
+            {
+                Notification.showMsg("Error de conexión", 
+                        "No se pudo obtener conexión desde la base de datos remota.", 2);
                 return;
             }
-            if(object instanceof SyncIntIdValidaName){
+            if(object instanceof SyncIntIdValidaName)
+            {
                 addSyncIntIdValidaNameRemote(object);
                 return;
             }else{
@@ -687,17 +708,19 @@ public class Dao{
         }
         if(object instanceof SyncStringId){
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(Cmp.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));//solo se actualizan lastuodates para crear objetos
             addSyncStringIdRemote(object);
             return;
         }
-        Notification.showMsg("No se puede insertar registro", "La entidad enviada no tiene un formato válido\n"
+        Notification.showMsg("No se puede insertar registro", 
+                "La entidad enviada no tiene un formato válido\n"
                 + "\n"
                 + "Detalle: " + object.getClass().getName(), 2);
     }
 
     private void addSyncIntIdValidaNameLocal(Object object) {
-        SyncIntIdValidaName entity = (SyncIntIdValidaName) GV.LOCAL_SYNC.getElement(((SyncIntIdValidaName)object).getNombre(), 0, object);
+        SyncIntIdValidaName entity = (SyncIntIdValidaName) GV.LOCAL_SYNC.getElement
+        (((SyncIntIdValidaName)object).getNombre(), 0, object);
         if(entity == null){
             if(GV.LOCAL_SYNC.add(object)){
                 msgEntityAdded();
@@ -714,7 +737,8 @@ public class Dao{
     
     private void addSyncIntIdRemote(Object object) {
         if(object instanceof User){
-            User entity = (User) GV.REMOTE_SYNC.getElement(((User)object).getUsername(), 0, object);
+            User entity = (User) GV.REMOTE_SYNC.getElement(((User)object)
+                    .getUsername(), 0, object);
             if(entity == null){
                 if(GV.REMOTE_SYNC.add(object)){
                     GV.LOCAL_SYNC.add(object);
@@ -725,10 +749,13 @@ public class Dao{
                 return;
             }else{
                 if(entity.getEstado() == 0){
-                    Notification.showMsg("No se puede agregar el registro", "Ya existe un usuario con el username ingresado pero se encuentra anulado.", 2);
+                    Notification.showMsg("No se puede agregar el registro", 
+                            "Ya existe un usuario con el username ingresado "
+                                    + "pero se encuentra anulado.", 2);
                     return;
                 }else{
-                    Notification.showMsg("No se puede agregar el registro", "Ya existe un usuario con el username ingresado.", 2);
+                    Notification.showMsg("No se puede agregar el registro", 
+                            "Ya existe un usuario con el username ingresado.", 2);
                     return;
                 }
             }
@@ -754,7 +781,8 @@ public class Dao{
     }
     
     private void msgEntityAdded(){
-        Notification.showMsg("Proceso finalizado", "El registro a sido guardado exitosamente.", 1);
+        Notification.showMsg("Proceso finalizado", 
+                "El registro a sido guardado exitosamente.", 1);
     }
     
     private void msgEntityNotAdded(){
@@ -763,28 +791,33 @@ public class Dao{
     }
     
     private void msgEntityUpdated() {
-        Notification.showMsg("Proceso finalizado", "El registro a sido modificado exitosamente.", 1);
+        Notification.showMsg("Proceso finalizado", 
+                "El registro a sido modificado exitosamente.", 1);
     }
 
     private void msgEntityNotUpdated() {
-        Notification.showMsg("Proceso finalizado", "El registro no se ha podido modificar\n"
+        Notification.showMsg("Proceso finalizado", 
+                "El registro no se ha podido modificar\n"
                 + "ha ocurrido un error inesperado durante la operación.", 2);
     }
 
     private void addSyncStringIdLocal(Object object) {
-        SyncStringId entity = (SyncStringId)GV.LOCAL_SYNC.getElement(((SyncStringId)object).getCod(), 0, object);
+        SyncStringId entity = (SyncStringId)GV.LOCAL_SYNC.getElement
+        (((SyncStringId)object).getCod(), 0, object);
         if(entity == null){
             GV.LOCAL_SYNC.add(object);
         }else{
             if(entity.getEstado() == 0){
                 if(Notification.getConfirmation("El registro ya existe", 
                         "Los datos ingresados corresponden a un registro anulado.\n"
-                        + "Los datos se actualizarán y el registro se restaurará si confirmas los cambios.\n"
+                        + "Los datos se actualizarán y el registro se restaurará "
+                                + "si confirmas los cambios.\n"
                         + "¿Deseas actualizar los datos?", 2)){
                     GV.LOCAL_SYNC.update(object);
                 }
             }else{
-                if(Notification.getConfirmation("El registro ya existe", "No se ha podido guardar el registro a menos que \n"
+                if(Notification.getConfirmation("El registro ya existe", 
+                        "No se ha podido guardar el registro a menos que \n"
                         + "confirmes los cambios.\n"
                         + "¿Deseas actualizar los datos?", 2)){
                     GV.LOCAL_SYNC.update(object);
@@ -794,7 +827,8 @@ public class Dao{
     }
     
     private void addSyncStringIdRemote(Object object) {
-        SyncStringId entity = (SyncStringId)GV.LOCAL_SYNC.getElement(((SyncStringId)object).getCod(), 0, object);
+        SyncStringId entity = (SyncStringId)GV.LOCAL_SYNC.getElement
+        (((SyncStringId)object).getCod(), 0, object);
         if(entity == null){
             GV.LOCAL_SYNC.add(object);
             msgEntityAdded();
@@ -802,13 +836,15 @@ public class Dao{
             if(entity.getEstado() == 0){
                 if(Notification.getConfirmation("El registro ya existe", 
                         "Los datos ingresados corresponden a un registro anulado.\n"
-                        + "Los datos se actualizarán y el registro se restaurará si confirmas los cambios.\n"
+                        + "Los datos se actualizarán y el registro se restaurará "
+                                + "si confirmas los cambios.\n"
                         + "¿Deseas actualizar los datos?", 2)){
                     GV.LOCAL_SYNC.update(object);
                     msgEntityAdded();
                 }
             }else{
-                if(Notification.getConfirmation("El registro ya existe", "No se ha podido guardar el registro a menos que \n"
+                if(Notification.getConfirmation("El registro ya existe", 
+                        "No se ha podido guardar el registro a menos que \n"
                         + "confirmes los cambios.\n"
                         + "¿Deseas actualizar los datos?", 2)){
                     GV.LOCAL_SYNC.update(object);
@@ -819,7 +855,8 @@ public class Dao{
     }
 
     private void addSyncIntIdValidaNameRemote(Object object) {
-        SyncIntIdValidaName entity = (SyncIntIdValidaName) GV.LOCAL_SYNC.getElement(((SyncIntIdValidaName)object).getNombre(), 0, object);
+        SyncIntIdValidaName entity = (SyncIntIdValidaName) GV.LOCAL_SYNC
+                .getElement(((SyncIntIdValidaName)object).getNombre(), 0, object);
         if(entity == null){
             if(GV.REMOTE_SYNC.add(object)){
                 GV.LOCAL_SYNC.add(object);
@@ -839,7 +876,8 @@ public class Dao{
         if(object instanceof SyncIntIdValidaName){
             SyncIntIdValidaName obj = (SyncIntIdValidaName)object;
             if(obj.getStr(obj.getNombre()).length() <= 3){
-                Notification.showMsg("Nombre incorrecto", "El registro debe tener un nombre válido.\n"
+                Notification.showMsg("Nombre incorrecto", "El registro debe tener "
+                        + "un nombre válido.\n"
                         + "Información a considerar:\n"
                         + "- El campo nombre no debe estar vacío.\n"
                         + "- El nombre debe tener más de tres caracteres.\n"
@@ -847,19 +885,11 @@ public class Dao{
                 return false;
             }
         }
-        if(object instanceof Descuento){
-            Descuento obj = (Descuento)object;
-            if(obj.getMonto() == 0 && obj.getPorcetange() == 0){
-                Notification.showMsg("Descuento inválido", "No ha agregado ningún tipo de descuento.\n"
-                        + "Seleccione el tipo de descuento y aplique un monto válido.", 2);
-                return false;
-            }
-            return true;
-        }
         if(object instanceof Cliente){
             Cliente obj = (Cliente)object;
             if(obj.getStr(obj.getNombre()).length() <= 3){
-                Notification.showMsg("Nombre incorrecto", "El registro debe tener un nombre válido.\n"
+                Notification.showMsg("Nombre incorrecto", "El registro debe tener "
+                        + "un nombre válido.\n"
                         + "Información a considerar:\n"
                         + "- El campo nombre no debe estar vacío.\n"
                         + "- El nombre debe tener más de tres caracteres.\n"
@@ -867,94 +897,36 @@ public class Dao{
                 return false;
             }
             if(obj.getNacimiento() == null){
-                Notification.showMsg("Fecha no ingresada", "El cliente debe tener una fecha de nacimiento válida.", 2);
+                Notification.showMsg("Fecha no ingresada", 
+                        "El cliente debe tener una fecha de nacimiento válida.", 2);
                 return false;
             }
-            if(obj.getTelefono1().isEmpty() && obj.getTelefono2().isEmpty() && obj.getEmail().isEmpty()){
-                Notification.showMsg("Faltan datos de contacto", "El cliente debe tener al menos un registro de contacto.\n"
+            if(obj.getTelefono1().isEmpty() && obj.getTelefono2()
+                    .isEmpty() && obj.getEmail().isEmpty())
+            {
+                Notification.showMsg("Faltan datos de contacto", 
+                        "El cliente debe tener al menos un registro de contacto.\n"
                     + "Ingrese un teléfono o correo electrónico.", 2);
                 return false;
             }
             return true;
         }
-        if(object instanceof Convenio){
-            Convenio obj = (Convenio)object;
-            if(obj.getFechaCobro() == null || obj.getFechaFin() == null | obj.getFechaInicio() == null){
-                Notification.showMsg("Fechas mal ingresadas", "Todos los campos de fecha deben tener un dato válido.", 2);
-                return false;
-            }
-            if(localIsNewOrEqual(obj.getFechaInicio(), obj.getFechaFin())){
-                if(!GV.dateToString(obj.getFechaInicio(), "ddmmyyyy").equals(GV.dateToString(obj.getFechaFin(), "ddmmyyyy"))){
-                    Notification.showMsg("Fechas mal ingresadas", "La fecha de término debe ser mayor o igual a la fecha de inicio.", 2);
-                    return false;
-                }
-            }
-            if(localIsNewOrEqual(obj.getFechaFin(), obj.getFechaCobro())){
-                Notification.showMsg("Fechas mal ingresadas", "La fecha de pago debe ser mayor a la fecha de término.", 2);
-                return false;
-            }
-            if(!GV.fechaActualOFutura(obj.getFechaFin())){
-                Notification.showMsg("Fechas mal ingresadas", "La fecha de inicio debe ser igual o superior a la fecha actual.", 2);
-                return false;
-            }
-            if(GV.fechaActualOPasada(obj.getFechaCobro())){
-                Notification.showMsg("Fechas mal ingresadas", "La fecha de pago debe ser superior a la fecha actual.", 2);
-                return false;
-            }
-            if(obj.getIdInstitucion() == null){
-                Notification.showMsg("Institución no existe", "Debe seleccionar una institución registrada y no modificarla.\n"
-                    + "Si no aparece la deseada, debe crear un nuevo registro en \"Instituciones\".", 2);
-                return false;
-            }
-            if(obj.getIdInstitucion().isEmpty()){
-                Notification.showMsg("Institución no existe", "Debe seleccionar una institución registrada y no modificarla.\n"
-                    + "Si no aparece la deseada, debe crear un nuevo registro en \"Instituciones\".", 2);
+        if(object instanceof Descuento){
+            Descuento obj = (Descuento)object;
+            if(obj.getMonto() == 0 && obj.getPorcetange() == 0){
+                Notification.showMsg("Descuento inválido", "No ha agregado ningún "
+                        + "tipo de descuento.\n"
+                        + "Seleccione el tipo de descuento y aplique un monto válido.", 2);
                 return false;
             }
             return true;
         }
-        if(object instanceof Cristal){
-            Cristal obj = (Cristal)object;
-            if(obj.getPrecio() <= 0){
-                Notification.showMsg("Precio incorrecto", "No se puede registrar un lente con precio " + GV.strToPrice(obj.getPrecio()) + ".", 2);
-                return false;
-            }
-            return true;
-        }
-        if(object instanceof Doctor){
-            Doctor obj = (Doctor)object;
-            if(obj.getStr(obj.getNombre()).length() <= 3){
-                Notification.showMsg("Nombre incorrecto", "El registro debe tener un nombre válido.\n"
-                        + "Información a considerar:\n"
-                        + "- El campo nombre no debe estar vacío.\n"
-                        + "- El nombre debe tener más de tres caracteres.\n"
-                        + "- El nombre no debe contener caracteres especiales.", 2);
-                return false;
-            }
-            if(obj.getTelefono().isEmpty() && obj.getEmail().isEmpty()){
-                Notification.showMsg("Faltan datos de contacto", "El nuevo registro debe tener al menos un registro de contacto.\n"
-                        + "Ingrese un teléfono o correo electrónico.", 2);
-                return false;
-            }
-            return true;
-        }
-        if(object instanceof Institucion){
-            Institucion obj = (Institucion)object;
-            if(obj.getCod().isEmpty()){
-                Notification.showMsg("Identificador no ingresado", "El nuevo registro debe tener un identificador o rut válido.", 2);
-                return false;
-            }
-            if(obj.getStr(obj.getNombre()).length() <= 3){
-                Notification.showMsg("Nombre incorrecto", "El registro debe tener un nombre válido.\n"
-                        + "Información a considerar:\n"
-                        + "- El campo nombre no debe estar vacío.\n"
-                        + "- El nombre debe tener más de tres caracteres.\n"
-                        + "- El nombre no debe contener caracteres especiales.", 2);
-                return false;
-            }
-            if(obj.getTelefono().isEmpty() && obj.getEmail().isEmpty()){
-                Notification.showMsg("Faltan datos de contacto", "El nuevo registro debe tener al menos un registro de contacto.\n"
-                        + "Ingrese un teléfono o correo electrónico.", 2);
+        if(object instanceof Detalle){
+            Detalle obj = (Detalle)object;
+            if(obj.getCantidad() == 0){
+                Notification.showMsg("Item agregado inválido", "No ha agregado una "
+                        + "cantidad válida para este item.\n"
+                        + "Asigne cantidad al producto.", 2);
                 return false;
             }
             return true;
@@ -962,33 +934,49 @@ public class Dao{
         if(object instanceof Inventario){
             return true;
         }
-        if(object instanceof Lente){
-            Lente obj = (Lente)object;
+        if(object instanceof Item){
+            Item obj = (Item)object;
             if(obj.getCod().isEmpty()){
-                Notification.showMsg("Faltan datos", "El lente debe tener un código válido.", 2);
+                Notification.showMsg("Faltan datos", "El item debe tener un código válido.", 
+                        2);
                 return false;
             }
-            if(obj.getColor().isEmpty()){
-                Notification.showMsg("Faltan datos", "El lente debe tener un color válido.", 2);
+            if(obj.getClasificacion() == 0){
+                Notification.showMsg("Faltan datos", 
+                        "El item debe tener una clasificación asignada.", 2);
                 return false;
             }
-            if(obj.getTipo().isEmpty()){
-                Notification.showMsg("Faltan datos", "El lente debe tener un tipo válido.", 2);
+            if(obj.getDescripcion().isEmpty()){
+                Notification.showMsg("Faltan datos", 
+                        "El item no contiene una descripcion del producto.", 2);
+                return false;
+            }
+            if(obj.getInventario() == 0){
+                Notification.showMsg("Faltan datos", 
+                        "El item debe tener un inventario asignado.", 2);
                 return false;
             }
             if(obj.getMarca().isEmpty()){
-                Notification.showMsg("Faltan datos", "El lente debe tener una marca válida.", 2);
+                Notification.showMsg("Faltan datos", 
+                        "Falta agregar un valor en el campo \"marca\".", 2);
                 return false;
             }
-            if(obj.getMaterial().isEmpty()){
-                Notification.showMsg("Faltan datos", "El lente debe tener un material válido.", 2);
+            if(obj.getPrecioAct() < 0 || obj.getPrecioRef() < 0){
+                Notification.showMsg("Error de datos", 
+                        "Uo de los precios ingresados no son válido.", 2);
+                return false;
+            }
+            if(obj.getStock() < 0 || obj.getStockMin() < 0){
+                Notification.showMsg("Error de datos", 
+                        "Uo de los stocks ingresados no son válido.", 2);
                 return false;
             }
             return true;
         }
         if(object instanceof Oficina){
             Oficina obj = (Oficina)object;
-            if(obj.getTelefono1().isEmpty() && obj.getTelefono2().isEmpty() && obj.getEmail().isEmpty()){
+            if(obj.getTelefono1().isEmpty() && 
+                    obj.getTelefono2().isEmpty() && obj.getEmail().isEmpty()){
                 Notification.showMsg("Faltan datos de contacto", "El nuevo registro debe tener al menos un registro de contacto.\n"
                         + "Ingrese un teléfono o correo electrónico.", 2);
                 return false;
@@ -1004,37 +992,45 @@ public class Dao{
         if(object instanceof User){
             User obj = (User)object;
             if(obj.getNombre().length() <= 3){
-                Notification.showMsg("Agregar usuario", "No se pudo agregar usuario, debe ingresar un nombre válido,"
+                Notification.showMsg("Agregar usuario", 
+                        "No se pudo agregar usuario, debe ingresar un nombre válido,"
                     + "\nlos registros deben tener como mínimo 3 carácteres.", 2);
                 return false;
             }
             if(obj.getUsername().length() <= 3){
-                Notification.showMsg("Agregar usuario", "No se pudo agregar usuario, debe ingresar un username válido,"
+                Notification.showMsg("Agregar usuario", 
+                        "No se pudo agregar usuario, debe ingresar un username válido,"
                     + "\nlos registros deben tener como mínimo 3 carácteres.", 2);
                 return false;
             }
             if(!GV.tipoUserSuperAdmin() && obj.getTipo() == 1){
-                Notification.showMsg("Agregar usuario", "No se pudo agregar usuario, debe ingresar un tipo de usuario distinto,"
-                        + "\nno tienes permisos suficientes para crear un usuario de tipo \"Jefatura\".", 2);
+                Notification.showMsg("Agregar usuario", "No se pudo agregar usuario, "
+                        + "debe ingresar un tipo de usuario distinto,"
+                        + "\nno tienes permisos suficientes para crear un usuario de tipo "
+                        + "\"Jefatura\".", 2);
                 return false;
             }
             if(obj.getTipo() == 0){
-                Notification.showMsg("Agregar usuario", "No se pudo agregar usuario, debe ingresar un tipo de usuario válido.", 2);
+                Notification.showMsg("Agregar usuario", "No se pudo agregar usuario, "
+                        + "debe ingresar un tipo de usuario válido.", 2);
                 return false;
             }
             return true;
         }
-        Notification.showMsg("Entidad no validada", "No se ha cumplido con las validaciones en esta entidad.", 3);
+        Notification.showMsg("Entidad no validada", "No se ha cumplido con las validaciones "
+                + "en esta entidad.", 3);
         return false;
     }
 
     private void updateRemote(Object object) {
         if(object instanceof SyncClass){
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(Cmp.hourToInt(new Date()));
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));
             if(object instanceof SyncIntId){
                 if(!NetWrk.isOnline()){
-                    Notification.showMsg("No se puede modificar el registro", "Para poder modificar estos datos debes tener acceso a internet.", 2);
+                    Notification.showMsg("No se puede modificar el registro",
+                            "Para poder modificar estos datos debes tener acceso "
+                                    + "a internet.", 2);
                     return;
                 }
                 if(object instanceof SyncIntIdValidaName){
@@ -1050,13 +1046,15 @@ public class Dao{
                 return;
             }
         }
-        Notification.showMsg("No se puede modificar registro", "La entidad enviada no tiene un formato válido\n"
+        Notification.showMsg("No se puede modificar registro", 
+                "La entidad enviada no tiene un formato válido\n"
                 + "\n"
                 + "Detalle: " + object.getClass().getName(), 2);
     }
 
     private void updateSyncIntIdValidaNameRemote(Object object) {
-        SyncIntIdValidaName entity = (SyncIntIdValidaName)GV.REMOTE_SYNC.getElement(((SyncIntIdValidaName)object).getNombre(), 0, object);
+        SyncIntIdValidaName entity = (SyncIntIdValidaName)GV.REMOTE_SYNC
+                .getElement(((SyncIntIdValidaName)object).getNombre(), 0, object);
         if(entity == null){
             if(GV.REMOTE_SYNC.update(object)){
                 GV.LOCAL_SYNC.update(object);
@@ -1081,7 +1079,9 @@ public class Dao{
 
     private void updateSyncIntIdRemote(Object object) {
         if(object instanceof User){
-            User entity = (User)GV.REMOTE_SYNC.getElement(((User)object).getUsername(), 0, new User());
+            User entity = (User)GV.REMOTE_SYNC.getElement(
+                    ((User)object).getUsername(), 0, new User()
+            );
             if(entity == null){
                 if(GV.REMOTE_SYNC.update(object)){
                     GV.LOCAL_SYNC.update(object);
@@ -1101,10 +1101,13 @@ public class Dao{
                     return;
                 }else{
                     if(entity.getEstado() == 0){
-                        Notification.showMsg("No se puede modificar el registro", "Ya existe un usuario con el username ingresado pero se encuentra anulado.", 2);
+                        Notification.showMsg("No se puede modificar el registro", 
+                                "Ya existe un usuario con el username ingresado "
+                                        + "pero se encuentra anulado.", 2);
                         return;
                     }else{
-                        Notification.showMsg("No se puede modificar el registro", "Ya existe un usuario con el username ingresado.", 2);
+                        Notification.showMsg("No se puede modificar el registro", 
+                                "Ya existe un usuario con el username ingresado.", 2);
                         return;
                     }
                 }
@@ -1123,7 +1126,7 @@ public class Dao{
     private void restoreOrDeleteRemote(Object object) {
         if(object instanceof SyncClass){
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
-            ((SyncClass)object).setLastHour(Cmp.hourToInt(new Date()));
+            ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));
             int estado = ((SyncClass)object).getEstado();
             if(object instanceof Venta){
                 ((SyncClass)object).setEstado(estado*-1);
@@ -1137,9 +1140,13 @@ public class Dao{
             if(object instanceof SyncIntId){
                 if(!NetWrk.isOnline()){
                     if(((SyncClass)object).getEstado() < 1){
-                        Notification.showMsg("No se puede eliminar el registro", "Para poder eliminar este elemento debes tener acceso a internet.", 2);
+                        Notification.showMsg("No se puede eliminar el registro", 
+                                "Para poder eliminar este elemento debes tener acceso "
+                                        + "a internet.", 2);
                     }else{
-                        Notification.showMsg("No se puede restaurar el registro", "Para poder restaurar este elemento debes tener acceso a internet.", 2);
+                        Notification.showMsg("No se puede restaurar el registro", 
+                                "Para poder restaurar este elemento debes tener acceso "
+                                        + "a internet.", 2);
                     }
                     return;
                 }
@@ -1151,7 +1158,8 @@ public class Dao{
                 return;
             }
         }
-        Notification.showMsg("No se puede eliminar registro", "La entidad enviada no tiene un formato válido\n"
+        Notification.showMsg("No se puede eliminar registro", 
+                "La entidad enviada no tiene un formato válido\n"
                 + "\n"
                 + "Detalle: " + object.getClass().getName(), 2);
     }
@@ -1177,17 +1185,21 @@ public class Dao{
 
     private void msgEntityRestoreOrDeleted(int estado) {
         if(estado == 0){
-            Notification.showMsg("Registro eliminado", "La operación se ejecutó exitosamente", 1);
+            Notification.showMsg("Registro eliminado", 
+                    "La operación se ejecutó exitosamente", 1);
         }else{
-            Notification.showMsg("Registro restaurado", "La operación se ejecutó exitosamente", 1);
+            Notification.showMsg("Registro restaurado", 
+                    "La operación se ejecutó exitosamente", 1);
         }
     }
 
     private void msgEntityNotRestoreOrDeleted(int estado) {
         if(estado == 0){
-            Notification.showMsg("Registro no fue eliminado", "La operación no se pudo ejecutar correctamente", 2);
+            Notification.showMsg("Registro no fue eliminado", 
+                    "La operación no se pudo ejecutar correctamente", 2);
         }else{
-            Notification.showMsg("Registro no fue restaurado", "La operación no se pudo ejecutar correctamente", 2);
+            Notification.showMsg("Registro no fue restaurado", 
+                    "La operación no se pudo ejecutar correctamente", 2);
         }
     }
 
@@ -1195,202 +1207,137 @@ public class Dao{
         if(object instanceof Cliente){
             return GV.tipoUserIventario();
         }
-        if(object instanceof Convenio)
-            return GV.tipoUserSuperAdmin();
-        if(object instanceof Cristal)
-            return GV.tipoUserIventario();
         if(object instanceof Descuento)
-            return GV.tipoUserSuperAdmin();
-        if(object instanceof Doctor)
+            return GV.tipoUserAdmin();
+        if(object instanceof Despacho)
             return true;
-        if(object instanceof Institucion)
+        if(object instanceof Detalle)
             return true;
         if(object instanceof Inventario)
             return GV.tipoUserIventario();
-        if(object instanceof Lente)
+        if(object instanceof Item)
             return GV.tipoUserIventario();
         if(object instanceof Oficina)
+            return GV.tipoUserSuperAdmin();
+        if(object instanceof Proveedor)
             return GV.tipoUserSuperAdmin();
         if(object instanceof TipoPago)
             return GV.tipoUserSuperAdmin();
         if(object instanceof User)
             return GV.tipoUserAdmin();
-        Notification.showMsg("No valid entitie", "isnt possible to validate the user type", 3);
+        if(object instanceof Venta)
+            return true;
+        Notification.showMsg("No valid entitie", 
+                "isnt possible to validate the user type", 3);
         return false;
     }
     
     public static String getSqlRemoteInsert(String sql, Object object){
         if(object instanceof SyncClass){
             if(sql.startsWith("INSERT")){
-                //System.out.println("getSqlRemoteInsert 1");
                 sql = sql + "," + getValuesSqlStatement(object);
             }else{
-                //System.out.println("getSqlRemoteInsert 2");
                 sql = getInsertSqlStatement(object) + getValuesSqlStatement(object);
             }
         }
-        //System.out.println("SQL: "+sql);
         return sql;
     }
     
     private static String getValuesSqlStatement(Object object){
-        if(object instanceof Armazon){
-            //System.out.println("values arm");
-            return ((Armazon)object).getSqlInsertStatement();
-        }
         if(object instanceof Cliente){
-            //System.out.println("values cli:"+((Cliente)object).getSqlInsertStatement());
             return ((Cliente)object).getSqlInsertStatement();
         }
-        if(object instanceof Convenio){
-            //System.out.println("values cnv");
-            return ((Convenio)object).getSqlInsertStatement();
-        }
-        if(object instanceof Cristal){
-            //System.out.println("values cri");
-            return ((Cristal)object).getSqlInsertStatement();
-        }
-        if(object instanceof CuotasConvenio){
-            //System.out.println("values cc");
-            return ((CuotasConvenio)object).getSqlInsertStatement();
-        }
         if(object instanceof Descuento){
-            //System.out.println("values des");
             return ((Descuento)object).getSqlInsertStatement();
         }
         if(object instanceof Despacho){
-            //System.out.println("values dsp");
             return ((Despacho)object).getSqlInsertStatement();
         }
-        if(object instanceof Doctor){
-            //System.out.println("values doc");
-            return ((Doctor)object).getSqlInsertStatement();
+        if(object instanceof Detalle){
+            return ((Detalle)object).getSqlInsertStatement();
         }
         if(object instanceof Equipo){
-            //System.out.println("values eq");
             return ((Equipo)object).getSqlInsertStatement();
         }
-        if(object instanceof EtiquetVenta){
-            //System.out.println("values etiq venta");
-            return ((EtiquetVenta)object).getSqlInsertStatement();
-        }
         if(object instanceof HistorialPago){
-            //System.out.println("values hp");
             return ((HistorialPago)object).getSqlInsertStatement();
         }
-        if(object instanceof Institucion){
-            //System.out.println("values inst");
-            return ((Institucion)object).getSqlInsertStatement();
-        }
-        if(object instanceof Inventario){
-            //System.out.println("values inv");
-            return ((Inventario)object).getSqlInsertStatement();
-        }
-        if(object instanceof Lente){
-            //System.out.println("values len");
-            return ((Lente)object).getSqlInsertStatement();
-        }
         if(object instanceof InternMail){
-            //System.out.println("values mail");
             return ((InternMail)object).getSqlInsertStatement();
         }
+        if(object instanceof Inventario){
+            return ((Inventario)object).getSqlInsertStatement();
+        }
+        if(object instanceof Item){
+            return ((Item)object).getSqlInsertStatement();
+        }
         if(object instanceof Oficina){
-            //System.out.println("values ofi");
             return ((Oficina)object).getSqlInsertStatement();
         }
+        if(object instanceof Proveedor){
+            return ((Proveedor)object).getSqlInsertStatement();
+        }
         if(object instanceof RegistroBaja){
-            //System.out.println("values rb");
             return ((RegistroBaja)object).getSqlInsertStatement();
         }
         if(object instanceof TipoPago){
-            //System.out.println("values tp");
             return ((TipoPago)object).getSqlInsertStatement();
         }
         if(object instanceof User){
-            //System.out.println("values us");
             return ((User)object).getSqlInsertStatement();
         }
-        //System.out.println("values nadad");
+        if(object instanceof VentaDTO){
+            return ((VentaDTO)object).getSqlInsertStatement();
+        }
         return "";
     }
     
     private static String getInsertSqlStatement(Object object){
-        if(object instanceof Armazon){
-            //System.out.println("Armazon");
-            return "INSERT INTO armazon VALUES ";
-        }
         if(object instanceof Cliente){
-            //System.out.println("cliente");
             return "INSERT INTO cliente VALUES ";
         }
-        if(object instanceof Convenio){
-            //System.out.println("convenio");
-            return "INSERT INTO convenio VALUES ";
-        }
-        if(object instanceof Cristal){
-            //System.out.println("cristal");
-            return "INSERT INTO cristal VALUES ";
-        }
-        if(object instanceof CuotasConvenio){
-            //System.out.println("cuotas");
-            return "INSERT INTO cuotas_convenio VALUES ";
-        }
         if(object instanceof Descuento){
-            //System.out.println("descuento");
             return "INSERT INTO descuento VALUES ";
         }
         if(object instanceof Despacho){
-            //System.out.println("despacho");
             return "INSERT INTO despacho VALUES ";
         }
-        if(object instanceof Doctor){
-            //System.out.println("doctor");
-            return "INSERT INTO doctor VALUES ";
+        if(object instanceof Detalle){
+            return "INSERT INTO detalle VALUES ";
         }
         if(object instanceof Equipo){
-            //System.out.println("equipo");
             return "INSERT INTO equipo VALUES ";
         }
-        if(object instanceof EtiquetVenta){
-            return "INSERT INTO venta VALUES ";
-        }
         if(object instanceof HistorialPago){
-            //System.out.println("historialoaogo");
             return "INSERT INTO historial_pago VALUES ";
         }
-        if(object instanceof Institucion){
-            //System.out.println("inst");
-            return "INSERT INTO institucion VALUES ";
-        }
-        if(object instanceof Inventario){
-            //System.out.println("inv");
-            return "INSERT INTO inventario VALUES ";
-        }
-        if(object instanceof Lente){
-            //System.out.println("len");
-            return "INSERT INTO lente VALUES ";
-        }
         if(object instanceof InternMail){
-            //System.out.println("message");
             return "INSERT INTO message VALUES ";
         }
+        if(object instanceof Inventario){
+            return "INSERT INTO inventario VALUES ";
+        }
+        if(object instanceof Item){
+            return "INSERT INTO item VALUES ";
+        }
         if(object instanceof Oficina){
-            //System.out.println("ofi");
             return "INSERT INTO oficina VALUES ";
         }
+        if(object instanceof Proveedor){
+            return "INSERT INTO proveedor VALUES ";
+        }
         if(object instanceof RegistroBaja){
-            //System.out.println("rb");
             return "INSERT INTO registro_bajas VALUES ";
         }
         if(object instanceof TipoPago){
-            //System.out.println("tp");
             return "INSERT INTO tipo_pago VALUES ";
         }
         if(object instanceof User){
-            //System.out.println("us");
             return "INSERT INTO usuario VALUES ";
         }
-        //System.out.println("sql nada");
+        if(object instanceof VentaDTO){
+            return "INSERT INTO venta VALUES ";
+        }
         return "";
     }
 }

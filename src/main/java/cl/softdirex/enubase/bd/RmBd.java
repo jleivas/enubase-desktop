@@ -6,7 +6,6 @@
 package cl.softdirex.enubase.bd;
 
 import cl.softdirex.enubase.utils.BDUtils;
-import cl.softdirex.enubase.utils.StVars;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -5,33 +5,15 @@
  */
 package cl.softdirex.enubase.sync.entities;
 
-import bd.LcBd;
-import entities.Cliente;
-import entities.Convenio;
-import entities.Cristal;
-import entities.CuotasConvenio;
-import entities.Descuento;
-import entities.Doctor;
-import entities.Equipo;
-import entities.Institucion;
-import entities.InternMail;
-import entities.Inventario;
-import entities.Lente;
-import entities.Oficina;
-import entities.RegistroBaja;
-import entities.TipoPago;
-import entities.User;
-import entities.context.InternStockDetail;
-import entities.ficha.Armazon;
-import entities.ficha.Despacho;
-import entities.ficha.EtiquetFicha;
-import entities.ficha.Ficha;
-import entities.ficha.HistorialPago;
-import fn.GV;
-import static fn.GV.dateToString;
-import static fn.GV.strToNumber;
-import fn.Log;
-import fn.OptionPane;
+import cl.softdirex.enubase.bd.LcBd;
+import cl.softdirex.enubase.entities.Detalle;
+import cl.softdirex.enubase.entities.HistorialPago;
+import cl.softdirex.enubase.entities.Item;
+import cl.softdirex.enubase.entities.Venta;
+import cl.softdirex.enubase.entities.utils.InternStockDetail;
+import cl.softdirex.enubase.utils.GV;
+import cl.softdirex.enubase.utils.StVars;
+import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,14 +31,15 @@ import java.util.logging.Logger;
 public class LocalInventario {
     private static String className="LocalInventario";
     private static List<InternStockDetail> stockTemporalRebajado = new ArrayList<>();
+    private static final String SQL_SYNC = "sincronizar";
     
-    public static boolean insert(String idLente, int cantidad){
+    public static boolean insert(String idItem, int cantidad){
         try {
             int id = getMaxId();
             PreparedStatement insert = LcBd.obtener().prepareStatement(
                     "INSERT INTO intern_stock VALUES("
                             + id + ",'"
-                            + idLente + "',"
+                            + idItem + "',"
                             + cantidad + ","
                             + 1 + ")"
             );
@@ -66,19 +49,16 @@ public class LocalInventario {
             }
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(LocalInventario.class.getName()).log(Level.SEVERE, null, ex);
-            OptionPane.showMsg("Error de excepcion", className + "\n"
+            Notification.showMsg("Error de excepcion", className + "\n"
                     + ex.getMessage(),3);
         }
         return false;
     }
     
-    public static Lente getLente(String id){
+    public static Item getItem(String id){
         try {
-            for (Object object : listarLentes(id)) {
-                if(((Lente)object).getCod().equals(id)){
-                    return (Lente)object;
-                }
-            }
+            Object object = GV.searchInList(id, listarItems(id), new Item());
+            return (object!=null)?(Item)object:null;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
             Logger.getLogger(LocalInventario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -86,17 +66,17 @@ public class LocalInventario {
     }
     
     /**
-     * Retorna una lista de String con los id de los lentes cuyos stocks no han sido actualizados
+     * Retorna una lista de String con los id de los items cuyos stocks no han sido actualizados
      * @return 
      */
-    public static ArrayList<Object> listarLentesForSync(){
+    public static ArrayList<Object> listarItemsForSync(){
         ArrayList<Object> lista = new ArrayList<>();
         updateStockTemporal();
         for (InternStockDetail isd : stockTemporalRebajado) {
             try {
-                Object lente = selectToSync(isd.getCod());
-                if(lente != null){
-                    lista.add(lente);
+                Object item = selectToSync(isd.getCod());
+                if(item != null){
+                    lista.add(item);
                 }
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
                 Logger.getLogger(LocalInventario.class.getName()).log(Level.SEVERE, null, ex);
@@ -108,33 +88,30 @@ public class LocalInventario {
     private static Object selectToSync(String idParam) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException{
         ArrayList<Object> lista = new ArrayList<>();
         updateStockTemporal();
-        String sql = "SELECT len_id, len_color, len_tipo, len_marca, len_material, len_flex, len_clasificacion, len_descripcion, len_precio_ref, len_precio_act, len_stock, len_stock_min, inventario_inv_id, len_estado, len_last_update, len_last_hour,"
-                + "(Select SUM(stock) from intern_stock WHERE id_lente = len_id AND estado = 1) as stock_menos FROM lente WHERE len_id ='" + idParam + "'";
+        String sql = "SELECT itm_id, itm_foto, itm_marca, itm_clasificacion, itm_descripcion, itm_precio_ref, itm_precio_act, itm_stock, itm_stock_min, inventario_inv_id, itm_estado, itm_last_update, itm_last_hour,"
+                + "(Select SUM(stock) from intern_stock WHERE id_item = itm_id AND estado = 1) as stock_menos FROM item WHERE itm_id ='" + idParam + "'";
 
         PreparedStatement consulta = LcBd.obtener().prepareStatement(sql);
         ResultSet datos = consulta.executeQuery();
         while (datos.next()) {
-            String idLente = datos.getString("len_id");
-            int stock = datos.getInt("len_stock")-datos.getInt("stock_menos");
+            String idItem = datos.getString("itm_id");
+            int stock = datos.getInt("itm_stock")-datos.getInt("stock_menos");
             Date lastUpdate = new Date();
-            int lastHour = strToNumber(dateToString(lastUpdate, "hhmmss"));
-            lista.add(new Lente(
-                idLente,
-                datos.getString("len_color"),
-                datos.getString("len_tipo"),
-                datos.getString("len_marca"),
-                datos.getString("len_material"),
-                datos.getInt("len_flex"),
-                datos.getInt("len_clasificacion"),
-                datos.getString("len_descripcion"),
-                datos.getInt("len_precio_ref"),
-                datos.getInt("len_precio_act"),
-                stock,
-                datos.getInt("len_stock_min"),
-                datos.getInt("inventario_inv_id"),
-                datos.getInt("len_estado"),
-                lastUpdate,
-                lastHour
+            int lastHour = GV.strToNumber(GV.dateToString(lastUpdate, "hhmmss"));
+            lista.add(new Item(
+                        idItem,
+                        datos.getString("itm_foto"),
+                        datos.getString("itm_marca"),
+                        datos.getInt("itm_clasificacion"),
+                        datos.getString("itm_descripcion"),
+                        datos.getInt("itm_precio_ref"),
+                        datos.getInt("itm_precio_act"),
+                        stock,
+                        datos.getInt("itm_stock_min"),
+                        datos.getInt("inventario_inv_id"),
+                        datos.getInt("itm_estado"),
+                        lastUpdate,
+                        lastHour
                 )
             );
         }
@@ -143,99 +120,90 @@ public class LocalInventario {
         return (lista.size() > 0)?lista.get(0):null;
     }
     
-    public static ArrayList<Object> listarLentes(String idParam) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException{
+    public static ArrayList<Object> listarItems(String idParam) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException{
         ArrayList<Object> lista = new ArrayList<>();
-        boolean sincronizar = (idParam.equals(getSqlSync()));
+        boolean sincronizar = (idParam.equals(SQL_SYNC));
         updateStockTemporal();
-        String sql = "SELECT * FROM lente WHERE len_id ='" + idParam + "' AND inventario_inv_id = "+GV.getInventarioSeleccionado();
-        if (idParam.equals("0") || idParam.equals(GV.sqlLowStock())) {
-            sql = "SELECT * FROM lente WHERE len_estado=1 AND inventario_inv_id = "+GV.getInventarioSeleccionado();
+        String sql = "SELECT * FROM item WHERE itm_id ='" + idParam + "' AND inventario_inv_id = "+StVars.getInventaryChooser();
+        if (idParam.equals("0") || idParam.equals(StVars.getSqlLowStock())) {
+            sql = "SELECT * FROM item WHERE itm_estado=1 AND inventario_inv_id = "+StVars.getInventaryChooser();
         }
         if (idParam.equals("-1")) {
-            sql = "SELECT * FROM lente WHERE len_estado=0 AND inventario_inv_id = "+GV.getInventarioSeleccionado();
+            sql = "SELECT * FROM item WHERE itm_estado=0 AND inventario_inv_id = "+StVars.getInventaryChooser();
         }
         if (idParam.equals("-2")) {
-            sql = "SELECT * FROM lente WHERE inventario_inv_id = "+GV.getInventarioSeleccionado();
+            sql = "SELECT * FROM item WHERE inventario_inv_id = "+StVars.getInventaryChooser();
         }
         if (idParam.equals("st")) {
-            sql = "SELECT * FROM lente WHERE (len_estado=1 AND len_stock > 0) AND inventario_inv_id = "+GV.getInventarioSeleccionado();
+            sql = "SELECT * FROM item WHERE (itm_estado=1 AND itm_stock > 0) AND inventario_inv_id = "+StVars.getInventaryChooser();
         }
         if (sincronizar) {
-            sql = "SELECT * FROM lente";
+            sql = "SELECT * FROM item";
         }
 
         PreparedStatement consulta = LcBd.obtener().prepareStatement(sql);
         ResultSet datos = consulta.executeQuery();
         while (datos.next()) {
-            String idLente = datos.getString("len_id");
-            int currentStock = datos.getInt("len_stock");
-            int stock = currentStock-getLocalStock(idLente);
-            Date lastUpdate = datos.getDate("len_last_update");
-            int lastHour = datos.getInt("len_last_hour");
+            String idItem = datos.getString("itm_id");
+            int currentStock = datos.getInt("itm_stock");
+            int stock = currentStock-getLocalStock(idItem);
+            Date lastUpdate = datos.getDate("itm_last_update");
+            int lastHour = datos.getInt("itm_last_hour");
             if(currentStock != stock && sincronizar){
                 lastUpdate = new Date();
-                lastHour = strToNumber(dateToString(lastUpdate, "hhmmss"));
-                lista.add(new Lente(
-                    idLente,
-                    datos.getString("len_color"),
-                    datos.getString("len_tipo"),
-                    datos.getString("len_marca"),
-                    datos.getString("len_material"),
-                    datos.getInt("len_flex"),
-                    datos.getInt("len_clasificacion"),
-                    datos.getString("len_descripcion"),
-                    datos.getInt("len_precio_ref"),
-                    datos.getInt("len_precio_act"),
-                    stock,
-                    datos.getInt("len_stock_min"),
-                    datos.getInt("inventario_inv_id"),
-                    datos.getInt("len_estado"),
-                    lastUpdate,
-                    lastHour
+                lastHour = GV.strToNumber(GV.dateToString(lastUpdate, "hhmmss"));
+                lista.add(new Item(
+                        idItem,
+                        datos.getString("itm_foto"),
+                        datos.getString("itm_marca"),
+                        datos.getInt("itm_clasificacion"),
+                        datos.getString("itm_descripcion"),
+                        datos.getInt("itm_precio_ref"),
+                        datos.getInt("itm_precio_act"),
+                        stock,
+                        datos.getInt("itm_stock_min"),
+                        datos.getInt("inventario_inv_id"),
+                        datos.getInt("itm_estado"),
+                        lastUpdate,
+                        lastHour
                     )
-                );
+            )   ;
             }
             if(!sincronizar){
                 if(idParam.equals("st")){
                     if(stock > 0){
-                        lista.add(new Lente(
-                            idLente,
-                            datos.getString("len_color"),
-                            datos.getString("len_tipo"),
-                            datos.getString("len_marca"),
-                            datos.getString("len_material"),
-                            datos.getInt("len_flex"),
-                            datos.getInt("len_clasificacion"),
-                            datos.getString("len_descripcion"),
-                            datos.getInt("len_precio_ref"),
-                            datos.getInt("len_precio_act"),
+                        lista.add(new Item(
+                            idItem,
+                            datos.getString("itm_foto"),
+                            datos.getString("itm_marca"),
+                            datos.getInt("itm_clasificacion"),
+                            datos.getString("itm_descripcion"),
+                            datos.getInt("itm_precio_ref"),
+                            datos.getInt("itm_precio_act"),
                             stock,
-                            datos.getInt("len_stock_min"),
+                            datos.getInt("itm_stock_min"),
                             datos.getInt("inventario_inv_id"),
-                            datos.getInt("len_estado"),
+                            datos.getInt("itm_estado"),
                             lastUpdate,
                             lastHour
                             )
                         );
                     }
                 }else{
-                    lista.add(new Lente(
-                        idLente,
-                        datos.getString("len_color"),
-                        datos.getString("len_tipo"),
-                        datos.getString("len_marca"),
-                        datos.getString("len_material"),
-                        datos.getInt("len_flex"),
-                        datos.getInt("len_clasificacion"),
-                        datos.getString("len_descripcion"),
-                        datos.getInt("len_precio_ref"),
-                        datos.getInt("len_precio_act"),
-                        stock,
-                        datos.getInt("len_stock_min"),
-                        datos.getInt("inventario_inv_id"),
-                        datos.getInt("len_estado"),
-                        lastUpdate,
-                        lastHour
+                    lista.add(new Item(
+                            idItem,
+                            datos.getString("itm_foto"),
+                            datos.getString("itm_marca"),
+                            datos.getInt("itm_clasificacion"),
+                            datos.getString("itm_descripcion"),
+                            datos.getInt("itm_precio_ref"),
+                            datos.getInt("itm_precio_act"),
+                            stock,
+                            datos.getInt("itm_stock_min"),
+                            datos.getInt("inventario_inv_id"),
+                            datos.getInt("itm_estado"),
+                            lastUpdate,
+                            lastHour
                         )
                     );
                 }
@@ -245,18 +213,18 @@ public class LocalInventario {
         return lista;
     }
     
-    public static boolean deleteAllRegistry(String idLente) {
+    public static boolean deleteAllRegistry(String idItem) {
         try{
-            String sql = "UPDATE intern_stock set estado = 0 WHERE id_lente = '" + idLente+"' AND estado = 1";
-            if(idLente.equals("-2")){
+            String sql = "UPDATE intern_stock set estado = 0 WHERE id_item = '" + idItem+"' AND estado = 1";
+            if(idItem.equals("-2")){
                 sql = "UPDATE intern_stock set estado = 0 WHERE estado = 1";
             }
             PreparedStatement insert = LcBd.obtener().prepareStatement(sql);
             insert.executeUpdate();
             LcBd.cerrar();
         }catch( ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex){
-            OptionPane.showMsg("Error inesperado", "Ocurrió un error al intentar borrar los registros temporales del stock\n"
-                    + "en :"+className+"\n\n"+Log.getLog(), 3);
+            Notification.showMsg("Error inesperado", "Ocurrió un error al intentar borrar los registros temporales del stock\n"
+                    + "en :"+className, 3);
             updateStockTemporal();
             return false;
         }
@@ -265,7 +233,7 @@ public class LocalInventario {
     }
 
     public static int getMaxId() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
-        Log.setLog(className, Log.getReg());
+        
         int id = 0;
         String sql = "SELECT MAX(id) as suma FROM intern_stock";
         PreparedStatement consulta = LcBd.obtener().prepareStatement(sql);
@@ -279,28 +247,28 @@ public class LocalInventario {
     
     /**
      * retorna la cantidad total de registros de stock que no han sido eliminados
-     * No se actualiza la lista estática porue este método sólo se llama desde listar lentes
+     * No se actualiza la lista estática porue este método sólo se llama desde listar items
      * para evitar problemas de conexion con la base de datos
-     * @param idLente
+     * @param idItem
      * @return 
      */
-    private static int getLocalStock(String idLente){
-        return searchInList(idLente).getCantidad();
+    private static int getLocalStock(String idItem){
+        return searchInList(idItem).getCantidad();
     }
     
     /**
      * actualiza lista de stock retorna la cantidad total de registros de stock que no han sido eliminados
-     * @param idLente
+     * @param idItem
      * @return 
      */
-    public static int stockDescontado(String idLente){
+    public static int stockDescontado(String idItem){
         updateStockTemporal();
-        return searchInList(idLente).getCantidad();
+        return searchInList(idItem).getCantidad();
     }
     
-    private static InternStockDetail searchInList(String idLente) {
+    private static InternStockDetail searchInList(String idItem) {
         Optional<InternStockDetail> objectFound = stockTemporalRebajado.stream()
-            .filter(p -> p.getCod().equals(idLente))
+            .filter(p -> p.getCod().equals(idItem))
             .findFirst();
         return objectFound.isPresent() ? objectFound.get() : new InternStockDetail();
     }
@@ -310,14 +278,14 @@ public class LocalInventario {
     }
     
     public static List<InternStockDetail> listarStocksTemporales(){
-        Log.setLog(className, Log.getReg());
+        
         List<InternStockDetail> listaStock = new ArrayList<>();
         try{
-            String sql = "SELECT id_lente, SUM(stock) as cantidad FROM intern_stock WHERE estado = 1 GROUP BY id_lente";
+            String sql = "SELECT id_item, SUM(stock) as cantidad FROM intern_stock WHERE estado = 1 GROUP BY id_item";
             PreparedStatement consulta = LcBd.obtener().prepareStatement(sql);
                 ResultSet datos = consulta.executeQuery();
                 while (datos.next()) {
-                    listaStock.add(new InternStockDetail(datos.getString("id_lente"), datos.getInt("cantidad")));
+                    listaStock.add(new InternStockDetail(datos.getString("id_item"), datos.getInt("cantidad")));
                 }
                 LcBd.cerrar();
         }catch(Exception e){
@@ -325,259 +293,20 @@ public class LocalInventario {
         }
         return listaStock;
     }
-
-    private static String getSqlSync() {
-        return "sincronizar";
-    }
     
     public static boolean addObject(Object objectParam) {
-        Log.setLog(className, Log.getReg());
+        
         try{
-            if(objectParam == null)
+            if(objectParam == null){
                 return false;
-            if(objectParam instanceof Ficha){
-                Ficha object = (Ficha)objectParam;
+            }else{
                 PreparedStatement insert = LcBd.obtener().prepareStatement(
-                        sqlInsert(object)
+                        sqlInsert(objectParam)
                 );
                 if(insert.executeUpdate() != 0) {
                     LcBd.cerrar();
                     return true;
                 }
-                return false;
-            }
-            if(objectParam instanceof EtiquetFicha){
-                EtiquetFicha object = (EtiquetFicha)objectParam;
-                PreparedStatement insert = LcBd.obtener().prepareStatement(
-                        sqlInsert(object)
-                );
-                if (insert.executeUpdate() != 0) {
-                    LcBd.cerrar();
-                    return true;
-                }
-                return false;
-            }
-            if(objectParam instanceof Armazon){
-                Armazon object = (Armazon)objectParam;
-                PreparedStatement insert = LcBd.obtener().prepareStatement(
-                        sqlInsert(object)
-                );
-                if (insert.executeUpdate() != 0) {
-                    LcBd.cerrar();
-                    return true;
-                }
-                OptionPane.showMsg("Error inseperado en la operación", "armazon: " + object.getCod()+ "\nNo se pudo insertar.", 3);
-                return false;
-            }
-            if(objectParam instanceof Cliente){
-                Cliente object = (Cliente)objectParam;
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Convenio){
-                Convenio object = (Convenio)objectParam;
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Cristal){
-                Cristal object = (Cristal)objectParam;
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof CuotasConvenio){
-                CuotasConvenio object = (CuotasConvenio)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Descuento){
-                Descuento object = (Descuento)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Despacho){
-                Despacho object = (Despacho)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Doctor){
-                Doctor object = (Doctor)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Equipo){
-                Equipo object = (Equipo)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof HistorialPago){
-                HistorialPago object = (HistorialPago)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Institucion){
-                Institucion object = (Institucion)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof InternMail){
-                InternMail object = (InternMail)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Inventario){
-                Inventario object = (Inventario)objectParam;
-                  
-                PreparedStatement insert = LcBd.obtener().prepareStatement(
-                        sqlInsert(object)
-                               );
-                if(insert.executeUpdate()!=0){
-                    LcBd.cerrar();
-
-                    return true;
-                }
-            }
-            if(objectParam instanceof Lente){
-                Lente object = (Lente)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof Oficina){
-                Oficina object = (Oficina)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof RegistroBaja){
-                RegistroBaja object = (RegistroBaja)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof TipoPago){
-                TipoPago object = (TipoPago)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-
-                        return true;
-                    }
-                return false;
-            }
-            if(objectParam instanceof User){
-                User object = (User)objectParam;
-                
-                    PreparedStatement insert = LcBd.obtener().prepareStatement(
-                            sqlInsert(object)
-                    );
-                    if (insert.executeUpdate() != 0) {
-                        LcBd.cerrar();
-                        //OptionPane.showMsg("Operación realizada correctamente", "Usuario: "+object.getUsername()+"\nId: "+object.getId()+"\nAgregado correctamente.", 1);
-                        return true;
-                    }
-                return false;
-            }else{
-                OptionPane.showMsg("Error inseperado en la operación", "El objeto no se pudo insertar.\n\n"+className+" no soporta el tipo de registro enviado.", 3);
                 return false;
             }
         }catch( InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException | NullPointerException ex){
@@ -590,7 +319,7 @@ public class LocalInventario {
         return GV.LOCAL_SYNC.sqlInsert(objectParam);
     }
     
-    public static boolean addFicha(Ficha ficha, Armazon cerca, Armazon lejos, HistorialPago hp){
+    public static boolean addVenta(Venta venta, List<Detalle> articulos, HistorialPago hp){
         try {
             PreparedStatement insert = LcBd.obtener().prepareStatement(
                     sqlInsert(hp)
@@ -598,61 +327,24 @@ public class LocalInventario {
             if(insert.executeUpdate() == 0) {
                 return false;
             }
-            java.sql.Date sqlfechaLejos = new java.sql.Date(lejos.getLastUpdate().getTime());
-            java.sql.Date sqlfechaCerca = new java.sql.Date(cerca.getLastUpdate().getTime());
-            insert = LcBd.obtener().prepareStatement(
-                    sqlInsert(
-                            "INSERT INTO armazon VALUES('"
-                            + lejos.getCod() + "',"
-                            + lejos.getTipo()+ ",'"
-                            + lejos.getMarca()+ "',"
-                            + lejos.getPrecioMarca()+ ",'"
-                            + lejos.getCristal()+ "',"
-                            + lejos.getPrecioCristal()+ ",'"
-                            + lejos.getAdd()+ "','"
-                            + lejos.getOdA()+ "','"
-                            + lejos.getOdEsf()+ "','"
-                            + lejos.getOdCil()+ "','"
-                            + lejos.getOiA()+ "','"
-                            + lejos.getOiEsf()+ "','"
-                            + lejos.getOiCil()+ "',"
-                            + lejos.getDp()+ ","
-                            + lejos.getEndurecido()+ ","
-                            + lejos.getCapa()+ ","
-                            + lejos.getPlusMax()+ ",'"
-                            + lejos.getIdFicha()+ "',"
-                            + lejos.getEstado() + ",'"
-                            + sqlfechaLejos + "',"
-                            + lejos.getLastHour() + "),"
-                            +"('"
-                            + cerca.getCod() + "',"
-                            + cerca.getTipo()+ ",'"
-                            + cerca.getMarca()+ "',"
-                            + cerca.getPrecioMarca()+ ",'"
-                            + cerca.getCristal()+ "',"
-                            + cerca.getPrecioCristal()+ ",'"
-                            + cerca.getAdd()+ "','"
-                            + cerca.getOdA()+ "','"
-                            + cerca.getOdEsf()+ "','"
-                            + cerca.getOdCil()+ "','"
-                            + cerca.getOiA()+ "','"
-                            + cerca.getOiEsf()+ "','"
-                            + cerca.getOiCil()+ "',"
-                            + cerca.getDp()+ ","
-                            + cerca.getEndurecido()+ ","
-                            + cerca.getCapa()+ ","
-                            + cerca.getPlusMax()+ ",'"
-                            + cerca.getIdFicha()+ "',"
-                            + cerca.getEstado() + ",'"
-                            + sqlfechaCerca + "',"
-                            + cerca.getLastHour() + ")"
-                    )
-            );
-            if(insert.executeUpdate() == 0) {
-                return false;
+            String sqlInsert="INSERT INTO detalle VALUES";
+            String sql="";
+            for (Detalle det : articulos) {
+                java.sql.Date lastUpdate = new java.sql.Date(det.getLastUpdate().getTime());
+                String values = "('"+det.getCod()+"','"+det.getIdVenta()+"','"+det.getIdItem()+"',"
+                        + det.getCantidad()+","+det.getPrecioUnitario()+","
+                        + det.getEstado()+",'"+lastUpdate+"',"+det.getLastHour()+")";
+                sql=(sql.isEmpty())?values:sql + "," + values;
             }
+            if(!sql.isEmpty()){
+                sqlInsert = sqlInsert + sql;
+                insert = LcBd.obtener().prepareStatement(sqlInsert);
+                if(insert.executeUpdate() == 0) {
+                    return false;
+                }
+            }   
             insert = LcBd.obtener().prepareStatement(
-                    sqlInsert(ficha)
+                    sqlInsert(venta)
             );
             if(insert.executeUpdate() == 0) {
                 return false;

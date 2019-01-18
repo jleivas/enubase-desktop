@@ -5,6 +5,7 @@
  */
 package cl.softdirex.enubase.utils;
 
+import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Oficina;
 import cl.softdirex.enubase.entities.User;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ public class StEntities {
     public static boolean setOficina(String nombre){
         Dao load = new Dao();
         try {
-            Oficina temp = (Oficina)load.get(GC.getStr(nombre), 0, new Oficina());
+            Oficina temp = (Oficina)load.get(GV.getStr(nombre), 0, new Oficina());
             if(temp != null){
                 setOficina(temp);
                 return true;
@@ -60,42 +61,6 @@ public class StEntities {
             return USER.getTipo();
         }
         return 0;
-    }
-    
-    /**
-     * Retorna true si es Jefe administrativo o Sistema
-     * @return 
-     */
-    public static boolean tipoUserSuperAdmin(){
-        int tipoUsuario = getTipoUsuario();
-        if(tipoUsuario == 1 || tipoUsuario == 7){
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Retorna true si es Jefe administrativo, Administrador o Sistema
-     * @return 
-     */
-    public static boolean tipoUserAdmin(){
-        int tipoUsuario = getTipoUsuario();
-        if(tipoUsuario == 1 || tipoUsuario == 2 || tipoUsuario == 7){
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Retorna true si es Jefe administrativo, Administrador, inventario o Sistema
-     * @return 
-     */
-    public static boolean tipoUserIventario(){
-        int tipoUsuario = getTipoUsuario();
-        if(tipoUsuario == 1 || tipoUsuario == 2 || tipoUsuario == 4 || tipoUsuario == 7){
-            return true;
-        }
-        return false;
     }
     
     public static void setSessionUser(User user){

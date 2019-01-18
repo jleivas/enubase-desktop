@@ -5,6 +5,7 @@
  */
 package cl.softdirex.enubase.utils;
 
+import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
@@ -24,13 +25,14 @@ public class SubProcess {
     volatile static boolean ejecucion = true;
     volatile static boolean pause = false;
     private static String className="SubProcess";
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService scheduler = 
+            Executors.newScheduledThreadPool(1);
     private static String defaultText = "";
     
     
-    private static int TIME_MIN_COMPROBAR_ONLINE = 5;
-    private static int MIN_EXPIRE_TODAY = 30;
-    private static int MIN_EXPIRED = TIME_MIN_COMPROBAR_ONLINE;
+    private static final int TIME_MIN_COMPROBAR_ONLINE = 5;
+    private static final int MIN_EXPIRE_TODAY = 30;
+    private static final int MIN_EXPIRED = TIME_MIN_COMPROBAR_ONLINE;
     
     Dao load = new Dao();
     
@@ -56,7 +58,7 @@ public class SubProcess {
     
     public static void licenciaComprobarOnline(){
         XmlUtils.readXMLOnline();
-        UI.licenciaShowMessageLicenceStatus();
+        PanelUtils.licenciaShowMessageLicenceStatus();
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
             try {
@@ -66,14 +68,14 @@ public class SubProcess {
                     Thread.sleep(TIME_MIN_COMPROBAR_ONLINE*60000);
                     XmlUtils.readXMLOnline();
                     sumMinutes = sumMinutes + TIME_MIN_COMPROBAR_ONLINE;
-                    diffDate = GC.fechaDiferencia(GC.stringToDate(StVars.getExpDate()));
+                    diffDate = GV.fechaDiferencia(GV.stringToDate(StVars.getExpDate()));
                     if(diffDate == 0 && sumMinutes >= MIN_EXPIRE_TODAY){
                         sumMinutes=0;
-                        UI.licenciaShowMessageLicenceStatus();
+                        PanelUtils.licenciaShowMessageLicenceStatus();
                     }
                     if(diffDate < 0 && sumMinutes >= MIN_EXPIRED){
                         sumMinutes=0;
-                        UI.licenciaShowMessageLicenceStatus();
+                        PanelUtils.licenciaShowMessageLicenceStatus();
                     }
                 }
             } catch (InterruptedException ex) {

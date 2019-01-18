@@ -5,10 +5,11 @@
  */
 package cl.softdirex.enubase.bd;
 
+import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.TipoPago;
 import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.utils.BDUtils;
-import cl.softdirex.enubase.utils.GC;
+import cl.softdirex.enubase.utils.GV;
 import cl.softdirex.enubase.utils.StVars;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.Connection;
@@ -42,9 +43,7 @@ public class LcBd{
         }
         Dao load = new Dao();
         try {
-            load.addOnInit(new User(1, "Admin", "admin", "", GC.enC("admin"), 1, 1, null, 0));
-            load.addOnInit(new TipoPago(1, "Convenio", 1, null, 0));
-            
+            load.addOnInit(new User(1, "Admin", "admin", "", GV.enC("admin"), 1, 1, null, 0));
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(LcBd.class.getName()).log(Level.SEVERE, null, ex);
         }
