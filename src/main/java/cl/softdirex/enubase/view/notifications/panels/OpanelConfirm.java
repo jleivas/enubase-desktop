@@ -55,7 +55,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/info_50px.png"))); // NOI18N
+        imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/info_50px.png"))); // NOI18N
         imgIconMessage.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 imgIconMessageMouseClicked(evt);
@@ -71,7 +71,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
             }
         });
 
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/cancel_50px.png"))); // NOI18N
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel_50px.png"))); // NOI18N
         btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCancelarMouseClicked(evt);
@@ -97,7 +97,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
         lblMessage.setRows(5);
         jScrollPane1.setViewportView(lblMessage);
 
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/accept_50px.png"))); // NOI18N
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/accept_50px.png"))); // NOI18N
         btnAceptar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 btnAceptarMousePressed(evt);
@@ -133,7 +133,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
                 .addGap(18, 18, 18))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(393, Short.MAX_VALUE)
+                    .addContainerGap(387, Short.MAX_VALUE)
                     .addComponent(btnAceptar)
                     .addGap(79, 79, 79)))
         );
@@ -151,7 +151,7 @@ public class OpanelConfirm extends javax.swing.JPanel {
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(173, Short.MAX_VALUE)
+                    .addContainerGap(172, Short.MAX_VALUE)
                     .addComponent(btnAceptar)
                     .addGap(8, 8, 8)))
         );

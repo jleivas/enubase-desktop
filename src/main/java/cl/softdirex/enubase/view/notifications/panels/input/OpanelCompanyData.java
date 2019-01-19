@@ -65,7 +65,7 @@ public class OpanelCompanyData extends javax.swing.JPanel {
         lblRut.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         lblRut.setText("Rut");
 
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/cancel_50px.png"))); // NOI18N
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel_50px.png"))); // NOI18N
         btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCancelarMouseClicked(evt);
@@ -81,7 +81,7 @@ public class OpanelCompanyData extends javax.swing.JPanel {
             }
         });
 
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/accept_50px.png"))); // NOI18N
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/accept_50px.png"))); // NOI18N
         btnGuardar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnGuardarMouseClicked(evt);

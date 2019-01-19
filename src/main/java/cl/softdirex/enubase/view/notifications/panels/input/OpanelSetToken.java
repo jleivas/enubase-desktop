@@ -47,7 +47,7 @@ public class OpanelSetToken extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         jLabel1.setText("Ingrese el token recibido");
 
-        btnDropDb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/icons8_Broom_50px.png"))); // NOI18N
+        btnDropDb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Broom_50px.png"))); // NOI18N
         btnDropDb.setToolTipText("Borrar base de datos");
         btnDropDb.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -64,7 +64,7 @@ public class OpanelSetToken extends javax.swing.JPanel {
             }
         });
 
-        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/accept_50px.png"))); // NOI18N
+        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/accept_50px.png"))); // NOI18N
         btnLoad.setToolTipText("Confirmar");
         btnLoad.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -81,7 +81,7 @@ public class OpanelSetToken extends javax.swing.JPanel {
             }
         });
 
-        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/cancel_50px.png"))); // NOI18N
+        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel_50px.png"))); // NOI18N
         btnCancel.setToolTipText("No tengo");
         btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {

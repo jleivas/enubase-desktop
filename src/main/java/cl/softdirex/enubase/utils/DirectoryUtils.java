@@ -13,15 +13,21 @@ import java.io.File;
  */
 public class DirectoryUtils {
     /* Direcciones de fichero*/
-    private static String LOCAL_PATH = System.getProperty("user.dir")+File.separator;
-    private static String FILES_PATH = LOCAL_PATH+"files"+File.separator;
-    private static String FILES_REPORTS_PATH = "src"+File.separator+"reportes"+File.separator;
-    private static String REPORT_EXCEL_PATH = LOCAL_PATH+"reports"+File.separator+"excel"+File.separator;
-    private static String REPORT_VIEW_PATH = LOCAL_PATH+"reports"+File.separator+"view"+File.separator;
+    private static final String BARS = File.separator;
+    private static final String LOCAL_PATH = System.getProperty("user.dir")+BARS;
+    private static final String PROPERTIES_PATH = LOCAL_PATH+"src"+BARS+"main"+BARS+"resources"+BARS+"properties"+BARS;
+    private static final String FILES_PATH = LOCAL_PATH+"files"+BARS;
+    private static final String FILES_REPORTS_PATH = "src"+BARS+"reportes"+BARS;
+    private static final String REPORT_EXCEL_PATH = LOCAL_PATH+"reports"+BARS+"excel"+BARS;
+    private static final String REPORT_VIEW_PATH = LOCAL_PATH+"reports"+BARS+"view"+BARS;
     
     
     public static String getFilesPath(){
         return GV.getStr(FILES_PATH);
+    }
+    
+    public static String getPropertiesPath(){
+        return GV.getStr(PROPERTIES_PATH);
     }
     
     public static String getFilesReportsPath(){

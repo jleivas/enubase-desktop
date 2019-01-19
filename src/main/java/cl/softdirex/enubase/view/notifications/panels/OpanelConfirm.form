@@ -41,7 +41,7 @@
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="393" max="32767" attributes="0"/>
+                  <EmptySpace pref="387" max="32767" attributes="0"/>
                   <Component id="btnAceptar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
               </Group>
@@ -64,7 +64,7 @@
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="173" max="32767" attributes="0"/>
+                  <EmptySpace pref="172" max="32767" attributes="0"/>
                   <Component id="btnAceptar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
               </Group>
@@ -76,7 +76,7 @@
     <Component class="javax.swing.JLabel" name="imgIconMessage">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/cl/softdirex/enubase/view/icons/info_50px.png"/>
+          <Image iconType="3" name="/icons/info_50px.png"/>
         </Property>
       </Properties>
       <Events>
@@ -89,7 +89,7 @@
     <Component class="javax.swing.JLabel" name="btnCancelar">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/cl/softdirex/enubase/view/icons/cancel_50px.png"/>
+          <Image iconType="3" name="/icons/cancel_50px.png"/>
         </Property>
       </Properties>
       <Events>
@@ -136,7 +136,7 @@
     <Component class="javax.swing.JLabel" name="btnAceptar">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/cl/softdirex/enubase/view/icons/accept_50px.png"/>
+          <Image iconType="3" name="/icons/accept_50px.png"/>
         </Property>
       </Properties>
       <Events>
