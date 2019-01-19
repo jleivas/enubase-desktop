@@ -20,7 +20,7 @@ public class MPanel extends javax.swing.JFrame {
      */
     public MPanel() {
         initComponents();
-        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(PanelUtils.ICON_LOGO));
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/softdirex/enubase/view/image/icon.png"));
         setIconImage(icon);
         this.setLocationRelativeTo(null);
         this.setAlwaysOnTop(true);

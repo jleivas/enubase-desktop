@@ -57,7 +57,7 @@ public class Dao{
     public boolean sendMessage (InternMail msg) throws InstantiationException, IllegalAccessException{
         msg.setEstado(1);
         String mail = msg.getDestinatario().getEmail();
-        if(mail != null || !mail.isEmpty()){
+        if(GV.getStr(mail).isEmpty()){
             mailSend.sendMessageMail(msg.getAsunto(), mail);
         }
         return add(msg);

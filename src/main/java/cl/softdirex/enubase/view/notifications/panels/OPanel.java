@@ -22,7 +22,7 @@ public class OPanel extends javax.swing.JFrame {
      */
     public OPanel() {
         initComponents();
-        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(ICON_PATH));
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/softdirex/enubase/view/image/icon.png"));
         setIconImage(icon);
         this.setLocationRelativeTo(null);
     }

@@ -313,7 +313,6 @@ public class Send {
         msg.setRecipients(Message.RecipientType.TO, toAddresses);
         msg.setSubject(subject);
         msg.setSentDate(new Date());
-        MimeMultipart m = new MimeMultipart();
         // set plain text message
         msg.setContent(message, "text/html");
  

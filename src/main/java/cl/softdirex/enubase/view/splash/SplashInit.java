@@ -6,6 +6,7 @@
 package cl.softdirex.enubase.view.splash;
 
 import cl.softdirex.enubase.utils.GV;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -50,7 +51,7 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
         welcomeTitle.setText("Bienvenido");
         getContentPane().add(welcomeTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 230, -1, -1));
 
-        loader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/image/loader.gif"))); // NOI18N
+        loader.setIcon(new ImageIcon(SplashInit.class.getResource("/cl/softdirex/enubase/view/image/loader.gif"))); // NOI18N
         getContentPane().add(loader, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 290, 200));
 
         llabelInfo.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
