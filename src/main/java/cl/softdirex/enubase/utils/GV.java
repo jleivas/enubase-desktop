@@ -20,7 +20,6 @@ import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelCompanyData;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetLicencia;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetToken;
-import cl.softdirex.enubase.view.os.other.ContentAdminMac;
 import cl.softdirex.enubase.view.os.windows.ContentAdmin;
 import java.security.MessageDigest;
 import java.sql.SQLException;
@@ -72,11 +71,7 @@ public class GV {
     }
     
     public static void contentAdminUpdateLabelUser(){
-        if(GlobalValuesVariables.getIsWindows()){
-            ContentAdmin.lblUserName.setText(StEntities.USER.getNombre());
-        }else{
-            ContentAdminMac.lblUserName.setText(StEntities.USER.getNombre());
-        }
+        ContentAdmin.lblUserName.setText(StEntities.USER.getNombre());
     }
     public static String mailValidate(String email) {
         email = getStr(email).toLowerCase();

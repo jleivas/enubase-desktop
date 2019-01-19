@@ -14,7 +14,6 @@ import cl.softdirex.enubase.utils.GlobalValuesVariables;
 import cl.softdirex.enubase.utils.StEntities;
 import cl.softdirex.enubase.utils.XmlUtils;
 import cl.softdirex.enubase.view.notifications.OptionPane;
-import cl.softdirex.enubase.view.os.other.ContentAdminMac;
 import cl.softdirex.enubase.view.os.windows.ContentAdmin;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -262,14 +261,8 @@ public class Acceso extends javax.swing.JFrame {
                     StEntities.setSessionUser(usu);
                     XmlUtils.crearRegistroLocal();
                     ContentAdmin principalAdmin;
-                    ContentAdminMac principalAdminMac;
-                    if(GlobalValuesVariables.getIsWindows()){
-                        principalAdmin = new ContentAdmin();
-                        principalAdmin.setVisible(true);
-                    }else{
-                        principalAdminMac = new ContentAdminMac();
-                        principalAdminMac.setVisible(true);
-                    }
+                    principalAdmin = new ContentAdmin();
+                    principalAdmin.setVisible(true);
                     
                     this.dispose();
                 } catch (SQLException | ClassNotFoundException ex) {

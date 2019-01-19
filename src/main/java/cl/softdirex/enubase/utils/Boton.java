@@ -8,7 +8,6 @@ package cl.softdirex.enubase.utils;
 import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.os.general.panels.VMessage;
 import cl.softdirex.enubase.view.os.general.panels.VUsuarios;
-import static cl.softdirex.enubase.view.os.other.ContentAdminMac.principalAdminMac;
 import static cl.softdirex.enubase.view.os.windows.ContentAdmin.principalAdmin;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -190,7 +189,7 @@ public class Boton {
     }
     
     private void openView(JPanel p1){
-        if(isWin()){
+//        if(isWin()){
             try{
                 p1.setSize(principalAdmin.getWidth(), principalAdmin.getHeight());
                 p1.setLocation(locat, locat);
@@ -204,21 +203,21 @@ public class Boton {
                         + "póngase en contacto con su proveedor de software.", JOptionPane.ERROR_MESSAGE);
             }
             principalAdmin.setCursor(Cursor.getDefaultCursor());
-        }else{
-            try{
-                p1.setSize(principalAdminMac.getWidth(), principalAdminMac.getHeight());
-                p1.setLocation(locat, locat);
-                principalAdminMac.removeAll();
-                principalAdminMac.add(p1,BorderLayout.CENTER);
-                principalAdminMac.revalidate();
-                principalAdminMac.repaint();
-            }catch(Exception ex){
-                OptionPane.showMsg("Error inesperado", "No se ha podido abrir la ventana solicitada, \n"
-                        + "se enviará un reporte para solucionar este problema,\n"
-                        + "póngase en contacto con su proveedor de software.", JOptionPane.ERROR_MESSAGE);
-            }
-            principalAdminMac.setCursor(Cursor.getDefaultCursor());
-        }
+//        }else{
+//            try{
+//                p1.setSize(principalAdminMac.getWidth(), principalAdminMac.getHeight());
+//                p1.setLocation(locat, locat);
+//                principalAdminMac.removeAll();
+//                principalAdminMac.add(p1,BorderLayout.CENTER);
+//                principalAdminMac.revalidate();
+//                principalAdminMac.repaint();
+//            }catch(Exception ex){
+//                OptionPane.showMsg("Error inesperado", "No se ha podido abrir la ventana solicitada, \n"
+//                        + "se enviará un reporte para solucionar este problema,\n"
+//                        + "póngase en contacto con su proveedor de software.", JOptionPane.ERROR_MESSAGE);
+//            }
+//            principalAdminMac.setCursor(Cursor.getDefaultCursor());
+//        }
     }
 
     private void accesDenied() {
