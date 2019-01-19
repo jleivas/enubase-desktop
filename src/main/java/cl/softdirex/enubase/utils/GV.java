@@ -20,7 +20,7 @@ import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelCompanyData;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetLicencia;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetToken;
-import cl.softdirex.enubase.view.os.windows.ContentAdmin;
+import cl.softdirex.enubase.view.principal.ContentAdmin;
 import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.text.DateFormat;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cl.softdirex.enubase.view.os.windows;
+package cl.softdirex.enubase.view.principal;
 
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.Boton;

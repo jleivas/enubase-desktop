@@ -8,7 +8,7 @@ package cl.softdirex.enubase.utils;
 import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.os.general.panels.VMessage;
 import cl.softdirex.enubase.view.os.general.panels.VUsuarios;
-import static cl.softdirex.enubase.view.os.windows.ContentAdmin.principalAdmin;
+import static cl.softdirex.enubase.view.principal.ContentAdmin.principalAdmin;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.sql.SQLException;

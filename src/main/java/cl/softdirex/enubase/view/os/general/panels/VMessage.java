@@ -6,7 +6,7 @@
 package cl.softdirex.enubase.view.os.general.panels;
 
 import cl.softdirex.enubase.utils.CursorUtils;
-import cl.softdirex.enubase.view.os.windows.ContentAdmin;
+import cl.softdirex.enubase.view.principal.ContentAdmin;
 
 
 /**

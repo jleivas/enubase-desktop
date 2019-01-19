@@ -15,7 +15,7 @@ import cl.softdirex.enubase.utils.Icons;
 import cl.softdirex.enubase.utils.StEntities;
 import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelUserData;
-import cl.softdirex.enubase.view.os.windows.ContentAdmin;
+import cl.softdirex.enubase.view.principal.ContentAdmin;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;

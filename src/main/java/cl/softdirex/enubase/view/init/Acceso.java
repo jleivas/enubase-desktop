@@ -14,7 +14,7 @@ import cl.softdirex.enubase.utils.GlobalValuesVariables;
 import cl.softdirex.enubase.utils.StEntities;
 import cl.softdirex.enubase.utils.XmlUtils;
 import cl.softdirex.enubase.view.notifications.OptionPane;
-import cl.softdirex.enubase.view.os.windows.ContentAdmin;
+import cl.softdirex.enubase.view.principal.ContentAdmin;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
