@@ -10,7 +10,7 @@ import cl.softdirex.enubase.utils.Boton;
 import cl.softdirex.enubase.utils.CursorUtils;
 import cl.softdirex.enubase.utils.GV;
 import cl.softdirex.enubase.utils.PanelUtils;
-import cl.softdirex.enubase.utils.StVars;
+import cl.softdirex.enubase.utils.VarUtils;
 import cl.softdirex.enubase.utils.XmlUtils;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.SQLException;
@@ -348,10 +348,10 @@ public class OpanelCompanyData extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void loadData() {
-            txtDescripcion.setText(StVars.getCompanyDescription());
-            txtNombre.setText(StVars.getCompanyName());
-            txtRut.setText(StVars.getCompanyRut());
-            txtGiro.setText(StVars.getCompanyGiro());
+            txtDescripcion.setText(VarUtils.getCompanyDescription());
+            txtNombre.setText(VarUtils.getCompanyName());
+            txtRut.setText(VarUtils.getCompanyRut());
+            txtGiro.setText(VarUtils.getCompanyGiro());
     }
 
     private void saveFromGUI() {
@@ -365,10 +365,10 @@ public class OpanelCompanyData extends javax.swing.JPanel {
                     "¿Estas seguro que los datos ingresados son correctos?", 
                     JOptionPane.INFORMATION_MESSAGE)){
                 CursorUtils.cursorWAIT(this);
-                StVars.setCompanyName(GV.getStr(name));
-                StVars.setCompanyRut(GV.getStr(rut));
-                StVars.setCompanyDescription(GV.getStr(descripcion));
-                StVars.setCompanyGiro(GV.getStr(giro));
+                VarUtils.setCompanyName(GV.getStr(name));
+                VarUtils.setCompanyRut(GV.getStr(rut));
+                VarUtils.setCompanyDescription(GV.getStr(descripcion));
+                VarUtils.setCompanyGiro(GV.getStr(giro));
                 XmlUtils.crearRegistroLocal();
                 Notification.showMsg("Datos almacenados", "Los nuevos datos ingresados han sido almacenados con exito", 1);
                 Boton boton = new Boton();
@@ -400,10 +400,10 @@ public class OpanelCompanyData extends javax.swing.JPanel {
             if(Notification.getConfirmation("Registrar datos de mi empresa", 
                     "¿Estas seguro que los datos ingresados son correctos?", JOptionPane.INFORMATION_MESSAGE)){
                 CursorUtils.cursorWAIT(this);
-                StVars.setCompanyName(GV.getStr(name));
-                StVars.setCompanyRut(GV.getStr(rut));
-                StVars.setCompanyDescription(GV.getStr(descripcion));
-                StVars.setCompanyGiro(GV.getStr(giro));
+                VarUtils.setCompanyName(GV.getStr(name));
+                VarUtils.setCompanyRut(GV.getStr(rut));
+                VarUtils.setCompanyDescription(GV.getStr(descripcion));
+                VarUtils.setCompanyGiro(GV.getStr(giro));
                 CursorUtils.cursorDF(this);
                 Notification.closeOptionPanel();
                 Notification.showOptionPanel(new OpanelOfficeData(1), Notification.titleOfficeDataCreate());

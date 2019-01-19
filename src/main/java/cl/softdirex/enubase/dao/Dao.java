@@ -29,10 +29,10 @@ import cl.softdirex.enubase.entities.abstractclasses.SyncStringId;
 import cl.softdirex.enubase.sync.Sync;
 import cl.softdirex.enubase.sync.entities.LocalInventario;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.NetWrk;
+import cl.softdirex.enubase.utils.WebUtils;
 import cl.softdirex.enubase.utils.Send;
 import cl.softdirex.enubase.utils.StEntities;
-import cl.softdirex.enubase.utils.StVars;
+import cl.softdirex.enubase.utils.VarUtils;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -122,7 +122,7 @@ public class Dao{
                 ((SyncCodClass) object).setCod(getCurrentCod(object));
             }
         }
-        if(NetWrk.isOnline()){
+        if(WebUtils.isOnline()){
             if(object instanceof SyncIntId)//se pueden agregar solo si tienen conexion a internet
                 if(object instanceof User){
                     if(((User)object).getId() == 1 || ((User)object).getId() == 2){
@@ -260,7 +260,7 @@ public class Dao{
             }
         }
         if(object instanceof Inventario){
-            if(((Inventario)object).getNombre().equals(StVars.getInventarioName())){
+            if(((Inventario)object).getNombre().equals(VarUtils.getInventarioName())){
                 Notification.showMsg("No se puede eliminar", "Este inventario se encuentra en uso, no se puede eliminar.",3);
                 return false;
             }
@@ -302,7 +302,7 @@ public class Dao{
                 ((SyncClass)temp).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
                 ((SyncClass)temp).setLastHour(GV.hourToInt(new Date()));
                 
-                if(NetWrk.isOnline()){
+                if(WebUtils.isOnline()){
                     GV.REMOTE_SYNC.update(temp);
                 }
                 return GV.LOCAL_SYNC.update(temp);
@@ -331,7 +331,7 @@ public class Dao{
                 ((SyncClass)temp).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
                 ((SyncClass)temp).setLastHour(GV.hourToInt(new Date()));
                 
-                if(NetWrk.isOnline()){
+                if(WebUtils.isOnline()){
                     GV.REMOTE_SYNC.update(temp);
                 }
                 return GV.LOCAL_SYNC.update(temp);
@@ -359,12 +359,12 @@ public class Dao{
     public Object get(String cod,int id, Object type) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         
         if(type instanceof Item){
-            Inventario inv = (Inventario)get(StVars.getInventarioName(), 0, new Inventario());
+            Inventario inv = (Inventario)get(VarUtils.getInventarioName(), 0, new Inventario());
             if(inv != null){
-                StVars.setInventaryChooser(inv.getId());
+                VarUtils.setInventaryChooser(inv.getId());
             }
             Object item =  LocalInventario.getItem(cod);
-            StVars.setInventaryChooser(0);
+            VarUtils.setInventaryChooser(0);
             return item;
         }
         return GV.LOCAL_SYNC.getElement(cod,id,type);
@@ -377,9 +377,9 @@ public class Dao{
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Dao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        StVars.setInventaryChooser(inv.getId());
+        VarUtils.setInventaryChooser(inv.getId());
         Item item = LocalInventario.getItem(idItem);
-        StVars.setInventaryChooser(0);
+        VarUtils.setInventaryChooser(0);
         return item;
     }
 
@@ -390,20 +390,20 @@ public class Dao{
         }
         boolean esItem = (type instanceof Item);
             //System.out.println(esItem);
-        if(GV.isCurrentDate(StVars.getLastUpdate())){//validar plan de licencia
+        if(GV.isCurrentDate(VarUtils.getLastUpdate())){//validar plan de licencia
             return;//solo hace una actualizacion por día.
         }
         try {
-            if(NetWrk.isOnline()){
+            if(WebUtils.isOnline()){
                 if(type instanceof Venta){
                     type = new VentaDTO();
                 }
                 ArrayList<Object> remoteObjectList= GV.REMOTE_SYNC.listar("-2",type);
                 ArrayList<Object> localObjectList= GV.LOCAL_SYNC.listar("-2",type);
                 /*LISTA1 SE DEBE CARGAR CON UN RETRASO DE DOS MESES PARA RESCATAR ULTIMOS REGISTROS SUBIDOS*/
-                ArrayList<Object> lista1= GV.REMOTE_SYNC.listar(GV.dateSumaResta(StVars.getLastUpdate(), -2, "MONTHS"),type);
+                ArrayList<Object> lista1= GV.REMOTE_SYNC.listar(GV.dateSumaResta(VarUtils.getLastUpdate(), -2, "MONTHS"),type);
                 int size1 = lista1.size();
-                ArrayList<Object> lista2= GV.LOCAL_SYNC.listar(StVars.getLastUpdate(),type);
+                ArrayList<Object> lista2= GV.LOCAL_SYNC.listar(VarUtils.getLastUpdate(),type);
                 
                 int size2 = lista2.size();
                 if(size1 > 0){
@@ -420,7 +420,7 @@ public class Dao{
                             //System.out.println("XXX");
                             return;
                         }
-                        StVars.calcularSubPorcentaje(size1+size2);
+                        VarUtils.calcularSubPorcentaje(size1+size2);
                         if(local == null){
                             /*CREAR SQL PARA INSERTAR TODOS LOS REGISTROS EN UNA SOLA CONSULTA*/
                             //System.out.println("INSERT");
@@ -467,8 +467,8 @@ public class Dao{
                     String sql2 = "";
                     for (Object object : lista2) {
                         //System.out.println("lista2");
-                        StVars.calcularSubPorcentaje(size1+size2);
-                        if(!NetWrk.isOnline()){
+                        VarUtils.calcularSubPorcentaje(size1+size2);
+                        if(!WebUtils.isOnline()){
                             GV.stopSincronizacion();
                         }
                         if(GV.sincronizacionIsStopped()){
@@ -531,7 +531,7 @@ public class Dao{
                     lista2 = LocalInventario.listarItemsForSync();
                     int tam1 = lista2.size();
                     for (Object object : lista2) {
-                        StVars.calcularSubPorcentaje(tam1);
+                        VarUtils.calcularSubPorcentaje(tam1);
                         //System.out.println("items");
                         Sync.addRemoteSync(GV.LOCAL_SYNC, GV.REMOTE_SYNC, object);
                         GV.LOCAL_SYNC.updateFromDao(object);
@@ -595,7 +595,7 @@ public class Dao{
         
         int maxIdDetalle = GV.LOCAL_SYNC.getMaxId(new Detalle());
         for (Detalle det : venta.getDetalles()) {
-            det.setCod(maxIdDetalle+ "-" + StVars.getIdEquipo());
+            det.setCod(maxIdDetalle+ "-" + VarUtils.getIdEquipo());
             if(LocalInventario.addObject(det)){
                 String idItem = det.getIdItem();
                 if(!idItem.isEmpty()){
@@ -629,8 +629,8 @@ public class Dao{
     }
 
     public boolean usernameYaExiste(String username) {
-        if(StVars.getLicenciaTipoPlan() == StVars.licenciaTipoFree() ||
-           StVars.getLicenciaTipoPlan() == StVars.licenciaTipoLocal()){
+        if(VarUtils.getLicenciaTipoPlan() == VarUtils.licenciaTipoFree() ||
+           VarUtils.getLicenciaTipoPlan() == VarUtils.licenciaTipoLocal()){
             return (GV.LOCAL_SYNC.getElement(username, 0, new User())!=null);
         }else{
             return (GV.REMOTE_SYNC.getElement(username, 0, new User())!=null);
@@ -681,7 +681,7 @@ public class Dao{
         }
         if(object instanceof SyncIntId)
         {
-            if(!NetWrk.isOnline())
+            if(!WebUtils.isOnline())
             {
                 Notification.showMsg("No se puede crear nuevo registro", 
                         "Para poder ingresar un nuevo registro debes tener acceso "
@@ -1027,7 +1027,7 @@ public class Dao{
             ((SyncClass)object).setLastUpdate(new Date());//actualizamos la ultima fecha de modificacion
             ((SyncClass)object).setLastHour(GV.hourToInt(new Date()));
             if(object instanceof SyncIntId){
-                if(!NetWrk.isOnline()){
+                if(!WebUtils.isOnline()){
                     Notification.showMsg("No se puede modificar el registro",
                             "Para poder modificar estos datos debes tener acceso "
                                     + "a internet.", 2);
@@ -1138,7 +1138,7 @@ public class Dao{
                 }
             }
             if(object instanceof SyncIntId){
-                if(!NetWrk.isOnline()){
+                if(!WebUtils.isOnline()){
                     if(((SyncClass)object).getEstado() < 1){
                         Notification.showMsg("No se puede eliminar el registro", 
                                 "Para poder eliminar este elemento debes tener acceso "

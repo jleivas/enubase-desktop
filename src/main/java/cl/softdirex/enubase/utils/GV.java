@@ -7,12 +7,14 @@ package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Equipo;
+import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntId;
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntIdValidaName;
 import cl.softdirex.enubase.entities.abstractclasses.SyncStringId;
 import cl.softdirex.enubase.sync.entities.Local;
 import cl.softdirex.enubase.sync.entities.Remote;
 import static cl.softdirex.enubase.utils.StEntities.getTipoUsuario;
+import cl.softdirex.enubase.view.init.Acceso;
 import cl.softdirex.enubase.view.notifications.Notification;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelCompanyData;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetLicencia;
@@ -53,9 +55,37 @@ public class GV {
         BDUtils.initDB();
         boolean error = false;
         try{XmlUtils.checkXmlFiles();}catch(Exception e){error = true;licenciaRegistrar();}
-//        if(!error){
-//            initValues();
-//        }
+        if(!error){
+            initValues();
+        }
+    }
+    
+    private static void initValues(){
+        validaOs();
+        SubProcess.isOnline();
+        XmlUtils.cargarRegistroLocal();
+        SubProcess.licenciaComprobarOnline();
+        validaBD();
+        VarUtils.setIdEquipo(LOCAL_SYNC.getIdEquipo());
+        Acceso init = new Acceso();
+        init.setVisible(true);
+    }
+    
+    private static void validaBD(){
+        Dao load = new Dao();
+        try {    
+            if(!GV.licenciaLocal()){
+                //Comprueba si existe una base de datos remota con el usuario root
+                if(load.get("root", 0, new User())==null){
+                    sincronizeOrClose();
+                }
+
+            }else{
+                load.addOnInit(new User(2, "Sistema", "root", "contacto@softdirex.cl", GV.enC("softdirex"), 7, 1, null, 0));
+            }
+        } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(GV.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     /*BEGIN LICENCIA*/
     public static void licenciaRegistrar(){
@@ -64,7 +94,7 @@ public class GV {
     
     public static boolean licenciaComprobateOnline(String arg) {
         if(!KeyValid(arg)){licMsg("Debe ingresar una licencia válida.",2);return false;}
-        if(!NetWrk.isOnline()){licMsg("No tienes conexión, debes conectarte a internet primero.", 2);return false;}
+        if(!WebUtils.isOnline()){licMsg("No tienes conexión, debes conectarte a internet primero.", 2);return false;}
         String licencia = XmlUtils.getLicenciaOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg)));
         if(licencia == null){licMsg("Los datos ingresados son erróneos, consulte con su proveedor.", 2);return false;}
         try {
@@ -80,8 +110,8 @@ public class GV {
     }
     
     private static void validaToken(int tipoPlan,String licencia,String key) {
-        if(tipoPlan != StVars.licenciaTipoFree() && 
-           tipoPlan != StVars.licenciaTipoLocal()){
+        if(tipoPlan != VarUtils.licenciaTipoFree() && 
+           tipoPlan != VarUtils.licenciaTipoLocal()){
             Notification.showOptionPanel(new OpanelSetToken(key), Notification.titleRegistrarToken());
         }else{
             setLicenciaAsignarValoresPaso1(licencia, key);
@@ -89,17 +119,17 @@ public class GV {
     }
     
     private static void setLicenciaAsignarValoresPaso1(String licencia,String arg){
-        StVars.setSyncCount(0);
+        VarUtils.setSyncCount(0);
         
-        StVars.setUserName("admin");
-        StVars.setLicenciaTipoPlan(XmlUtils.getTipoPlanOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
+        VarUtils.setUserName("admin");
+        VarUtils.setLicenciaTipoPlan(XmlUtils.getTipoPlanOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
         
-        StVars.setLicenceCode(licencia);
-        StVars.setExpDate(XmlUtils.getExpDateOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
-        StVars.setCurrentEquipo(licencia+"_"+dateToString(new Date(), "yyyymmddhhmmss"));
-        StVars.setApiUriLicence(keyGetUrl(dsC(arg)));
-        StVars.setApiUriPort(keyGetPass(dsC(arg)));
-        StVars.setLastUpdateFromXml(stringToDate(StVars.getFechaDefault()));
+        VarUtils.setLicenceCode(licencia);
+        VarUtils.setExpDate(XmlUtils.getExpDateOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
+        VarUtils.setCurrentEquipo(licencia+"_"+dateToString(new Date(), "yyyymmddhhmmss"));
+        VarUtils.setApiUriLicence(keyGetUrl(dsC(arg)));
+        VarUtils.setApiUriPort(keyGetPass(dsC(arg)));
+        VarUtils.setLastUpdateFromXml(stringToDate(VarUtils.getFechaDefault()));
         Notification.closeOptionPanel();
         Notification.showOptionPanel(new OpanelCompanyData(1), Notification.titleCompanyDataCreate());
     }
@@ -222,8 +252,8 @@ public class GV {
     }
     
     public static boolean licenciaLocal() {
-        return (StVars.getLicenciaTipoPlan() == StVars.licenciaTipoFree() ||
-                StVars.getLicenciaTipoPlan() == StVars.licenciaTipoLocal());
+        return (VarUtils.getLicenciaTipoPlan() == VarUtils.licenciaTipoFree() ||
+                VarUtils.getLicenciaTipoPlan() == VarUtils.licenciaTipoLocal());
     }
     
     public static Object searchInList(String code , List<Object> list, Object classType) {
@@ -311,7 +341,7 @@ public class GV {
         try {
             byte[] message = Base64.decodeBase64(textContent.getBytes("utf-8"));
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digestOfPassword = md.digest(StVars.getSalt().getBytes("utf-8"));
+            byte[] digestOfPassword = md.digest(VarUtils.getSalt().getBytes("utf-8"));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
             SecretKey key = new SecretKeySpec(keyBytes, "DESede");
  
@@ -336,7 +366,7 @@ public class GV {
         try {
  
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digestOfPassword = md.digest(StVars.getSalt().getBytes("utf-8"));
+            byte[] digestOfPassword = md.digest(VarUtils.getSalt().getBytes("utf-8"));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
  
             SecretKey key = new SecretKeySpec(keyBytes, "DESede");
@@ -365,7 +395,7 @@ public class GV {
         } catch (ParseException ex) {
 
             ex.printStackTrace();
-            fecha = stringToDate(StVars.getFechaDefault());
+            fecha = stringToDate(VarUtils.getFechaDefault());
 
         }
         
@@ -487,7 +517,7 @@ public class GV {
     }
     
     public static boolean licenciaIsEnableToSendMails() {
-        return (StVars.getLicenciaTipoPlan() != StVars.licenciaTipoFree());
+        return (VarUtils.getLicenciaTipoPlan() != VarUtils.licenciaTipoFree());
     }
     
     public static String strToPrice(int monto){
@@ -497,32 +527,32 @@ public class GV {
     
     public static int getSyncCount(){
         XmlUtils.loadSyncCount();
-        return StVars.getSyncCount();
+        return VarUtils.getSyncCount();
     }
     
     public static void setSyncCount(int value){
-        StVars.setSyncCount(value);
+        VarUtils.setSyncCount(value);
         XmlUtils.saveSyncCount();
     }
     
     public static boolean syncEnabled(){
-        int tp = StVars.getLicenciaTipoPlan();
+        int tp = VarUtils.getLicenciaTipoPlan();
         int count = getSyncCount();
-        if(tp==StVars.licenciaTipoFullData())return true;
+        if(tp==VarUtils.licenciaTipoFullData())return true;
         if(count<0){
             Notification.showMsg("Registos adulterados", "No es posible continuar porque los archivos del sistema\n"
                     + " se encuentran corrompidos, esto puede causar daños irreversibles en el sistema", 3);
-            setSyncCount(StVars.TP_6X_MS*1000);
+            setSyncCount(VarUtils.TP_6X_MS*1000);
             return false;
         }
-        if(tp==StVars.licenciaTipo2X()){
-            return (count < StVars.TP_2X_MS);
+        if(tp==VarUtils.licenciaTipo2X()){
+            return (count < VarUtils.TP_2X_MS);
         }
-        if(tp==StVars.licenciaTipo4X()){
-            return (count < StVars.TP_4X_MS);
+        if(tp==VarUtils.licenciaTipo4X()){
+            return (count < VarUtils.TP_4X_MS);
         }
-        if(tp==StVars.licenciaTipo6X()){
-            return (count < StVars.TP_6X_MS);
+        if(tp==VarUtils.licenciaTipo6X()){
+            return (count < VarUtils.TP_6X_MS);
         }
         return false;
     }
@@ -568,7 +598,7 @@ public class GV {
     }
     
     public static void setLastUpdate(Date date) {
-        StVars.setLastUpdate(date);
+        VarUtils.setLastUpdate(date);
         XmlUtils.crearRegistroLocal();
     }
     
@@ -673,6 +703,67 @@ public class GV {
             }
         }
         return format;
+    }
+    
+    public static void validaOs(){
+        VarUtils.setIsWindowsOs((System.getProperty("os.name").toLowerCase().startsWith("win")));
+    }
+    
+    /**
+     * Obliga al usuario a sincronizar datos para evitar perdida importante de información
+     */
+    public static void sincronizeOrClose() {
+        if(Notification.getConfirmation("Sincronización inicial", "Todos los datos deben ser sincronizados para que el sistema "
+                + "funcione correctamente,\n el tiempo de espera puede ser largo dependiendo de los registros "
+                + "almacenados\n en la base de datos remota.\n"
+                + "Asegúrese de que su conexión a internet sea rápida para evitar posibles problemas de registro\n"
+                + "de lo contrario inicie el sistema mas tarde."
+                + "\n ¿Desea sincronizar los datos ahora?", 2)){
+            GV.setSyncCount(0);
+            BDUtils.sincronizarTodo();
+        }else{
+            Notification.showMsg("Operación cancelada", "El sistema no puede iniciar sin la sincronización,\n"
+                    + "vuelva a intentarlo mas tarde.", 2);
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GV.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.exit(0);
+        }
+    }
+    
+    public static User validar(String username, String pass) {
+        User user = null;
+        try {
+            user = (User)load.get(username, 0, new User());
+        } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(GV.class.getName()).log(Level.SEVERE, null, ex);
+            Notification.showMsg("Error al cargar usuario", "Ocurrió un error inesperado al validar usuario:\n"
+                    + ex.getMessage(), 3);
+        }
+        if(user!=null){
+            if(user.getEstado() == 0){
+                Notification.showMsg("Acceso denegado", "El usuario se encuentra anulado", 2);
+                return null;
+            }
+            if(GV.dsC(user.getPass()).equals(pass)){
+                VarUtils.setIntentosAccesoReset();
+                return user;
+            }else{
+                VarUtils.setIntentosAccesoSuma();
+                if(VarUtils.getIntentosAcceso() < 3){
+                    Notification.showMsg("Acceso denegado", "Clave de acceso inválida", 2);
+                }else{
+                    Notification.showMsg("Acceso denegado", "Clave de acceso inválida:\n"
+                        + "Si usted está seguro que la clave ingresada es la correcta\n"
+                        + "consulte una posible solución en el ícono de ayuda \"?\".", 2);
+                }
+            }
+        }else{
+            Notification.showMsg("Acceso denegado", "El usuario no existe", 2);
+        }
+        return null;
     }
     /*********************END FUNCTIONS****************************/
     /*********************BEGIN UI PROPERTIES****************************/

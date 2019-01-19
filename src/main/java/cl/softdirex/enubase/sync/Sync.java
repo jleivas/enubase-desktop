@@ -5,7 +5,7 @@
  */
 package cl.softdirex.enubase.sync;
 
-import cl.softdirex.enubase.utils.NetWrk;
+import cl.softdirex.enubase.utils.WebUtils;
 import java.sql.SQLException;
 
 /**
@@ -28,7 +28,7 @@ public class Sync {
     }
     
     public static boolean addRemoteSync(InterfaceSync localData, InterfaceSync remoteData, Object object) throws SQLException, ClassNotFoundException{        
-        if(NetWrk.isOnline()){
+        if(WebUtils.isOnline()){
             remoteData.add(object);
             return true;
         }

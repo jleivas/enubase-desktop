@@ -8,7 +8,7 @@ package cl.softdirex.enubase.view.notifications.panels.input;
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.Boton;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.NetWrk;
+import cl.softdirex.enubase.utils.WebUtils;
 import cl.softdirex.enubase.utils.PanelUtils;
 import cl.softdirex.enubase.view.notifications.Notification;
 
@@ -24,6 +24,7 @@ public class OpanelSetLicencia extends javax.swing.JPanel {
      */
     public OpanelSetLicencia() {
         initComponents();
+        txtLicencia.setText("7I3BGWJw0NkWB27uZBhdAAvDMJqldqNFUlanmPiDI1FNZOqo+NL6mvesJrNHGH6b2HtzjkYOHebmnUEG1AtmVw==");
     }
 
     /**
@@ -154,7 +155,7 @@ public class OpanelSetLicencia extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDropDbMousePressed
 
     private void btnLoadMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoadMouseClicked
-        if(NetWrk.isOnline()){
+        if(WebUtils.isOnline()){
             GV.licenciaComprobateOnline(txtLicencia.getText());
         }else{
             Notification.showMsg("No se puede comprobar", "Conéctese a internet para comprobar la licencia", 2);

@@ -52,7 +52,7 @@ public class XmlUtils {
             Element user = document.createElement("usr"); 
             //creamos un nuevo elemento. usr contiene name
             Element name= document.createElement("name");
-            Text vName = document.createTextNode(StVars.getUserName()); 
+            Text vName = document.createTextNode(VarUtils.getUserName()); 
             /**************************LICENCE******************************/
             Element lic = document.createElement("lic"); 
             //creamos un nuevo elemento. lic contiene st y date
@@ -60,9 +60,9 @@ public class XmlUtils {
             Element code= document.createElement("code");
             Element date= document.createElement("date");
             //Ingresamos la info. 
-            Text vSt = document.createTextNode(GV.enC(""+StVars.getLicenciaTipoPlan()));
-            Text vCode = document.createTextNode(GV.enC(StVars.getLicenceCode()));
-            Text vDate = document.createTextNode(GV.enC(StVars.getExpDate())); 
+            Text vSt = document.createTextNode(GV.enC(""+VarUtils.getLicenciaTipoPlan()));
+            Text vCode = document.createTextNode(GV.enC(VarUtils.getLicenceCode()));
+            Text vDate = document.createTextNode(GV.enC(VarUtils.getExpDate())); 
             /**************************NETWORK******************************/
             Element network = document.createElement("network"); 
             //creamos un nuevo elemento. lic contiene st y date
@@ -70,9 +70,9 @@ public class XmlUtils {
             Element uri= document.createElement("uri");
             Element port= document.createElement("port");
             //Ingresamos la info. 
-            Text vEquipo = document.createTextNode(GV.enC(StVars.getEquipo()));
-            Text vUri = document.createTextNode(GV.enC(StVars.apiUriLicence()));
-            Text vPort = document.createTextNode(GV.enC(StVars.urlUriPort()));
+            Text vEquipo = document.createTextNode(GV.enC(VarUtils.getEquipo()));
+            Text vUri = document.createTextNode(GV.enC(VarUtils.apiUriLicence()));
+            Text vPort = document.createTextNode(GV.enC(VarUtils.urlUriPort()));
             
              /**************************REGISTRY******************************/
             Element registry = document.createElement("registry"); 
@@ -87,13 +87,13 @@ public class XmlUtils {
             Element msgFile = document.createElement("message_file");
             //Ingresamos la info. 
             Text vOffice = document.createTextNode(GV.enC(StEntities.getNombreOficina()));
-            Text vCompany = document.createTextNode(GV.enC(StVars.getCompanyName()));
-            Text vInventary = document.createTextNode(GV.enC(StVars.getInventarioName()));
-            Text vLastUpdate = document.createTextNode(GV.enC(GV.dateToString(StVars.getLastUpdate(), "dd-mm-yyyy")));
-            Text vCompanyDesc = document.createTextNode(GV.enC(StVars.getCompanyDescription()));
-            Text vCompanyRut = document.createTextNode(GV.enC(StVars.getCompanyRut()));
-            Text vCompanyGiro = document.createTextNode(GV.enC(StVars.getCompanyGiro()));
-            Text vMsgMessage = document.createTextNode(GV.enC(StVars.getMessageFile()));
+            Text vCompany = document.createTextNode(GV.enC(VarUtils.getCompanyName()));
+            Text vInventary = document.createTextNode(GV.enC(VarUtils.getInventarioName()));
+            Text vLastUpdate = document.createTextNode(GV.enC(GV.dateToString(VarUtils.getLastUpdate(), "dd-mm-yyyy")));
+            Text vCompanyDesc = document.createTextNode(GV.enC(VarUtils.getCompanyDescription()));
+            Text vCompanyRut = document.createTextNode(GV.enC(VarUtils.getCompanyRut()));
+            Text vCompanyGiro = document.createTextNode(GV.enC(VarUtils.getCompanyGiro()));
+            Text vMsgMessage = document.createTextNode(GV.enC(VarUtils.getMessageFile()));
             
             /**************USER*******************************************/
             //Asignamos la versión de nuestro XML
@@ -218,7 +218,7 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    StVars.setUserName(element.getElementsByTagName("name").item(0)
+                    VarUtils.setUserName(element.getElementsByTagName("name").item(0)
                             .getTextContent());
                 }
             }
@@ -233,9 +233,9 @@ public class XmlUtils {
                     Element element = (Element) nodo;
                     String fInteger = GV.dsC(element.getElementsByTagName("st").item(0).getTextContent());
                     st = Integer.parseInt((GV.getStr(fInteger).isEmpty())?"0":fInteger);
-                    StVars.setLicenciaTipoPlan(st);
-                    StVars.setLicenceCode(GV.dsC(element.getElementsByTagName("code").item(0).getTextContent()));
-                    StVars.setExpDate(GV.dsC(element.getElementsByTagName("date").item(0).getTextContent()));
+                    VarUtils.setLicenciaTipoPlan(st);
+                    VarUtils.setLicenceCode(GV.dsC(element.getElementsByTagName("code").item(0).getTextContent()));
+                    VarUtils.setExpDate(GV.dsC(element.getElementsByTagName("date").item(0).getTextContent()));
                 }
             }
             
@@ -246,11 +246,11 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    StVars.setCurrentEquipo(GV.dsC(element.getElementsByTagName("equipo")
+                    VarUtils.setCurrentEquipo(GV.dsC(element.getElementsByTagName("equipo")
                             .item(0).getTextContent()));
-                    StVars.setApiUriLicence(GV.dsC(element.getElementsByTagName("uri")
+                    VarUtils.setApiUriLicence(GV.dsC(element.getElementsByTagName("uri")
                             .item(0).getTextContent()));
-                    StVars.setApiUriPort(GV.dsC(element.getElementsByTagName("port")
+                    VarUtils.setApiUriPort(GV.dsC(element.getElementsByTagName("port")
                             .item(0).getTextContent()));
                 }
             }
@@ -264,13 +264,13 @@ public class XmlUtils {
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
                     StEntities.setOficina(GV.dsC(element.getElementsByTagName("office").item(0).getTextContent()));
-                    StVars.setCompanyName(GV.dsC(element.getElementsByTagName("company").item(0).getTextContent()));
-                    StVars.setInventarioLocal(GV.dsC(element.getElementsByTagName("inventary").item(0).getTextContent()));
-                    StVars.setLastUpdateFromXml(GV.stringToDate(GV.dsC(element.getElementsByTagName("last_update_bd").item(0).getTextContent())));
-                    StVars.setCompanyDescription(GV.dsC(element.getElementsByTagName("company_description").item(0).getTextContent()));
-                    StVars.setCompanyRut(GV.dsC(element.getElementsByTagName("company_rut").item(0).getTextContent()));
-                    StVars.setCompanyGiro(GV.dsC(element.getElementsByTagName("company_giro").item(0).getTextContent()));
-                    StVars.setMessageFile(GV.dsC(element.getElementsByTagName("message_file").item(0).getTextContent()));
+                    VarUtils.setCompanyName(GV.dsC(element.getElementsByTagName("company").item(0).getTextContent()));
+                    VarUtils.setInventarioLocal(GV.dsC(element.getElementsByTagName("inventary").item(0).getTextContent()));
+                    VarUtils.setLastUpdateFromXml(GV.stringToDate(GV.dsC(element.getElementsByTagName("last_update_bd").item(0).getTextContent())));
+                    VarUtils.setCompanyDescription(GV.dsC(element.getElementsByTagName("company_description").item(0).getTextContent()));
+                    VarUtils.setCompanyRut(GV.dsC(element.getElementsByTagName("company_rut").item(0).getTextContent()));
+                    VarUtils.setCompanyGiro(GV.dsC(element.getElementsByTagName("company_giro").item(0).getTextContent()));
+                    VarUtils.setMessageFile(GV.dsC(element.getElementsByTagName("message_file").item(0).getTextContent()));
                 }
             }
         } catch (Exception e) {
@@ -295,13 +295,13 @@ public class XmlUtils {
                     Element element = (Element) nodo;
                     String fInteger = GV.dsC(element.getElementsByTagName("cont")
                             .item(0).getTextContent());
-                    Date vReg = GV.stringToDate(StVars.getFechaDefault());
+                    Date vReg = GV.stringToDate(VarUtils.getFechaDefault());
                     vReg = GV.stringToDate(GV.dsC(element.getElementsByTagName("reg")
                             .item(0).getTextContent()));
                     int value =0;
                     try{value = Integer.parseInt(fInteger);}catch(Exception e){value = -1;}
                     value=compobarSyncCount(value,vReg);
-                    StVars.setSyncCount(value);
+                    VarUtils.setSyncCount(value);
                 }
             }
         } catch (Exception e) {
@@ -323,7 +323,7 @@ public class XmlUtils {
             Element upt = document.createElement("upt"); 
             Element cont= document.createElement("cont");
             Element reg= document.createElement("reg");
-            Text vCont = document.createTextNode(GV.enC(""+StVars.getSyncCount())); 
+            Text vCont = document.createTextNode(GV.enC(""+VarUtils.getSyncCount())); 
             Text vReg = document.createTextNode(GV.enC(GV.dateToString(new Date(), 
                     "dd-mm-yyyy"))); 
             
@@ -364,10 +364,10 @@ public class XmlUtils {
                     Element element = (Element) nodo;
                     st = Integer.parseInt(GV.dsC(element.getElementsByTagName("st")
                             .item(0).getTextContent()));
-                    StVars.setLicenciaTipoPlan(st);
-                    StVars.setLicenceCode(GV.dsC(element.getElementsByTagName("code")
+                    VarUtils.setLicenciaTipoPlan(st);
+                    VarUtils.setLicenceCode(GV.dsC(element.getElementsByTagName("code")
                             .item(0).getTextContent()));
-                    StVars.setExpDate(GV.dsC(element.getElementsByTagName("date")
+                    VarUtils.setExpDate(GV.dsC(element.getElementsByTagName("date")
                             .item(0).getTextContent()));
                 }
             }
@@ -433,10 +433,10 @@ public class XmlUtils {
     
     public static boolean readXMLOnline() {
         cargarDatosLicencia();
-        if(StVars.getLicenciaTipoPlan()!=StVars.licenciaTipoFree()){
+        if(VarUtils.getLicenciaTipoPlan()!=VarUtils.licenciaTipoFree()){
             try{
                 int cont=0;
-                URL url = new URL(GV.getStr(StVars.apiUriLicence()));
+                URL url = new URL(GV.getStr(VarUtils.apiUriLicence()));
                 //URLConnection conn = url.openConnection();
                 BufferedReader br = new BufferedReader(
                         new InputStreamReader(url.openStream())
@@ -477,7 +477,7 @@ public class XmlUtils {
                                         (Element) primerNombreElementoLista.item(0);
                         NodeList primerNombre = primerNombreElemento.getChildNodes();
                         id = ((Node) primerNombre.item(0)).getNodeValue().toString();
-                        if(id.equals(StVars.getLicenceCode())){
+                        if(id.equals(VarUtils.getLicenceCode())){
                             cont++;
                             NodeList segundoNombreElementoLista =
                                         primerElemento.getElementsByTagName("st");
@@ -493,8 +493,8 @@ public class XmlUtils {
                             Element tercerNombreElemento =
                                             (Element) tercerNombreElementoLista.item(0);
                             NodeList tercerNombre = tercerNombreElemento.getChildNodes();
-                            StVars.setLicenciaTipoPlan(st);
-                            StVars.setExpDate(((Node) tercerNombre.item(0)).getNodeValue()
+                            VarUtils.setLicenciaTipoPlan(st);
+                            VarUtils.setExpDate(((Node) tercerNombre.item(0)).getNodeValue()
                                     .toString());
                             crearRegistroLocal();
                         }
@@ -503,8 +503,8 @@ public class XmlUtils {
                 if(cont == 0){
                     Notification.showMsg("Error de licencia", 
                             "Esta es una copia fraudulenta del software original.",2);
-                    StVars.setLicenciaTipoPlan(0);
-                    StVars.setLicenceCode("free");
+                    VarUtils.setLicenciaTipoPlan(0);
+                    VarUtils.setLicenceCode("free");
                     crearRegistroLocal();
                 }
                 return true;
@@ -525,7 +525,7 @@ public class XmlUtils {
     private static int compobarSyncCount(int value, Date vReg) {
         if(value<0)return -1;
         if(GV.dateToString(vReg, "dd-mm-yyyy").equals(
-                GV.stringToDate(StVars.getFechaDefault())))
+                GV.stringToDate(VarUtils.getFechaDefault())))
         {
             return -1;
         }
@@ -654,22 +654,22 @@ public class XmlUtils {
     
     public static String imprimirDatosLeidos(){
         return "\n"+
-        "Username: "+StVars.getUserName()+"\n"+
-        "tp: "+StVars.getLicenciaTipoPlan()+"\n"+
-        "code: "+StVars.getLicenceCode()+"\n"+
-        "expdate: "+StVars.getExpDate()+"\n"+
-        "equipo: "+StVars.getEquipo()+"\n"+
-        "uri: "+StVars.apiUriLicence()+"\n"+
-        "port: "+StVars.urlUriPort()+"\n"+
-        "lastupdate: "+GV.dateToString(StVars.getLastUpdate(), "dd-mm-yyyy")+"\n"+
+        "Username: "+VarUtils.getUserName()+"\n"+
+        "tp: "+VarUtils.getLicenciaTipoPlan()+"\n"+
+        "code: "+VarUtils.getLicenceCode()+"\n"+
+        "expdate: "+VarUtils.getExpDate()+"\n"+
+        "equipo: "+VarUtils.getEquipo()+"\n"+
+        "uri: "+VarUtils.apiUriLicence()+"\n"+
+        "port: "+VarUtils.urlUriPort()+"\n"+
+        "lastupdate: "+GV.dateToString(VarUtils.getLastUpdate(), "dd-mm-yyyy")+"\n"+
         
-        "companyname: "+StVars.getCompanyName()+"\n"+
-        "companyrut: "+StVars.getCompanyRut()+"\n"+
-        "companydescription: "+StVars.getCompanyDescription()+"\n"+
-        "companyGiro: "+StVars.getCompanyGiro()+"\n"+
+        "companyname: "+VarUtils.getCompanyName()+"\n"+
+        "companyrut: "+VarUtils.getCompanyRut()+"\n"+
+        "companydescription: "+VarUtils.getCompanyDescription()+"\n"+
+        "companyGiro: "+VarUtils.getCompanyGiro()+"\n"+
         "officename: "+StEntities.getNombreOficina()+"\n"+
-        "inventary: "+StVars.getInventarioName()+"\n"+
-        "messagefile: "+StVars.getMessageFile();
+        "inventary: "+VarUtils.getInventarioName()+"\n"+
+        "messagefile: "+VarUtils.getMessageFile();
     }
 
     public static void deleteXmlFiles() {

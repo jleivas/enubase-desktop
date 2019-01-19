@@ -11,7 +11,7 @@ import java.io.IOException;
  *
  * @author sdx
  */
-public class NetWrk {
+public class WebUtils {
     private static String className = "NetWrk";
     
     private static boolean IS_ONLINE = true;

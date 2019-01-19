@@ -12,7 +12,7 @@ import cl.softdirex.enubase.entities.Item;
 import cl.softdirex.enubase.entities.Venta;
 import cl.softdirex.enubase.entities.utils.InternStockDetail;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.StVars;
+import cl.softdirex.enubase.utils.VarUtils;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -124,18 +124,18 @@ public class LocalInventario {
         ArrayList<Object> lista = new ArrayList<>();
         boolean sincronizar = (idParam.equals(SQL_SYNC));
         updateStockTemporal();
-        String sql = "SELECT * FROM item WHERE itm_id ='" + idParam + "' AND inventario_inv_id = "+StVars.getInventaryChooser();
-        if (idParam.equals("0") || idParam.equals(StVars.getSqlLowStock())) {
-            sql = "SELECT * FROM item WHERE itm_estado=1 AND inventario_inv_id = "+StVars.getInventaryChooser();
+        String sql = "SELECT * FROM item WHERE itm_id ='" + idParam + "' AND inventario_inv_id = "+VarUtils.getInventaryChooser();
+        if (idParam.equals("0") || idParam.equals(VarUtils.getSqlLowStock())) {
+            sql = "SELECT * FROM item WHERE itm_estado=1 AND inventario_inv_id = "+VarUtils.getInventaryChooser();
         }
         if (idParam.equals("-1")) {
-            sql = "SELECT * FROM item WHERE itm_estado=0 AND inventario_inv_id = "+StVars.getInventaryChooser();
+            sql = "SELECT * FROM item WHERE itm_estado=0 AND inventario_inv_id = "+VarUtils.getInventaryChooser();
         }
         if (idParam.equals("-2")) {
-            sql = "SELECT * FROM item WHERE inventario_inv_id = "+StVars.getInventaryChooser();
+            sql = "SELECT * FROM item WHERE inventario_inv_id = "+VarUtils.getInventaryChooser();
         }
         if (idParam.equals("st")) {
-            sql = "SELECT * FROM item WHERE (itm_estado=1 AND itm_stock > 0) AND inventario_inv_id = "+StVars.getInventaryChooser();
+            sql = "SELECT * FROM item WHERE (itm_estado=1 AND itm_stock > 0) AND inventario_inv_id = "+VarUtils.getInventaryChooser();
         }
         if (sincronizar) {
             sql = "SELECT * FROM item";

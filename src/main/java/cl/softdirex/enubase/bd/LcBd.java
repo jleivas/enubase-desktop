@@ -6,11 +6,10 @@
 package cl.softdirex.enubase.bd;
 
 import cl.softdirex.enubase.dao.Dao;
-import cl.softdirex.enubase.entities.TipoPago;
 import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.StVars;
+import cl.softdirex.enubase.utils.VarUtils;
 import cl.softdirex.enubase.view.notifications.Notification;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -153,13 +152,15 @@ public class LcBd{
                     PreparedStatement pstm = conn.prepareStatement(creartabla);
                     pstm.execute();
                     pstm.close();
+                    System.out.println(creartabla);
                     cerrar();
                 } catch (SQLException ex) {
+                    System.out.println(ex+"\n"+ex.getSQLState());
                     return false;                }
             }
         }catch(SQLException | ClassNotFoundException | ExceptionInInitializerError e){
-            JOptionPane.showMessageDialog(null,"Ha intentado abrir el programa mas de una vez\n¡"+StVars.getProjectName()+" ya se encuentra en ejecución!"
-                    +"\n\nEl sistema se cerrará",StVars.getProjectName()+" ya se encuentra en ejecución", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Ha intentado abrir el programa mas de una vez\n¡"+VarUtils.getProjectName()+" ya se encuentra en ejecución!"
+                    +"\n\nEl sistema se cerrará",VarUtils.getProjectName()+" ya se encuentra en ejecución", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         return true;

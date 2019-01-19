@@ -12,7 +12,7 @@ import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.GV;
 import cl.softdirex.enubase.utils.PanelUtils;
 import cl.softdirex.enubase.utils.StEntities;
-import cl.softdirex.enubase.utils.StVars;
+import cl.softdirex.enubase.utils.VarUtils;
 import cl.softdirex.enubase.utils.SubProcess;
 import cl.softdirex.enubase.utils.XmlUtils;
 import cl.softdirex.enubase.view.notifications.Notification;
@@ -408,7 +408,7 @@ public class OpanelOfficeData extends javax.swing.JPanel {
             Oficina of = new Oficina(0, officeName, direccion, ciudad, telefono, "", mail, web, 1, null, 0);
             Dao load = new Dao();
             SubProcess.report("Nuevo registro", "Reporte de nueva instalación de "
-                    +StVars.getProjectName()+" "+StVars.getVersion()+"\n"
+                    +VarUtils.getProjectName()+" "+VarUtils.getVersion()+"\n"
                     + XmlUtils.imprimirDatosLeidos());
             try {
                 load.add(of);
@@ -417,7 +417,7 @@ public class OpanelOfficeData extends javax.swing.JPanel {
                         1, null, 0);
                 load.add(inv);
                 StEntities.setOficina(officeName);
-                StVars.setInventarioLocal(inventarioName);
+                VarUtils.setInventarioLocal(inventarioName);
                 Notification.closeOptionPanel();
                 XmlUtils.crearRegistroLocal();
                 System.exit(0);

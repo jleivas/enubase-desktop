@@ -101,14 +101,14 @@ public class XlsUtils {
         Dao load = new Dao();
         Inventario local = null;
         try {
-            local = ((Inventario)load.get(StVars.getInventarioName(), 0, new Inventario()));
+            local = ((Inventario)load.get(VarUtils.getInventarioName(), 0, new Inventario()));
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             local = new Inventario();
         }
         local = (local!=null)?local:new Inventario();
-        StVars.setInventaryChooser(local.getId());//Se prepara el id del inventario que se usara en la consulta a la base de datos
-        List<Object> lista = load.listar(StVars.getSqlLowStock(),new Item());
-        StVars.setInventaryChooser(0);//Se reinicia el id temporal del inventario seleccionado
+        VarUtils.setInventaryChooser(local.getId());//Se prepara el id del inventario que se usara en la consulta a la base de datos
+        List<Object> lista = load.listar(VarUtils.getSqlLowStock(),new Item());
+        VarUtils.setInventaryChooser(0);//Se reinicia el id temporal del inventario seleccionado
         JFileChooser archivo = new JFileChooser();
         if(lista.size()<1){
             Notification.showMsg("No se puede generar archivo", "No existen productos con stock bajo para generar la orden de compra.", 2);
@@ -122,9 +122,9 @@ public class XlsUtils {
                 String [][] entrada = new String[filas][4];
                 entrada[0][1] = "Orden de compra generada el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
-                entrada[1][1] = StVars.getCompanyName();
+                entrada[1][1] = VarUtils.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = StVars.getProjectName();
+                entrada[2][1] = VarUtils.getProjectName();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 entrada[5][0] = "Codigo";
@@ -159,7 +159,7 @@ public class XlsUtils {
     
     public static void saveInventary(){
         Dao load = new Dao();
-        if(StVars.getInventaryChooser()==0){
+        if(VarUtils.getInventaryChooser()==0){
             Notification.showMsg("No se pudo realizar la operación", "Los datos no han sido ingresados correctamente\n"
                     + "Debe seleccionar un invntario", 1);
             return;
@@ -179,9 +179,9 @@ public class XlsUtils {
                 String [][] entrada = new String[filas][6];
                 entrada[0][1] = "Registro de inventario generado el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
-                entrada[1][1] = StVars.getCompanyName();
+                entrada[1][1] = VarUtils.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = StVars.getProjectName();
+                entrada[2][1] = VarUtils.getProjectName();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 entrada[5][0] = "Codigo";
@@ -243,9 +243,9 @@ public class XlsUtils {
                 String [][] entrada = new String[filas][7];
                 entrada[0][1] = "Documento generado el "+GV.dateToString(new Date(), "dd de mm del yyyy").replaceFirst("de", "del")+"";
                 entrada[1][0] = "Empresa:";
-                entrada[1][1] = StVars.getCompanyName();
+                entrada[1][1] = VarUtils.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = StVars.getProjectName();
+                entrada[2][1] = VarUtils.getProjectName();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 entrada[5][0] = "Rut";
@@ -320,9 +320,9 @@ public class XlsUtils {
                 String [][] entrada = new String[filas][columns];
                 entrada[0][1] = "Documento generado el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
-                entrada[1][1] = StVars.getCompanyName();
+                entrada[1][1] = VarUtils.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = StVars.getProjectName();
+                entrada[2][1] = VarUtils.getProjectName();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author sdx
  */
-public class StVars {
+public class VarUtils {
     /*  Nombres de sistema  */
     private static String PROJECTNAME="Optics";
     private static String VERSION = "v4.1.3";
@@ -267,7 +267,7 @@ public class StVars {
                             try {
                                 Thread.sleep(10000);
                             } catch (InterruptedException ex) {
-                                Logger.getLogger(StVars.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(VarUtils.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             System.exit(0);
                         }
@@ -287,7 +287,7 @@ public class StVars {
                 }
             }
         } catch (InstantiationException | IllegalAccessException | SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(StVars.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VarUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

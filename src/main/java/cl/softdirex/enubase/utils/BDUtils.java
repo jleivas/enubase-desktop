@@ -385,13 +385,13 @@ public class BDUtils {
         if(GV.syncEnabled()){
             //si la ultima fecha de actualizacion corresponde al dia actual
             //restamos un dia a LastUpdate para validar actualización
-            StVars.resetAllPorcentaje();
-            if(GV.isCurrentDate(StVars.getLastUpdate())){
-                StVars.setLastUpdate(GV.dateSumaResta(StVars.getLastUpdate(), -1, "DAYS"));
+            VarUtils.resetAllPorcentaje();
+            if(GV.isCurrentDate(VarUtils.getLastUpdate())){
+                VarUtils.setLastUpdate(GV.dateSumaResta(VarUtils.getLastUpdate(), -1, "DAYS"));
             }
             if(sincronizar(allEntitiesForRemoteSync())){
-                StVars.setLastUpdate(new Date());
-                StVars.setSyncCount(StVars.getSyncCount()+1);
+                VarUtils.setLastUpdate(new Date());
+                VarUtils.setSyncCount(VarUtils.getSyncCount()+1);
             }
         }else{
             Notification.showMsg("No se puede procesar la solicitud", 
@@ -422,7 +422,7 @@ public class BDUtils {
     
     public static boolean sincronizar(List<Object> listaObjetos){
         setSincronizar(true);
-        StVars.calcularPorcentaje(listaObjetos.size(),"Preparando la sincronización");
+        VarUtils.calcularPorcentaje(listaObjetos.size(),"Preparando la sincronización");
         for (Object type : listaObjetos) {
             if(type instanceof Venta){
                 type = new VentaDTO();
@@ -431,9 +431,9 @@ public class BDUtils {
                 error = true;
                 break;
             }
-            StVars.calcularPorcentaje(listaObjetos.size(), "Sincronizando entidades [Tipo de datos:"+GV.getClassName(type).trim()+"]...");
+            VarUtils.calcularPorcentaje(listaObjetos.size(), "Sincronizando entidades [Tipo de datos:"+GV.getClassName(type).trim()+"]...");
         }
-        StVars.resetAllPorcentaje();
+        VarUtils.resetAllPorcentaje();
         setSincronizar(false);
         if(error){
             Notification.showMsg("La sincrconización se ha suspendido", "No se sincronizaron los datos por uno de estos motivos:\n"
@@ -445,7 +445,7 @@ public class BDUtils {
     }
     
     public static boolean sincronizeObject(Object object){
-        if(NetWrk.isOnline()){
+        if(WebUtils.isOnline()){
             if(!GV.sincronizacionIsStopped()){
                 
                 Dao.sincronize(object);
@@ -453,7 +453,7 @@ public class BDUtils {
                 return true;
             }
         }
-        StVars.setReport("No se pudo sincronizar la base de datos...");
+        VarUtils.setReport("No se pudo sincronizar la base de datos...");
         return false;
     }
     
@@ -527,7 +527,7 @@ public class BDUtils {
     private static void generarBackup(List<Object> listaObjetos){
         try {
             LcBd.cerrar();
-            if(NetWrk.isOnline() && LcBd.obtener() != null){
+            if(WebUtils.isOnline() && LcBd.obtener() != null){
                 ZipUtils.zipperBackup();
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
@@ -651,7 +651,7 @@ public class BDUtils {
     public static List<Object> listarVentas(Date dateTo, Date dateFrom,String idUser, String codClient, String idVenta){
         Dao load = new Dao();
         String idParam = GV.getWhereFromVentas(dateTo, dateFrom, idUser, codClient, idVenta);
-        idParam = StVars.convertVentaIdToVentaList(idParam);
+        idParam = VarUtils.convertVentaIdToVentaList(idParam);
         return load.listar(idParam, new Venta());
     }
     
@@ -669,7 +669,7 @@ public class BDUtils {
     public static List<Object> listarAllVentas(Date dateTo, Date dateFrom,String idUser, String codClient, String idVenta){
         Dao load = new Dao();
         String idParam = GV.getWhereFromAllVentas(dateTo, dateFrom, idUser, codClient, idVenta);
-        idParam = StVars.convertVentaIdToVentaList(idParam);
+        idParam = VarUtils.convertVentaIdToVentaList(idParam);
         return load.listar(idParam, new Venta());
     }
     

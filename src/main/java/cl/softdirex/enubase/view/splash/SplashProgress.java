@@ -6,7 +6,7 @@
 package cl.softdirex.enubase.view.splash;
 
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.StVars;
+import cl.softdirex.enubase.utils.VarUtils;
 import cl.softdirex.enubase.utils.PanelUtils;
 import com.sun.awt.AWTUtilities;
 import java.util.logging.Level;
@@ -48,6 +48,7 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
         txtPorcentaje = new javax.swing.JLabel();
         txtDescritption = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        panelBackground = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -80,8 +81,11 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
         txtDescritption.setText("Iniciando sincronización");
         getContentPane().add(txtDescritption, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 230, 510, -1));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/init/loading.gif"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, -70, 610, 380));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/loader.gif"))); // NOI18N
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, -10, 240, 220));
+
+        panelBackground.setBackground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(panelBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 300));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -156,6 +160,7 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnCancelar;
     private static javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel panelBackground;
     public static javax.swing.JLabel txtDescritption;
     public static javax.swing.JLabel txtPorcentaje;
     // End of variables declaration//GEN-END:variables
@@ -167,7 +172,7 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
             try {
                 Thread.sleep(1000);
                 while (!GV.sincronizacionIsStopped()){
-                    txtPorcentaje.setText(StVars.getPorc()+"%");
+                    txtPorcentaje.setText(VarUtils.getPorc()+"%");
                     txtDescritption.setText("Sincronización en curso, espere a que finalice para seguir trabajado...");
                 }
                 txtPorcentaje.setText("100%");

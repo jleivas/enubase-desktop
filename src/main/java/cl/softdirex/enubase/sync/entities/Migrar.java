@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 import cl.softdirex.enubase.sync.InterfaceSync;
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.StVars;
+import cl.softdirex.enubase.utils.VarUtils;
 import cl.softdirex.enubase.view.notifications.Notification;
 
 /**
@@ -772,7 +772,7 @@ public class Migrar implements InterfaceSync {
     
     public int getIdEquipo(){
         int id = 0;
-        String sql = "SELECT eq_id  FROM equipo WHERE eq_nombre = '"+StVars.getEquipo()+"'";
+        String sql = "SELECT eq_id  FROM equipo WHERE eq_nombre = '"+VarUtils.getEquipo()+"'";
         PreparedStatement consulta;
         try {
             consulta = BD.obtener().prepareStatement(sql);
@@ -884,13 +884,13 @@ public class Migrar implements InterfaceSync {
         idParam = idParam.trim();
         try {
             if(type instanceof Venta){
-                if(!StVars.ventaIdParamIsVentaList(idParam) && !StVars.ventaIdParamIsIdVenta(idParam)){
+                if(!VarUtils.ventaIdParamIsVentaList(idParam) && !VarUtils.ventaIdParamIsIdVenta(idParam)){
                     return listar(idParam,new VentaDTO());
                 }
                 String sql = getSqlVenta()+" WHERE venta.ven_id='" + idParam + "'";
                 sql = (idParam.equals("-2"))?getSqlVenta():sql;
-                if(StVars.ventaIdParamIsVentaList(idParam)){
-                    sql=getSqlVenta()+StVars.cleanIdParam(idParam);
+                if(VarUtils.ventaIdParamIsVentaList(idParam)){
+                    sql=getSqlVenta()+VarUtils.cleanIdParam(idParam);
                 }
                 
                     PreparedStatement consulta = BD.obtener().prepareStatement(sql);
@@ -1066,7 +1066,7 @@ public class Migrar implements InterfaceSync {
                 + "(SELECT cliente.cli_estado from cliente where cliente.cli_rut=venta.cliente_cli_rut) as cli_estado, "
                 + "(SELECT cliente.cli_last_update from cliente where cliente.cli_rut=venta.cliente_cli_rut) as cli_last_update, "
                 + "(SELECT cliente.cli_last_hour from cliente where cliente.cli_rut=venta.cliente_cli_rut) as cli_last_hour "
-                + "from venta where ven_estado="+StVars.estadoVentaPaid()+" AND (ven_fecha_entrega < '"+GV.dateToString(new Date(), "yyyy-mm-dd")+"' OR ven_fecha_entrega = '"+GV.dateToString(new Date(), "yyyy-mm-dd")+"')";
+                + "from venta where ven_estado="+VarUtils.estadoVentaPaid()+" AND (ven_fecha_entrega < '"+GV.dateToString(new Date(), "yyyy-mm-dd")+"' OR ven_fecha_entrega = '"+GV.dateToString(new Date(), "yyyy-mm-dd")+"')";
                 }
                 PreparedStatement consulta = BD.obtener().prepareStatement(sql);
                 ResultSet datos = consulta.executeQuery();

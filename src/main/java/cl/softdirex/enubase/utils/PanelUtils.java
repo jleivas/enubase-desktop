@@ -44,7 +44,7 @@ public class PanelUtils {
 
     public static String getEnteredIconIfConnected(String stIcon) {
         stIcon = stIcon.substring(stIcon.indexOf("/icons"));
-        if(NetWrk.isOnline())
+        if(WebUtils.isOnline())
             return stIcon.replaceAll(".png", "_1.png");
         else
             return stIcon.replaceAll(".png", "_2.png");
@@ -95,7 +95,7 @@ public class PanelUtils {
         String pagar = "Para evitar este mensaje:\nEntre al sistema y en el menú superior diríjase a \"Herramientas\", seleccione \"Renovar Licencia\"\n"
                 + "y renueve su licencia con el medio de pago que más le acomode.\n"
                 + "Si usted ya había efectuado el pago correspondiente, póngase en contacto con su proveedor.";
-        int expDias = GV.fechaDiferencia(GV.stringToDate(StVars.getExpDate())); 
+        int expDias = GV.fechaDiferencia(GV.stringToDate(VarUtils.getExpDate())); 
         if(expDias <= 5){
             if(expDias > 1){
                 Notification.showMsg("Renueve su licencia", "Su licencia expirará dentro de "+expDias+" días."+pagar, 2);

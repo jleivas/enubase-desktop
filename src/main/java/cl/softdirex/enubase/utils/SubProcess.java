@@ -45,7 +45,7 @@ public class SubProcess {
         executor.submit(() -> {
                 while(ejecucion){
                     if(!pause){
-                        NetWrk.checkIfOnline();
+                        WebUtils.checkIfOnline();
                     }
                     try {
                         Thread.sleep(5000);
@@ -68,7 +68,7 @@ public class SubProcess {
                     Thread.sleep(TIME_MIN_COMPROBAR_ONLINE*60000);
                     XmlUtils.readXMLOnline();
                     sumMinutes = sumMinutes + TIME_MIN_COMPROBAR_ONLINE;
-                    diffDate = GV.fechaDiferencia(GV.stringToDate(StVars.getExpDate()));
+                    diffDate = GV.fechaDiferencia(GV.stringToDate(VarUtils.getExpDate()));
                     if(diffDate == 0 && sumMinutes >= MIN_EXPIRE_TODAY){
                         sumMinutes=0;
                         PanelUtils.licenciaShowMessageLicenceStatus();
@@ -95,7 +95,7 @@ public class SubProcess {
             }
             int porcentaje = 0;
                 while(ejecucion){
-                    porcentaje = StVars.getPorc();
+                    porcentaje = VarUtils.getPorc();
                     if(porcentaje > 0){
                         txtTitle.setText("Sincronizando dependencias... ("+porcentaje+"%)");
                     }else{
@@ -114,12 +114,12 @@ public class SubProcess {
     }
     
     public static void suspendConnectionOnline(){
-        NetWrk.setIsOnline(false);
+        WebUtils.setIsOnline(false);
         pause = true;
     }
     
     public static void activateConnectionOnline(){
-        NetWrk.setIsOnline(true);
+        WebUtils.setIsOnline(true);
         pause = false;
     }
     
@@ -132,10 +132,10 @@ public class SubProcess {
     }
     
     public static void isOnlineDeprecated() {
-        NetWrk.checkIfOnline();
+        WebUtils.checkIfOnline();
         final Runnable beeper = new Runnable() {
           public void run() { 
-              NetWrk.checkIfOnline();
+              WebUtils.checkIfOnline();
           }
         };
         final ScheduledFuture<?> beeperHandle =

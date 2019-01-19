@@ -49,8 +49,8 @@ public class Send {
         }
         String host = "smtp.gmail.com";
         String port = "587";
-        String mailFrom = StVars.getMailSystemName();
-        String password = StVars.getMailSystemPass();
+        String mailFrom = VarUtils.getMailSystemName();
+        String password = VarUtils.getMailSystemPass();
  
         // outgoing message information
  
@@ -173,62 +173,62 @@ public class Send {
     }
     
     public void sendReportMail(String title,String content){
-        if(NetWrk.isOnline()){
+        if(WebUtils.isOnline()){
             width = 25;
             height = 50;
             color1 =  color_turquesa;
             String userName = (StEntities.USER != null)?StEntities.USER.getUsername():"No iniciado";
-            String equipo = StVars.getEquipo().substring(0,StVars.getEquipo().indexOf("_"));
-            sendMail("Reporte desde equipo: "+equipo+", Comercial: "+StVars.getCompanyName(),
-                    StVars.getMailReport(), title, content,
-                    "Usuario: "+userName, StVars.getCompanyName(), StVars.LOGO_MAIL, 
-                    StVars.ICON_USER_MAIL, 
-                    StVars.ICON_COMPANY_MAIL);
+            String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
+            sendMail("Reporte desde equipo: "+equipo+", Comercial: "+VarUtils.getCompanyName(),
+                    VarUtils.getMailReport(), title, content,
+                    "Usuario: "+userName, VarUtils.getCompanyName(), VarUtils.LOGO_MAIL, 
+                    VarUtils.ICON_USER_MAIL, 
+                    VarUtils.ICON_COMPANY_MAIL);
             width = 100;
             height = 140;
         }
     }
     
     public void sendMessageMail(String asunto,String mailDestino){
-        if(NetWrk.isOnline()){
+        if(WebUtils.isOnline()){
             width = 25;
             height = 50;
             color1 =  color_turquesa;
             color2 = color_verde;
             
-            sendMail("["+StVars.getProjectName()+"] Nuevo mensaje: "+asunto,
-                    mailDestino, "Tienes un nuevo mensaje en tu buzon de entrada", "Inicia sesión en "+StVars.getProjectName()+" para verlo.",
-                    "Usuario: "+StEntities.USER.getNombre(), StVars.getCompanyName(), StVars.LOGO_MAIL, 
-                    StVars.ICON_USER_MAIL, 
-                    StVars.ICON_COMPANY_MAIL);
+            sendMail("["+VarUtils.getProjectName()+"] Nuevo mensaje: "+asunto,
+                    mailDestino, "Tienes un nuevo mensaje en tu buzon de entrada", "Inicia sesión en "+VarUtils.getProjectName()+" para verlo.",
+                    "Usuario: "+StEntities.USER.getNombre(), VarUtils.getCompanyName(), VarUtils.LOGO_MAIL, 
+                    VarUtils.ICON_USER_MAIL, 
+                    VarUtils.ICON_COMPANY_MAIL);
             width = 100;
             height = 140;
         }
     }
     
     public void sendReportSalesMail(SalesVentasJasperReport salesReport,String mail, String title){
-        if(NetWrk.isOnline() && GV.licenciaIsEnableToSendMails()){
+        if(WebUtils.isOnline() && GV.licenciaIsEnableToSendMails()){
             width = 25;
             height = 50;
             color1 =  color_turquesa;
-            String equipo = StVars.getEquipo().substring(0,StVars.getEquipo().indexOf("_"));
-            sendMail("Reporte de ventas desde "+equipo+" ["+StVars.getCompanyName()+"]",
+            String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
+            sendMail("Reporte de ventas desde "+equipo+" ["+VarUtils.getCompanyName()+"]",
                     mail, "Reporte de ventas", salesReport.generateHtml(title),
-                    "Usuario: "+StEntities.USER.getUsername(), StVars.getCompanyName(), StVars.LOGO_MAIL, 
-                    StVars.ICON_USER_MAIL, 
-                    StVars.ICON_COMPANY_MAIL);
+                    "Usuario: "+StEntities.USER.getUsername(), VarUtils.getCompanyName(), VarUtils.LOGO_MAIL, 
+                    VarUtils.ICON_USER_MAIL, 
+                    VarUtils.ICON_COMPANY_MAIL);
             width = 100;
             height = 140;
         }
     }
     
     public void sendReportItemsMail(String mail, String title){
-        if(NetWrk.isOnline() && GV.licenciaIsEnableToSendMails()){
+        if(WebUtils.isOnline() && GV.licenciaIsEnableToSendMails()){
             width = 25;
             height = 50;
             color1 =  color_turquesa;
-            int compra = StVars.ITEMS_COMPRA;
-            int venta = StVars.ITEMS_VENTA;
+            int compra = VarUtils.ITEMS_COMPRA;
+            int venta = VarUtils.ITEMS_VENTA;
             String reporte = 
                 "<table style=\"width:100%\">\n" +
                 "  <tr>\n" +
@@ -237,15 +237,15 @@ public class Send {
                 "  </tr>\n" +
                 "  <tr>\n" +
                 "    <td><strong>Stock total de productos</strong></td>\n" +
-                "    <td><strong>"+StVars.ITEMS_STOCK+"</strong></td>\n" +
+                "    <td><strong>"+VarUtils.ITEMS_STOCK+"</strong></td>\n" +
                 "  </tr>\n" +
                 "  <tr>\n" +
                 "    <td>Productos con stock bajo</td>\n" +
-                "    <td>"+StVars.ITEMS_STOCK_BAJO+"</td>\n" +
+                "    <td>"+VarUtils.ITEMS_STOCK_BAJO+"</td>\n" +
                 "  </tr>\n" +
                 "  <tr>\n" +
                 "    <td>Productos con stock en cero</td>\n" +
-                "    <td>"+StVars.ITEMS_STOCK_CERO+"</td>\n" +
+                "    <td>"+VarUtils.ITEMS_STOCK_CERO+"</td>\n" +
                 "  </tr>\n" +
                 "</table>"
                 + "</br></br>"
@@ -268,12 +268,12 @@ public class Send {
                     "  </tr>\n" +
                     "</table>"
                 + "</br><small>El monto calculado en inventario corresponde al precio de referencia ingresado por item.</small>";
-            String equipo = StVars.getEquipo().substring(0,StVars.getEquipo().indexOf("_"));
-            sendMail("Reporte de inventario desde "+equipo+" ["+StVars.getCompanyName()+"]",
+            String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
+            sendMail("Reporte de inventario desde "+equipo+" ["+VarUtils.getCompanyName()+"]",
                     mail, title, reporte,
-                    "Usuario: "+StEntities.USER.getUsername(), StVars.getCompanyName(), StVars.LOGO_MAIL, 
-                    StVars.ICON_USER_MAIL, 
-                    StVars.ICON_COMPANY_MAIL);
+                    "Usuario: "+StEntities.USER.getUsername(), VarUtils.getCompanyName(), VarUtils.LOGO_MAIL, 
+                    VarUtils.ICON_USER_MAIL, 
+                    VarUtils.ICON_COMPANY_MAIL);
             width = 100;
             height = 140;
         }
@@ -293,7 +293,7 @@ public class Send {
             p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
             p.setProperty("mail.smtp.starttls.enable", "true");
             p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", StVars.getMailSystemName());
+            p.setProperty("mail.smtp.user", VarUtils.getMailSystemName());
             p.setProperty("mail.smtp.auth", "true");
  
         // creates a new session with an authenticator
@@ -333,13 +333,13 @@ public class Send {
             p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
             p.setProperty("mail.smtp.starttls.enable", "true");
             p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", StVars.getMailSystemName());
+            p.setProperty("mail.smtp.user", VarUtils.getMailSystemName());
             p.setProperty("mail.smtp.auth", "true");
             
             Session s = Session.getDefaultInstance(p,null);
             BodyPart text = new MimeBodyPart();
-            String equipo = StVars.getEquipo().substring(0,StVars.getEquipo().indexOf("_"));
-            text.setText("Respaldo de base de datos Derby, programa "+StVars.getProjectName()+" version "+StVars.getVersion()+", equipo: "+equipo);
+            String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
+            text.setText("Respaldo de base de datos Derby, programa "+VarUtils.getProjectName()+" version "+VarUtils.getVersion()+", equipo: "+equipo);
             BodyPart adjunto1=new MimeBodyPart();
             if(directorio1 != null){
                 if(!directorio1.equals("")){
@@ -358,13 +358,13 @@ public class Send {
             }
             
             MimeMessage mensaje = new MimeMessage(s);
-            mensaje.setFrom(new InternetAddress(StVars.getMailSystemName()));
-            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(StVars.getMailReport()));
-            mensaje.setSubject("Backup: "+StVars.getCompanyName()+", System and version: "+StVars.getProjectName()+"-"+StVars.getVersion());
+            mensaje.setFrom(new InternetAddress(VarUtils.getMailSystemName()));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(VarUtils.getMailReport()));
+            mensaje.setSubject("Backup: "+VarUtils.getCompanyName()+", System and version: "+VarUtils.getProjectName()+"-"+VarUtils.getVersion());
             mensaje.setContent(m);
             Transport t = s.getTransport("smtp");
             try{
-                t.connect(StVars.getMailSystemName(),StVars.getMailSystemPass());
+                t.connect(VarUtils.getMailSystemName(),VarUtils.getMailSystemPass());
             }catch(MessagingException ex){
                 System.out.println("Error en t.connect:"+ex);
             }
