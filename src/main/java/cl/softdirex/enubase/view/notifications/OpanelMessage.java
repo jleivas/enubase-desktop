@@ -71,7 +71,7 @@ public class OpanelMessage extends javax.swing.JPanel {
             }
         });
 
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/icons/accept_50px.png"))); // NOI18N
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/accept_50px.png"))); // NOI18N
         btnAceptar.setToolTipText("Entendido");
         btnAceptar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -131,7 +131,7 @@ public class OpanelMessage extends javax.swing.JPanel {
                     .addComponent(lblTitle)
                     .addComponent(imgIconMessage))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAceptar)
                 .addGap(18, 18, 18))
