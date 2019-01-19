@@ -71,7 +71,7 @@
     <Component class="javax.swing.JLabel" name="btnDropDb">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/cl/softdirex/enubase/view/icons/icons8_Broom_50px.png"/>
+          <Image iconType="3" name="/icons/icons8_Broom_50px.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Borrar base de datos"/>
       </Properties>
@@ -85,7 +85,7 @@
     <Component class="javax.swing.JLabel" name="btnLoad">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/cl/softdirex/enubase/view/icons/accept_50px.png"/>
+          <Image iconType="3" name="/icons/accept_50px.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Confirmar"/>
       </Properties>
@@ -101,15 +101,15 @@
     <Component class="javax.swing.JLabel" name="btnCancel">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/cl/softdirex/enubase/view/icons/cancel_50px.png"/>
+          <Image iconType="3" name="/icons/cancel_50px.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="No tengo"/>
       </Properties>
       <Events>
-        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnCancelMousePressed"/>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnCancelMouseClicked"/>
-        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnCancelMouseExited"/>
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnCancelMouseEntered"/>
+        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnCancelMouseExited"/>
+        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnCancelMousePressed"/>
       </Events>
     </Component>
   </SubComponents>

@@ -20,7 +20,7 @@ public class MPanel extends javax.swing.JFrame {
      */
     public MPanel() {
         initComponents();
-        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/softdirex/enubase/view/image/icon.png"));
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(PanelUtils.ICON_LOGO));
         setIconImage(icon);
         this.setLocationRelativeTo(null);
         this.setAlwaysOnTop(true);
@@ -43,7 +43,7 @@ public class MPanel extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        MpanelContent.setBackground(new java.awt.Color(108, 217, 186));
+        MpanelContent.setBackground(new java.awt.Color(102, 0, 102));
 
         javax.swing.GroupLayout MpanelContentLayout = new javax.swing.GroupLayout(MpanelContent);
         MpanelContent.setLayout(MpanelContentLayout);
@@ -58,10 +58,11 @@ public class MPanel extends javax.swing.JFrame {
 
         getContentPane().add(MpanelContent, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 54, 560, -1));
 
-        jpSuperior.setBackground(new java.awt.Color(108, 217, 186));
+        jpSuperior.setBackground(new java.awt.Color(51, 0, 102));
         jpSuperior.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblTitle.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
+        lblTitle.setForeground(new java.awt.Color(255, 255, 255));
         lblTitle.setText("OPanel Title");
         jpSuperior.add(lblTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
 

@@ -22,7 +22,7 @@ public class OPanel extends javax.swing.JFrame {
      */
     public OPanel() {
         initComponents();
-        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/softdirex/enubase/view/image/icon.png"));
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(PanelUtils.ICON_LOGO));
         setIconImage(icon);
         this.setLocationRelativeTo(null);
     }
@@ -43,16 +43,17 @@ public class OPanel extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jpSuperior.setBackground(new java.awt.Color(108, 217, 186));
+        jpSuperior.setBackground(new java.awt.Color(51, 0, 102));
         jpSuperior.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblTitle.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
+        lblTitle.setForeground(new java.awt.Color(255, 255, 255));
         lblTitle.setText("OPanel Title");
         jpSuperior.add(lblTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
 
         getContentPane().add(jpSuperior, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 60));
 
-        OpanelContent.setBackground(new java.awt.Color(108, 217, 186));
+        OpanelContent.setBackground(new java.awt.Color(102, 0, 102));
 
         javax.swing.GroupLayout OpanelContentLayout = new javax.swing.GroupLayout(OpanelContent);
         OpanelContent.setLayout(OpanelContentLayout);

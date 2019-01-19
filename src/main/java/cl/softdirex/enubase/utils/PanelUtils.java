@@ -22,30 +22,28 @@ public class PanelUtils {
     public static OPanel OPTIONPANEL = new OPanel();
     public static String PANELTITLE ="";
     public static int MSG_STATUS=JOptionPane.ABORT;
-    private static String SLB = "/";
-    private static String ICONS = SLB+"icons";
-    public static String ICON_INFO = SLB+"src"+SLB+"main"+SLB+"java"+SLB+"cl"+SLB+"softdirex"+SLB+"enubase"+SLB+"view"+SLB+"icons"+SLB+"info_50px.png";
-    public static String ICON_WARN = SLB+"src"+SLB+"main"+SLB+"java"+SLB+"cl"+SLB+"softdirex"+SLB+"enubase"+SLB+"view"+SLB+"icons"+SLB+"alert_50px.png";
-    public static String ICON_ERROR = SLB+"src"+SLB+"main"+SLB+"java"+SLB+"cl"+SLB+"softdirex"+SLB+"enubase"+SLB+"view"+SLB+"icons"+SLB+"error_50px.png";
-    public static String ICON_LOGO = "/cl/softdirex/enubase/view/image/icon.png";
+    public static final String ICON_INFO = "/icons/info_50px.png";
+    public static final String ICON_WARN = "/icons/alert_50px.png";
+    public static final String ICON_ERROR = "/icons/error_50px.png";
+    public static final String ICON_LOGO = "/images/icon.png";
     
     public static String getEnteredIcon(String stIcon) {
-        //stIcon = stIcon.substring(stIcon.indexOf("/icons"));
+        stIcon = stIcon.substring(stIcon.indexOf("/icons"));
         return stIcon.replaceAll(".png", "_1.png");
     }
 
     public static String getEnteredIconIfActive(String stIcon) {
-        //stIcon = stIcon.substring(stIcon.indexOf("/icons"));
+        stIcon = stIcon.substring(stIcon.indexOf("/icons"));
         return stIcon.replaceAll(".png", "_1.png");//borrar
     }
 
     public static String getExitedIcon(String img) {
-        //img = img.substring(img.indexOf("/icons"));
+        img = img.substring(img.indexOf("/icons"));
         return img.replaceAll("_1.png", ".png").replaceAll("_2.png", ".png");
     }
 
     public static String getEnteredIconIfConnected(String stIcon) {
-        //stIcon = stIcon.substring(stIcon.indexOf("/icons"));
+        stIcon = stIcon.substring(stIcon.indexOf("/icons"));
         if(NetWrk.isOnline())
             return stIcon.replaceAll(".png", "_1.png");
         else

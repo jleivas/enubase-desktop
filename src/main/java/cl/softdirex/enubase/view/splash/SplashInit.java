@@ -6,7 +6,10 @@
 package cl.softdirex.enubase.view.splash;
 
 import cl.softdirex.enubase.utils.GV;
-import javax.swing.ImageIcon;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +23,8 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
      */
     public SplashInit() {
         initComponents();
-
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/icon.png"));
+        setIconImage(icon);
         this.setLocationRelativeTo(null);
         
         tiempo = new Thread(this);
@@ -51,7 +55,7 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
         welcomeTitle.setText("Bienvenido");
         getContentPane().add(welcomeTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 230, -1, -1));
 
-        loader.setIcon(new ImageIcon(SplashInit.class.getResource("/cl/softdirex/enubase/view/image/loader.gif"))); // NOI18N
+        loader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/loader.gif"))); // NOI18N
         getContentPane().add(loader, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 290, 200));
 
         llabelInfo.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
@@ -59,7 +63,7 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
         llabelInfo.setText("Iniciando servicios...");
         getContentPane().add(llabelInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, -1, 20));
 
-        fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/softdirex/enubase/view/image/fondoLoader.jpg"))); // NOI18N
+        fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/fondoLoader.jpg"))); // NOI18N
         fondo.setText("jLabel2");
         getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, -1));
 
@@ -111,7 +115,7 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel fondo;
     private javax.swing.JLabel llabelInfo;
-    private javax.swing.JLabel loader;
+    private static javax.swing.JLabel loader;
     private javax.swing.JLabel welcomeTitle;
     // End of variables declaration//GEN-END:variables
 
@@ -125,7 +129,7 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
                 this.dispose();
                 return;
             } catch (InterruptedException ex) {
-                //Logger.getLogger(SplashInit.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SplashInit.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         tiempo = null;
