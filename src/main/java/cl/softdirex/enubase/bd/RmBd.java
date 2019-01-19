@@ -6,7 +6,7 @@
 package cl.softdirex.enubase.bd;
 
 import cl.softdirex.enubase.utils.BDUtils;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,12 +28,12 @@ public class RmBd {
         try{
         conn = DriverManager.getConnection("jdbc:mysql://"+BDUtils.getRemoteBdUrl()+"/"+BDUtils.getRemoteBdName(),BDUtils.getRemoteBdUser(),BDUtils.getRemoteBdPass());
         }catch(Exception ex){
-            Notification.showMsg("Error en Base de datos remota", "No se pudo obtener la conexion:\n"+detail+"\nbd.RmBd::obtener(): ERROR BD.\n\nCatch: "+ex.getMessage(), 3);
+            OptionPane.showMsg("Error en Base de datos remota", "No se pudo obtener la conexion:\n"+detail+"\nbd.RmBd::obtener(): ERROR BD.\n\nCatch: "+ex.getMessage(), 3);
             cerrar();
             BDUtils.setSincronizar(false);
         }
         if(conn == null){
-            Notification.showMsg("Error en Base de datos remota", "No se pudo obtener la conexion:\n"+detail+"\nbd.RmBd::obtener(): ERROR BD.", 3);
+            OptionPane.showMsg("Error en Base de datos remota", "No se pudo obtener la conexion:\n"+detail+"\nbd.RmBd::obtener(): ERROR BD.", 3);
             cerrar();
             BDUtils.setSincronizar(false);
         }

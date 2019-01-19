@@ -6,8 +6,8 @@
 package cl.softdirex.enubase.view.splash;
 
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.VarUtils;
-import cl.softdirex.enubase.utils.PanelUtils;
+import cl.softdirex.enubase.utils.GlobalValuesVariables;
+import cl.softdirex.enubase.utils.Icons;
 import com.sun.awt.AWTUtilities;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,16 +44,19 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnCancelar = new javax.swing.JLabel();
-        txtPorcentaje = new javax.swing.JLabel();
-        txtDescritption = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         panelBackground = new javax.swing.JPanel();
+        btnCancelar = new javax.swing.JLabel();
+        txtDescritption = new javax.swing.JLabel();
+        txtPorcentaje = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        panelBackground.setBackground(new java.awt.Color(255, 255, 255));
+        panelBackground.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Cancel_50px.png"))); // NOI18N
         btnCancelar.setToolTipText("Cancelar");
@@ -71,21 +74,20 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
                 btnCancelarMousePressed(evt);
             }
         });
-        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 250, -1, -1));
-
-        txtPorcentaje.setFont(new java.awt.Font("Segoe UI Symbol", 1, 18)); // NOI18N
-        txtPorcentaje.setText("0%");
-        getContentPane().add(txtPorcentaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 200, 510, -1));
+        panelBackground.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 280, -1, -1));
 
         txtDescritption.setFont(new java.awt.Font("Segoe UI Symbol", 1, 10)); // NOI18N
         txtDescritption.setText("Iniciando sincronización");
-        getContentPane().add(txtDescritption, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 230, 510, -1));
+        panelBackground.add(txtDescritption, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 510, -1));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/loader.gif"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, -10, 240, 220));
+        txtPorcentaje.setFont(new java.awt.Font("Segoe UI Symbol", 1, 18)); // NOI18N
+        txtPorcentaje.setText("0%");
+        panelBackground.add(txtPorcentaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 510, -1));
 
-        panelBackground.setBackground(new java.awt.Color(255, 255, 255));
-        getContentPane().add(panelBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 300));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/circles.gif"))); // NOI18N
+        panelBackground.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-50, -20, 750, 370));
+
+        getContentPane().add(panelBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, 440));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -96,11 +98,11 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnCancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseEntered
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseEntered
 
     private void btnCancelarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseExited
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseExited
 
     private void btnCancelarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMousePressed
@@ -172,7 +174,7 @@ public class SplashProgress extends javax.swing.JFrame implements Runnable{
             try {
                 Thread.sleep(1000);
                 while (!GV.sincronizacionIsStopped()){
-                    txtPorcentaje.setText(VarUtils.getPorc()+"%");
+                    txtPorcentaje.setText(GlobalValuesVariables.getPorc()+"%");
                     txtDescritption.setText("Sincronización en curso, espere a que finalice para seguir trabajado...");
                 }
                 txtPorcentaje.setText("100%");

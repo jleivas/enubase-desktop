@@ -9,10 +9,10 @@ import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.Boton;
 import cl.softdirex.enubase.utils.CursorUtils;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.PanelUtils;
-import cl.softdirex.enubase.utils.VarUtils;
+import cl.softdirex.enubase.utils.Icons;
+import cl.softdirex.enubase.utils.GlobalValuesVariables;
 import cl.softdirex.enubase.utils.XmlUtils;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -227,9 +227,9 @@ public class OpanelCompanyData extends javax.swing.JPanel {
     private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
          
         if(OPTION == 0){
-            Notification.closeOptionPanel();
+            OptionPane.closeOptionPanel();
         }else{
-            if(Notification.getConfirmation("Cancelar todo", "¿Desea cancelar todo y volver a intentar mas tarde?", 1)){
+            if(OptionPane.getConfirmation("Cancelar todo", "¿Desea cancelar todo y volver a intentar mas tarde?", 1)){
                 BDUtils.dropDB();
                 System.exit(0);
             }else{
@@ -239,13 +239,11 @@ public class OpanelCompanyData extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnCancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseEntered
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-                PanelUtils.getEnteredIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseEntered
 
     private void btnCancelarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseExited
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-                PanelUtils.getExitedIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseExited
 
     private void btnCancelarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMousePressed
@@ -261,13 +259,11 @@ public class OpanelCompanyData extends javax.swing.JPanel {
     }//GEN-LAST:event_btnGuardarMouseClicked
 
     private void btnGuardarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseEntered
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-                PanelUtils.getEnteredIcon(btnGuardar.getIcon().toString()))));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnGuardar.getIcon().toString()))));
     }//GEN-LAST:event_btnGuardarMouseEntered
 
     private void btnGuardarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseExited
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-                PanelUtils.getExitedIcon(btnGuardar.getIcon().toString()))));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnGuardar.getIcon().toString()))));
     }//GEN-LAST:event_btnGuardarMouseExited
 
     private void btnGuardarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMousePressed
@@ -278,7 +274,7 @@ public class OpanelCompanyData extends javax.swing.JPanel {
         int largo = 45;
         if(txtNombre.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", 
+            OptionPane.showMsg("Error de ingreso de datos", 
                     "El nombre solo debe contener hasta 45 caracteres", 
                     JOptionPane.WARNING_MESSAGE);
         }
@@ -290,7 +286,7 @@ public class OpanelCompanyData extends javax.swing.JPanel {
         
         if(txtRut.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", 
+            OptionPane.showMsg("Error de ingreso de datos", 
                     "El rut solo debe contener 12 digitos", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtRutKeyTyped
@@ -300,7 +296,7 @@ public class OpanelCompanyData extends javax.swing.JPanel {
         txtRut.setText(GV.strToRut(txtRut.getText()));
         if(txtDescripcion.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", 
+            OptionPane.showMsg("Error de ingreso de datos", 
                     "La descripción solo debe contener hasta 45 caracteres", 
                     JOptionPane.WARNING_MESSAGE);
         }
@@ -319,7 +315,7 @@ public class OpanelCompanyData extends javax.swing.JPanel {
         txtRut.setText(GV.strToRut(txtRut.getText()));
         if(txtGiro.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", 
+            OptionPane.showMsg("Error de ingreso de datos", 
                     "El giro solo debe contener hasta 45 caracteres", 
                     JOptionPane.WARNING_MESSAGE);
         }
@@ -348,10 +344,10 @@ public class OpanelCompanyData extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void loadData() {
-            txtDescripcion.setText(VarUtils.getCompanyDescription());
-            txtNombre.setText(VarUtils.getCompanyName());
-            txtRut.setText(VarUtils.getCompanyRut());
-            txtGiro.setText(VarUtils.getCompanyGiro());
+            txtDescripcion.setText(GlobalValuesVariables.getCompanyDescription());
+            txtNombre.setText(GlobalValuesVariables.getCompanyName());
+            txtRut.setText(GlobalValuesVariables.getCompanyRut());
+            txtGiro.setText(GlobalValuesVariables.getCompanyGiro());
     }
 
     private void saveFromGUI() {
@@ -361,22 +357,22 @@ public class OpanelCompanyData extends javax.swing.JPanel {
             String descripcion = txtDescripcion.getText();
             String giro = txtGiro.getText();
             
-            if(Notification.getConfirmation("Actualizar datos", 
+            if(OptionPane.getConfirmation("Actualizar datos", 
                     "¿Estas seguro que los datos ingresados son correctos?", 
                     JOptionPane.INFORMATION_MESSAGE)){
                 CursorUtils.cursorWAIT(this);
-                VarUtils.setCompanyName(GV.getStr(name));
-                VarUtils.setCompanyRut(GV.getStr(rut));
-                VarUtils.setCompanyDescription(GV.getStr(descripcion));
-                VarUtils.setCompanyGiro(GV.getStr(giro));
+                GlobalValuesVariables.setCompanyName(GV.getStr(name));
+                GlobalValuesVariables.setCompanyRut(GV.getStr(rut));
+                GlobalValuesVariables.setCompanyDescription(GV.getStr(descripcion));
+                GlobalValuesVariables.setCompanyGiro(GV.getStr(giro));
                 XmlUtils.crearRegistroLocal();
-                Notification.showMsg("Datos almacenados", "Los nuevos datos ingresados han sido almacenados con exito", 1);
+                OptionPane.showMsg("Datos almacenados", "Los nuevos datos ingresados han sido almacenados con exito", 1);
                 Boton boton = new Boton();
                 boton.oficinas();
                 CursorUtils.cursorDF(this);
-                Notification.closeOptionPanel();
+                OptionPane.closeOptionPanel();
             }else{
-                Notification.closeOptionPanel();
+                OptionPane.closeOptionPanel();
                 return;
             }
         } catch (SQLException | ClassNotFoundException ex) {
@@ -392,21 +388,21 @@ public class OpanelCompanyData extends javax.swing.JPanel {
             String giro = GV.getStr(txtGiro.getText());
             
             if(name.isEmpty() || rut.isEmpty() || descripcion.isEmpty() || giro.isEmpty()){
-                Notification.showMsg("Faltan datos", 
+                OptionPane.showMsg("Faltan datos", 
                         "Para continuar debe completar todos los campos", 2);
                 return;
             }
             
-            if(Notification.getConfirmation("Registrar datos de mi empresa", 
+            if(OptionPane.getConfirmation("Registrar datos de mi empresa", 
                     "¿Estas seguro que los datos ingresados son correctos?", JOptionPane.INFORMATION_MESSAGE)){
                 CursorUtils.cursorWAIT(this);
-                VarUtils.setCompanyName(GV.getStr(name));
-                VarUtils.setCompanyRut(GV.getStr(rut));
-                VarUtils.setCompanyDescription(GV.getStr(descripcion));
-                VarUtils.setCompanyGiro(GV.getStr(giro));
+                GlobalValuesVariables.setCompanyName(GV.getStr(name));
+                GlobalValuesVariables.setCompanyRut(GV.getStr(rut));
+                GlobalValuesVariables.setCompanyDescription(GV.getStr(descripcion));
+                GlobalValuesVariables.setCompanyGiro(GV.getStr(giro));
                 CursorUtils.cursorDF(this);
-                Notification.closeOptionPanel();
-                Notification.showOptionPanel(new OpanelOfficeData(1), Notification.titleOfficeDataCreate());
+                OptionPane.closeOptionPanel();
+                OptionPane.showOptionPanel(new OpanelOfficeData(1), OptionPane.titleOfficeDataCreate());
             }else{
                 return;
             }

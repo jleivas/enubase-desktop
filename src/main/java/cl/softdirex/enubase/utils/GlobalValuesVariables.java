@@ -8,7 +8,7 @@ package cl.softdirex.enubase.utils;
 import cl.softdirex.enubase.bd.LcBd;
 import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Equipo;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.splash.SplashProgress;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ import java.util.logging.Logger;
  *
  * @author sdx
  */
-public class VarUtils {
+public class GlobalValuesVariables {
     /*  Nombres de sistema  */
-    private static String PROJECTNAME="Optics";
-    private static String VERSION = "v4.1.3";
+    private static String PROJECTNAME="enubase";
+    private static String VERSION = "v1.0.0";
     private static String EQUIPO;//el nombre debe concatenarse con la fecha de instalacion
     private static int EQUIPO_ID = 1;
     private static String INVENTARIO_NAME;
@@ -91,6 +91,7 @@ public class VarUtils {
     private static String RUT_CLIENT_SELECTED="";
     private static String ID_USER_SELECTED="";
     public static Date LAST_UPDATE;
+    private static int CBO_VENTA_FILTER=0;
     private static String SQL_LOW_STOCK="lowStock";
     private static String ID_PARAM_IS_VENTA_LIST = "LISTAR_VENTAS/";
     
@@ -260,14 +261,14 @@ public class VarUtils {
                 if(e == null || !e.getNombre().equals(EQUIPO)){
                     if(e != null){
                         if(e.getEstado() != 0){
-                            Notification.showMsg("Licencia duplicada", "Esta licencia ya se encuentra asociada y vigente.\n"
+                            OptionPane.showMsg("Licencia duplicada", "Esta licencia ya se encuentra asociada y vigente.\n"
                                     + "Solicite una nueva licencia para este equipo.\n"
                                     + "Conflicto con equipo: "+e.getNombre(), 3);
                             XmlUtils.deleteXmlFiles();
                             try {
                                 Thread.sleep(10000);
                             } catch (InterruptedException ex) {
-                                Logger.getLogger(VarUtils.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(GlobalValuesVariables.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             System.exit(0);
                         }
@@ -287,7 +288,7 @@ public class VarUtils {
                 }
             }
         } catch (InstantiationException | IllegalAccessException | SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(VarUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GlobalValuesVariables.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -569,5 +570,9 @@ public class VarUtils {
     
     public static int estadoVentaPaid(){
         return PAID;
+    }
+    
+    public static int cboVentasFilter(){
+        return CBO_VENTA_FILTER;
     }
 }

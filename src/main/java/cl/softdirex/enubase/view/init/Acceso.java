@@ -9,14 +9,19 @@ import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.utils.Boton;
 import cl.softdirex.enubase.utils.GV;
 import cl.softdirex.enubase.utils.HelpUtils;
-import cl.softdirex.enubase.utils.PanelUtils;
-import cl.softdirex.enubase.utils.VarUtils;
+import cl.softdirex.enubase.utils.Icons;
+import cl.softdirex.enubase.utils.GlobalValuesVariables;
 import cl.softdirex.enubase.utils.StEntities;
 import cl.softdirex.enubase.utils.XmlUtils;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
+import cl.softdirex.enubase.view.os.other.ContentAdminMac;
+import cl.softdirex.enubase.view.os.windows.ContentAdmin;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingConstants;
 
 /**
@@ -26,8 +31,8 @@ import javax.swing.SwingConstants;
 public class Acceso extends javax.swing.JFrame {
 
     Boton boton = new Boton();
-    String projectName = VarUtils.getProjectName();
-    String version = "version "+VarUtils.getVersion();
+    String projectName = GlobalValuesVariables.getProjectName();
+    String version = GlobalValuesVariables.getVersion();
     String title = projectName+" "+version;
     /**
      * Creates new form Acceso
@@ -37,14 +42,14 @@ public class Acceso extends javax.swing.JFrame {
         initComponents();
         txtProjectName.setHorizontalAlignment(SwingConstants.CENTER);
         txtVersion.setHorizontalAlignment(SwingConstants.CENTER);
-        txtUser.setText(VarUtils.getUserName());
+        txtUser.setText(GlobalValuesVariables.getUserName());
         int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
         int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
 //        this.setBounds((ancho / 2) - (this.getWidth() / 2), (alto / 2) - (this.getHeight() / 2), 450, 300);
         this.setLocationRelativeTo(null);
         //Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagenes/logo.png"));
         //setIconImage(icon);
-        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(PanelUtils.ICON_LOGO));
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(Icons.ICON_LOGO));
         setIconImage(icon);
         this.setTitle(projectName);
         this.txtProjectName.setText(projectName);
@@ -153,7 +158,7 @@ public class Acceso extends javax.swing.JFrame {
         getContentPane().add(txtUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 230, 142, -1));
 
         logoSDXERP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon.png"))); // NOI18N
-        getContentPane().add(logoSDXERP, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, 100, 170));
+        getContentPane().add(logoSDXERP, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 100, 170));
 
         fondo.setBackground(new java.awt.Color(255, 255, 255));
         fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/fondo.jpg"))); // NOI18N
@@ -179,11 +184,11 @@ public class Acceso extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEnterMouseClicked
 
     private void btnEnterMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEnterMouseEntered
-        btnEnter.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnEnter.getIcon().toString()))));
+        btnEnter.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnEnter.getIcon().toString()))));
     }//GEN-LAST:event_btnEnterMouseEntered
 
     private void btnEnterMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEnterMouseExited
-        btnEnter.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnEnter.getIcon().toString()))));
+        btnEnter.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnEnter.getIcon().toString()))));
     }//GEN-LAST:event_btnEnterMouseExited
 
     private void txtPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassKeyPressed
@@ -197,11 +202,11 @@ public class Acceso extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHelpMouseClicked
 
     private void btnHelpMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHelpMouseEntered
-        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnHelp.getIcon().toString()))));
+        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnHelp.getIcon().toString()))));
     }//GEN-LAST:event_btnHelpMouseEntered
 
     private void btnHelpMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHelpMouseExited
-        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnHelp.getIcon().toString()))));
+        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnHelp.getIcon().toString()))));
     }//GEN-LAST:event_btnHelpMouseExited
 
     /**
@@ -243,7 +248,7 @@ public class Acceso extends javax.swing.JFrame {
     }
             
     private void entrar(){
-        if(VarUtils.getIntentosAcceso() >= 2){
+        if(GlobalValuesVariables.getIntentosAcceso() >= 2){
             btnHelp.setVisible(true);
         }
         String user = txtUser.getText();
@@ -251,36 +256,34 @@ public class Acceso extends javax.swing.JFrame {
         User usu;
             usu=GV.validar(user,pass);
             if(usu!=null){
-//                try {
+                try {
                     this.setVisible(false);
-                    VarUtils.setUserName(usu.getUsername());
+                    GlobalValuesVariables.setUserName(usu.getUsername());
                     StEntities.setSessionUser(usu);
                     XmlUtils.crearRegistroLocal();
-//                    ContentAdmin principalAdmin;
-//                    ContentAdminMac principalAdminMac;
-                    if(VarUtils.getIsWindows()){
-//                        principalAdmin = new ContentAdmin();
-//                        principalAdmin.setVisible(true);
-                        Notification.showMsg("es w", "windows", 1);
+                    ContentAdmin principalAdmin;
+                    ContentAdminMac principalAdminMac;
+                    if(GlobalValuesVariables.getIsWindows()){
+                        principalAdmin = new ContentAdmin();
+                        principalAdmin.setVisible(true);
                     }else{
-//                        principalAdminMac = new ContentAdminMac();
-//                        principalAdminMac.setVisible(true);
-                        Notification.showMsg("no es w", "OTHER OS", 1);
+                        principalAdminMac = new ContentAdminMac();
+                        principalAdminMac.setVisible(true);
                     }
                     
                     this.dispose();
-//                } catch (SQLException | ClassNotFoundException ex) {
-//                    try {
-//                        Logger.getLogger(Acceso.class.getName()).log(Level.SEVERE, null, ex);
-//                        OptionPane.showMsg("Error inesperado", "Ha ocurrido un error interno al iniciar el sistema", 3);
-//                        Thread.sleep(5000);
-//                        this.dispose();
-//                    } catch (InterruptedException ex1) {
-//                        Logger.getLogger(Acceso.class.getName()).log(Level.SEVERE, null, ex1);
-//                        OptionPane.showMsg("Error inesperado", "Ha ocurrido un error interno al iniciar el sistema:\n"
-//                                + ex.getMessage(), 3);
-//                    }
-//                }
+                } catch (SQLException | ClassNotFoundException ex) {
+                    try {
+                        Logger.getLogger(Acceso.class.getName()).log(Level.SEVERE, null, ex);
+                        OptionPane.showMsg("Error inesperado", "Ha ocurrido un error interno al iniciar el sistema", 3);
+                        Thread.sleep(5000);
+                        this.dispose();
+                    } catch (InterruptedException ex1) {
+                        Logger.getLogger(Acceso.class.getName()).log(Level.SEVERE, null, ex1);
+                        OptionPane.showMsg("Error inesperado", "Ha ocurrido un error interno al iniciar el sistema:\n"
+                                + ex.getMessage(), 3);
+                    }
+                }
             }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

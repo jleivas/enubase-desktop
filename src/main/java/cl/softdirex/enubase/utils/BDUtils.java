@@ -14,6 +14,7 @@ import cl.softdirex.enubase.entities.Detalle;
 import cl.softdirex.enubase.entities.Equipo;
 import cl.softdirex.enubase.entities.HistorialPago;
 import cl.softdirex.enubase.entities.InternMail;
+import cl.softdirex.enubase.entities.InternStock;
 import cl.softdirex.enubase.entities.Inventario;
 import cl.softdirex.enubase.entities.Item;
 import cl.softdirex.enubase.entities.Oficina;
@@ -25,7 +26,7 @@ import cl.softdirex.enubase.entities.Venta;
 import cl.softdirex.enubase.entities.VentaDTO;
 import cl.softdirex.enubase.sync.entities.Migrar;
 import cl.softdirex.enubase.sync.entities.Remote;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -385,16 +386,16 @@ public class BDUtils {
         if(GV.syncEnabled()){
             //si la ultima fecha de actualizacion corresponde al dia actual
             //restamos un dia a LastUpdate para validar actualización
-            VarUtils.resetAllPorcentaje();
-            if(GV.isCurrentDate(VarUtils.getLastUpdate())){
-                VarUtils.setLastUpdate(GV.dateSumaResta(VarUtils.getLastUpdate(), -1, "DAYS"));
+            GlobalValuesVariables.resetAllPorcentaje();
+            if(GV.isCurrentDate(GlobalValuesVariables.getLastUpdate())){
+                GlobalValuesVariables.setLastUpdate(GV.dateSumaResta(GlobalValuesVariables.getLastUpdate(), -1, "DAYS"));
             }
             if(sincronizar(allEntitiesForRemoteSync())){
-                VarUtils.setLastUpdate(new Date());
-                VarUtils.setSyncCount(VarUtils.getSyncCount()+1);
+                GlobalValuesVariables.setLastUpdate(new Date());
+                GlobalValuesVariables.setSyncCount(GlobalValuesVariables.getSyncCount()+1);
             }
         }else{
-            Notification.showMsg("No se puede procesar la solicitud", 
+            OptionPane.showMsg("No se puede procesar la solicitud", 
                     "Se ha agotado el limite de sincronizaciones por día", 2);
         } 
     }
@@ -422,7 +423,7 @@ public class BDUtils {
     
     public static boolean sincronizar(List<Object> listaObjetos){
         setSincronizar(true);
-        VarUtils.calcularPorcentaje(listaObjetos.size(),"Preparando la sincronización");
+        GlobalValuesVariables.calcularPorcentaje(listaObjetos.size(),"Preparando la sincronización");
         for (Object type : listaObjetos) {
             if(type instanceof Venta){
                 type = new VentaDTO();
@@ -431,12 +432,12 @@ public class BDUtils {
                 error = true;
                 break;
             }
-            VarUtils.calcularPorcentaje(listaObjetos.size(), "Sincronizando entidades [Tipo de datos:"+GV.getClassName(type).trim()+"]...");
+            GlobalValuesVariables.calcularPorcentaje(listaObjetos.size(), "Sincronizando entidades [Tipo de datos:"+GV.getClassName(type).trim()+"]...");
         }
-        VarUtils.resetAllPorcentaje();
+        GlobalValuesVariables.resetAllPorcentaje();
         setSincronizar(false);
         if(error){
-            Notification.showMsg("La sincrconización se ha suspendido", "No se sincronizaron los datos por uno de estos motivos:\n"
+            OptionPane.showMsg("La sincrconización se ha suspendido", "No se sincronizaron los datos por uno de estos motivos:\n"
                     + "-Se ha cancelado manualmente\n"
                     + "-Ocurrió un error de datos en la red, compruebe su conexion a internet", 2);
             return false;
@@ -453,7 +454,7 @@ public class BDUtils {
                 return true;
             }
         }
-        VarUtils.setReport("No se pudo sincronizar la base de datos...");
+        GlobalValuesVariables.setReport("No se pudo sincronizar la base de datos...");
         return false;
     }
     
@@ -509,7 +510,7 @@ public class BDUtils {
                            MESSAGE,OFICINA,PROVEEDOR,INTERN_STOCK,
                            REGISTRO_BAJAS,TIPO_PAGO,USUARIO,VENTA};
         if(tableNamesDB().length != tables.length){
-            Notification.showMsg("Error al generar tablas", "Los objetos Array no coinciden\nDetalle: BDUtils:tablesBD()", 3);
+            OptionPane.showMsg("Error al generar tablas", "Los objetos Array no coinciden\nDetalle: BDUtils:tablesBD()", 3);
         }
         return tables;
     }
@@ -519,12 +520,12 @@ public class BDUtils {
                            COL_MESSAGE,COL_OFICINA,COL_PROVEEDOR,COL_INTERN_STOCK,
                            COL_REGISTRO_BAJAS,COL_TIPO_PAGO,COL_USUARIO,COL_VENTA};
         if(tableNamesDB().length != tables.length){
-            Notification.showMsg("Error al generar tablas", "Los objetos Array no coinciden\nDetalle: BDUtils:tablesBD()", 3);
+            OptionPane.showMsg("Error al generar tablas", "Los objetos Array no coinciden\nDetalle: BDUtils:tablesBD()", 3);
         }
         return tables;
     }
     
-    private static void generarBackup(List<Object> listaObjetos){
+    public static void generarBackup(){
         try {
             LcBd.cerrar();
             if(WebUtils.isOnline() && LcBd.obtener() != null){
@@ -651,7 +652,7 @@ public class BDUtils {
     public static List<Object> listarVentas(Date dateTo, Date dateFrom,String idUser, String codClient, String idVenta){
         Dao load = new Dao();
         String idParam = GV.getWhereFromVentas(dateTo, dateFrom, idUser, codClient, idVenta);
-        idParam = VarUtils.convertVentaIdToVentaList(idParam);
+        idParam = GlobalValuesVariables.convertVentaIdToVentaList(idParam);
         return load.listar(idParam, new Venta());
     }
     
@@ -669,7 +670,7 @@ public class BDUtils {
     public static List<Object> listarAllVentas(Date dateTo, Date dateFrom,String idUser, String codClient, String idVenta){
         Dao load = new Dao();
         String idParam = GV.getWhereFromAllVentas(dateTo, dateFrom, idUser, codClient, idVenta);
-        idParam = VarUtils.convertVentaIdToVentaList(idParam);
+        idParam = GlobalValuesVariables.convertVentaIdToVentaList(idParam);
         return load.listar(idParam, new Venta());
     }
     

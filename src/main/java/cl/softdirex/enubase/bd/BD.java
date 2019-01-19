@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package cl.softdirex.enubase.bd;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -51,10 +51,10 @@ public class BD {
          registros = res.getInt("total");
          res.close();
       }catch(SQLException e){
-         Notification.showMsg("Error en LCBD", e.getLocalizedMessage(),3);
+         OptionPane.showMsg("Error en LCBD", e.getLocalizedMessage(),3);
       } catch (ClassNotFoundException ex) {
             Logger.getLogger(LcBd.class.getName()).log(Level.SEVERE, null, ex);
-            Notification.showMsg("Error en LCBD", "Detalle:\n"+ex.getLocalizedMessage(),3);
+            OptionPane.showMsg("Error en LCBD", "Detalle:\n"+ex.getLocalizedMessage(),3);
         }
     
     //se crea una matriz con tantas filas y columnas que necesite
@@ -71,9 +71,9 @@ public class BD {
             i++;         }
          res.close();
           }catch(SQLException e){
-         Notification.showMsg("Error en LCBD al obtener datos", ""+e.getLocalizedMessage(),3);
+         OptionPane.showMsg("Error en LCBD al obtener datos", ""+e.getLocalizedMessage(),3);
     }   catch (ClassNotFoundException ex) {
-            Notification.showMsg("Error en LCBD al obtener datos", "Detalle:\n"+ex.getLocalizedMessage(),3);
+            OptionPane.showMsg("Error en LCBD al obtener datos", "Detalle:\n"+ex.getLocalizedMessage(),3);
         }
     return data;
  }

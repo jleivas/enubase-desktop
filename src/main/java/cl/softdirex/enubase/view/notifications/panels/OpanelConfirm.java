@@ -5,8 +5,8 @@
  */
 package cl.softdirex.enubase.view.notifications.panels;
 
-import cl.softdirex.enubase.view.notifications.Notification;
-import cl.softdirex.enubase.utils.PanelUtils;
+import cl.softdirex.enubase.view.notifications.OptionPane;
+import cl.softdirex.enubase.utils.Icons;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,18 +21,18 @@ public class OpanelConfirm extends javax.swing.JPanel {
      */
     public OpanelConfirm() {
         initComponents();
-        switch (PanelUtils.getMsgStatus()){
+        switch (Icons.getMsgStatus()){
             case JOptionPane.INFORMATION_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.iconInfo())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.iconInfo())));
                 break;
             case JOptionPane.WARNING_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.iconWarn())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.iconWarn())));
                 break;
             case JOptionPane.ERROR_MESSAGE:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.iconError())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.iconError())));
                 break;
             case JOptionPane.ERROR:
-                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.iconError())));
+                imgIconMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.iconError())));
                 break;
         }
     }
@@ -174,16 +174,16 @@ public class OpanelConfirm extends javax.swing.JPanel {
     }//GEN-LAST:event_imgIconMessageMousePressed
 
     private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
-        Notification.setConfirm(false);
-        Notification.closeInfoPanel();
+        OptionPane.setConfirm(false);
+        OptionPane.closeInfoPanel();
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnCancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseEntered
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseEntered
 
     private void btnCancelarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseExited
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseExited
 
     private void btnCancelarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMousePressed
@@ -191,16 +191,16 @@ public class OpanelConfirm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarMousePressed
 
     private void btnAceptarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseClicked
-        Notification.setConfirm(true);
-        Notification.closeInfoPanel();
+        OptionPane.setConfirm(true);
+        OptionPane.closeInfoPanel();
     }//GEN-LAST:event_btnAceptarMouseClicked
 
     private void btnAceptarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseEntered
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnAceptar.getIcon().toString()))));
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnAceptar.getIcon().toString()))));
     }//GEN-LAST:event_btnAceptarMouseEntered
 
     private void btnAceptarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseExited
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnAceptar.getIcon().toString()))));
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnAceptar.getIcon().toString()))));
     }//GEN-LAST:event_btnAceptarMouseExited
 
     private void btnAceptarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMousePressed

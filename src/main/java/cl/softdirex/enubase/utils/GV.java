@@ -8,6 +8,7 @@ package cl.softdirex.enubase.utils;
 import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Equipo;
 import cl.softdirex.enubase.entities.User;
+import cl.softdirex.enubase.entities.Venta;
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntId;
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntIdValidaName;
 import cl.softdirex.enubase.entities.abstractclasses.SyncStringId;
@@ -15,10 +16,12 @@ import cl.softdirex.enubase.sync.entities.Local;
 import cl.softdirex.enubase.sync.entities.Remote;
 import static cl.softdirex.enubase.utils.StEntities.getTipoUsuario;
 import cl.softdirex.enubase.view.init.Acceso;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelCompanyData;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetLicencia;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetToken;
+import cl.softdirex.enubase.view.os.other.ContentAdminMac;
+import cl.softdirex.enubase.view.os.windows.ContentAdmin;
 import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -36,9 +39,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -51,6 +59,101 @@ public class GV {
     public static Remote REMOTE_SYNC = new Remote();
     private static Dao load = new Dao();
     /*********************BEGIN FUNCTIONS****************************/
+    
+    public static void cerrarSistema() {
+        OptionPane.closeInfoPanel();
+        Boton boton = new Boton();
+        boton.mensajeInfo("Cerrando el sistema","Finalizando procesos...El sistema se cerrará.");
+        if(OptionPane.getConfirmation("Respaldar información antes de cerrar", "¿Deseas respaldar los datos?", JOptionPane.INFORMATION_MESSAGE)){
+            BDUtils.generarBackup();
+        }
+
+        System.exit(0);
+    }
+    
+    public static void contentAdminUpdateLabelUser(){
+        if(GlobalValuesVariables.getIsWindows()){
+            ContentAdmin.lblUserName.setText(StEntities.USER.getNombre());
+        }else{
+            ContentAdminMac.lblUserName.setText(StEntities.USER.getNombre());
+        }
+    }
+    public static String mailValidate(String email) {
+        email = getStr(email).toLowerCase();
+        // Patrón para validar el email
+        Pattern pattern = Pattern
+                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+ 
+        // El email a validar
+ 
+        Matcher mather = pattern.matcher(email);
+        if(mather.find()){
+            return email;
+        }
+        return "";
+    }
+    
+    /**
+     * retorna true si la fecha ingresada por parametros es
+     * superior a la fecha actual
+     * @param date
+     * @return 
+     */
+    public static boolean fechaFutura(Date date){
+        return date.after(new Date());
+    }
+    
+    /**
+     * retorna true si la fecha ingresada por parametros es igual
+     * o superior a la fecha actual
+     * @param date
+     * @return 
+     */
+    public static boolean fechaActualOFutura(Date date){
+        if(GV.dateToString(date, "ddmmyyyy")
+                .equals(GV.dateToString(new Date(), "ddmmyyyy"))){
+            return true;
+        }
+        return fechaFutura(date);
+    }
+    
+    public static String licenciaEstado(){
+        String status = "Cambiate a premium";
+        if(GlobalValuesVariables.getLicenciaTipoPlan()> 0){
+            status = (fechaActualOFutura(stringToDate(GlobalValuesVariables.getExpDate())))?
+                    "Bajo licencia hasta el "+GlobalValuesVariables.getExpDate().replaceAll("-", "."):
+                    "La licencia ha caducado";
+            status = (isCurrentDate(stringToDate(GlobalValuesVariables.getExpDate())))?"Expirará hoy":status;
+            status = (isCurrentDate(dateSumaResta(stringToDate(GlobalValuesVariables.getExpDate()), -1, "DAYS")))?"Expirará mañana":status;
+        }
+        if(GlobalValuesVariables.getLicenciaTipoPlan()==GlobalValuesVariables.licenciaTipoFree()){
+            status = "Licencia gratuita: "+status;
+        }
+        if(GlobalValuesVariables.getLicenciaTipoPlan()==GlobalValuesVariables.licenciaTipo2X()){
+            status = "Licencia 2x: "+status;
+        }
+        if(GlobalValuesVariables.getLicenciaTipoPlan()==GlobalValuesVariables.licenciaTipo4X()){
+            status = "Licencia 4x: "+status;
+        }
+        if(GlobalValuesVariables.getLicenciaTipoPlan()==GlobalValuesVariables.licenciaTipo6X()){
+            status = "Licencia 6x: "+status;
+        }
+        if(GlobalValuesVariables.getLicenciaTipoPlan()==GlobalValuesVariables.licenciaTipoFullData()){
+            status = "Licencia FullData: "+status;
+        }
+        return status;
+    }
+    
+    public static boolean licenciaIsEnableToSendInternMessages() {
+        return (GlobalValuesVariables.getLicenciaTipoPlan() != GlobalValuesVariables.licenciaTipo2X() && 
+                GlobalValuesVariables.getLicenciaTipoPlan() != GlobalValuesVariables.licenciaTipoFree());
+    }
+    
+    public static boolean licenciaExpirada(){
+        return fechaPasada(stringToDate(GlobalValuesVariables.getExpDate()));
+    }
+    
     public static void startSystem(){
         BDUtils.initDB();
         boolean error = false;
@@ -66,7 +169,7 @@ public class GV {
         XmlUtils.cargarRegistroLocal();
         SubProcess.licenciaComprobarOnline();
         validaBD();
-        VarUtils.setIdEquipo(LOCAL_SYNC.getIdEquipo());
+        GlobalValuesVariables.setIdEquipo(LOCAL_SYNC.getIdEquipo());
         Acceso init = new Acceso();
         init.setVisible(true);
     }
@@ -89,7 +192,7 @@ public class GV {
     }
     /*BEGIN LICENCIA*/
     public static void licenciaRegistrar(){
-        Notification.showOptionPanel(new OpanelSetLicencia(), Notification.titleRegistrarLicencia());
+        OptionPane.showOptionPanel(new OpanelSetLicencia(), OptionPane.titleRegistrarLicencia());
     }
     
     public static boolean licenciaComprobateOnline(String arg) {
@@ -110,28 +213,28 @@ public class GV {
     }
     
     private static void validaToken(int tipoPlan,String licencia,String key) {
-        if(tipoPlan != VarUtils.licenciaTipoFree() && 
-           tipoPlan != VarUtils.licenciaTipoLocal()){
-            Notification.showOptionPanel(new OpanelSetToken(key), Notification.titleRegistrarToken());
+        if(tipoPlan != GlobalValuesVariables.licenciaTipoFree() && 
+           tipoPlan != GlobalValuesVariables.licenciaTipoLocal()){
+            OptionPane.showOptionPanel(new OpanelSetToken(key), OptionPane.titleRegistrarToken());
         }else{
             setLicenciaAsignarValoresPaso1(licencia, key);
         }
     }
     
     private static void setLicenciaAsignarValoresPaso1(String licencia,String arg){
-        VarUtils.setSyncCount(0);
+        GlobalValuesVariables.setSyncCount(0);
         
-        VarUtils.setUserName("admin");
-        VarUtils.setLicenciaTipoPlan(XmlUtils.getTipoPlanOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
+        GlobalValuesVariables.setUserName("admin");
+        GlobalValuesVariables.setLicenciaTipoPlan(XmlUtils.getTipoPlanOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
         
-        VarUtils.setLicenceCode(licencia);
-        VarUtils.setExpDate(XmlUtils.getExpDateOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
-        VarUtils.setCurrentEquipo(licencia+"_"+dateToString(new Date(), "yyyymmddhhmmss"));
-        VarUtils.setApiUriLicence(keyGetUrl(dsC(arg)));
-        VarUtils.setApiUriPort(keyGetPass(dsC(arg)));
-        VarUtils.setLastUpdateFromXml(stringToDate(VarUtils.getFechaDefault()));
-        Notification.closeOptionPanel();
-        Notification.showOptionPanel(new OpanelCompanyData(1), Notification.titleCompanyDataCreate());
+        GlobalValuesVariables.setLicenceCode(licencia);
+        GlobalValuesVariables.setExpDate(XmlUtils.getExpDateOnline(keyGetLicencia(dsC(arg)),keyGetUrl(dsC(arg))));
+        GlobalValuesVariables.setCurrentEquipo(licencia+"_"+dateToString(new Date(), "yyyymmddhhmmss"));
+        GlobalValuesVariables.setApiUriLicence(keyGetUrl(dsC(arg)));
+        GlobalValuesVariables.setApiUriPort(keyGetPass(dsC(arg)));
+        GlobalValuesVariables.setLastUpdateFromXml(stringToDate(GlobalValuesVariables.getFechaDefault()));
+        OptionPane.closeOptionPanel();
+        OptionPane.showOptionPanel(new OpanelCompanyData(1), OptionPane.titleCompanyDataCreate());
     }
     
     public static void asignarToken(String token,String key){
@@ -252,8 +355,8 @@ public class GV {
     }
     
     public static boolean licenciaLocal() {
-        return (VarUtils.getLicenciaTipoPlan() == VarUtils.licenciaTipoFree() ||
-                VarUtils.getLicenciaTipoPlan() == VarUtils.licenciaTipoLocal());
+        return (GlobalValuesVariables.getLicenciaTipoPlan() == GlobalValuesVariables.licenciaTipoFree() ||
+                GlobalValuesVariables.getLicenciaTipoPlan() == GlobalValuesVariables.licenciaTipoLocal());
     }
     
     public static Object searchInList(String code , List<Object> list, Object classType) {
@@ -341,7 +444,7 @@ public class GV {
         try {
             byte[] message = Base64.decodeBase64(textContent.getBytes("utf-8"));
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digestOfPassword = md.digest(VarUtils.getSalt().getBytes("utf-8"));
+            byte[] digestOfPassword = md.digest(GlobalValuesVariables.getSalt().getBytes("utf-8"));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
             SecretKey key = new SecretKeySpec(keyBytes, "DESede");
  
@@ -366,7 +469,7 @@ public class GV {
         try {
  
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digestOfPassword = md.digest(VarUtils.getSalt().getBytes("utf-8"));
+            byte[] digestOfPassword = md.digest(GlobalValuesVariables.getSalt().getBytes("utf-8"));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
  
             SecretKey key = new SecretKeySpec(keyBytes, "DESede");
@@ -395,7 +498,7 @@ public class GV {
         } catch (ParseException ex) {
 
             ex.printStackTrace();
-            fecha = stringToDate(VarUtils.getFechaDefault());
+            fecha = stringToDate(GlobalValuesVariables.getFechaDefault());
 
         }
         
@@ -443,7 +546,7 @@ public class GV {
             return dias; 
         } catch (ParseException ex) {
             Logger.getLogger(GV.class.getName()).log(Level.SEVERE, null, ex);
-            Notification.showMsg("Error al calcular dias", "Ocurrió un error inesperado...", 3);
+            OptionPane.showMsg("Error al calcular dias", "Ocurrió un error inesperado...", 3);
         }
         return 0;
     }
@@ -517,7 +620,7 @@ public class GV {
     }
     
     public static boolean licenciaIsEnableToSendMails() {
-        return (VarUtils.getLicenciaTipoPlan() != VarUtils.licenciaTipoFree());
+        return (GlobalValuesVariables.getLicenciaTipoPlan() != GlobalValuesVariables.licenciaTipoFree());
     }
     
     public static String strToPrice(int monto){
@@ -527,32 +630,32 @@ public class GV {
     
     public static int getSyncCount(){
         XmlUtils.loadSyncCount();
-        return VarUtils.getSyncCount();
+        return GlobalValuesVariables.getSyncCount();
     }
     
     public static void setSyncCount(int value){
-        VarUtils.setSyncCount(value);
+        GlobalValuesVariables.setSyncCount(value);
         XmlUtils.saveSyncCount();
     }
     
     public static boolean syncEnabled(){
-        int tp = VarUtils.getLicenciaTipoPlan();
+        int tp = GlobalValuesVariables.getLicenciaTipoPlan();
         int count = getSyncCount();
-        if(tp==VarUtils.licenciaTipoFullData())return true;
+        if(tp==GlobalValuesVariables.licenciaTipoFullData())return true;
         if(count<0){
-            Notification.showMsg("Registos adulterados", "No es posible continuar porque los archivos del sistema\n"
+            OptionPane.showMsg("Registos adulterados", "No es posible continuar porque los archivos del sistema\n"
                     + " se encuentran corrompidos, esto puede causar daños irreversibles en el sistema", 3);
-            setSyncCount(VarUtils.TP_6X_MS*1000);
+            setSyncCount(GlobalValuesVariables.TP_6X_MS*1000);
             return false;
         }
-        if(tp==VarUtils.licenciaTipo2X()){
-            return (count < VarUtils.TP_2X_MS);
+        if(tp==GlobalValuesVariables.licenciaTipo2X()){
+            return (count < GlobalValuesVariables.TP_2X_MS);
         }
-        if(tp==VarUtils.licenciaTipo4X()){
-            return (count < VarUtils.TP_4X_MS);
+        if(tp==GlobalValuesVariables.licenciaTipo4X()){
+            return (count < GlobalValuesVariables.TP_4X_MS);
         }
-        if(tp==VarUtils.licenciaTipo6X()){
-            return (count < VarUtils.TP_6X_MS);
+        if(tp==GlobalValuesVariables.licenciaTipo6X()){
+            return (count < GlobalValuesVariables.TP_6X_MS);
         }
         return false;
     }
@@ -598,7 +701,7 @@ public class GV {
     }
     
     public static void setLastUpdate(Date date) {
-        VarUtils.setLastUpdate(date);
+        GlobalValuesVariables.setLastUpdate(date);
         XmlUtils.crearRegistroLocal();
     }
     
@@ -706,14 +809,14 @@ public class GV {
     }
     
     public static void validaOs(){
-        VarUtils.setIsWindowsOs((System.getProperty("os.name").toLowerCase().startsWith("win")));
+        GlobalValuesVariables.setIsWindowsOs((System.getProperty("os.name").toLowerCase().startsWith("win")));
     }
     
     /**
      * Obliga al usuario a sincronizar datos para evitar perdida importante de información
      */
     public static void sincronizeOrClose() {
-        if(Notification.getConfirmation("Sincronización inicial", "Todos los datos deben ser sincronizados para que el sistema "
+        if(OptionPane.getConfirmation("Sincronización inicial", "Todos los datos deben ser sincronizados para que el sistema "
                 + "funcione correctamente,\n el tiempo de espera puede ser largo dependiendo de los registros "
                 + "almacenados\n en la base de datos remota.\n"
                 + "Asegúrese de que su conexión a internet sea rápida para evitar posibles problemas de registro\n"
@@ -722,7 +825,7 @@ public class GV {
             GV.setSyncCount(0);
             BDUtils.sincronizarTodo();
         }else{
-            Notification.showMsg("Operación cancelada", "El sistema no puede iniciar sin la sincronización,\n"
+            OptionPane.showMsg("Operación cancelada", "El sistema no puede iniciar sin la sincronización,\n"
                     + "vuelva a intentarlo mas tarde.", 2);
             try {
                 Thread.sleep(5000);
@@ -739,53 +842,110 @@ public class GV {
             user = (User)load.get(username, 0, new User());
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(GV.class.getName()).log(Level.SEVERE, null, ex);
-            Notification.showMsg("Error al cargar usuario", "Ocurrió un error inesperado al validar usuario:\n"
+            OptionPane.showMsg("Error al cargar usuario", "Ocurrió un error inesperado al validar usuario:\n"
                     + ex.getMessage(), 3);
         }
         if(user!=null){
             if(user.getEstado() == 0){
-                Notification.showMsg("Acceso denegado", "El usuario se encuentra anulado", 2);
+                OptionPane.showMsg("Acceso denegado", "El usuario se encuentra anulado", 2);
                 return null;
             }
             if(GV.dsC(user.getPass()).equals(pass)){
-                VarUtils.setIntentosAccesoReset();
+                GlobalValuesVariables.setIntentosAccesoReset();
                 return user;
             }else{
-                VarUtils.setIntentosAccesoSuma();
-                if(VarUtils.getIntentosAcceso() < 3){
-                    Notification.showMsg("Acceso denegado", "Clave de acceso inválida", 2);
+                GlobalValuesVariables.setIntentosAccesoSuma();
+                if(GlobalValuesVariables.getIntentosAcceso() < 3){
+                    OptionPane.showMsg("Acceso denegado", "Clave de acceso inválida", 2);
                 }else{
-                    Notification.showMsg("Acceso denegado", "Clave de acceso inválida:\n"
+                    OptionPane.showMsg("Acceso denegado", "Clave de acceso inválida:\n"
                         + "Si usted está seguro que la clave ingresada es la correcta\n"
                         + "consulte una posible solución en el ícono de ayuda \"?\".", 2);
                 }
             }
         }else{
-            Notification.showMsg("Acceso denegado", "El usuario no existe", 2);
+            OptionPane.showMsg("Acceso denegado", "El usuario no existe", 2);
         }
         return null;
+    }
+    
+    public static String getFilterString(String arg){
+        if(arg == null || arg.replaceAll(" ", "").isEmpty())
+            return "";
+        else{
+            String value = arg.replaceAll("[+^‘´'{}]","");
+            return (value.startsWith(" "))?value.replaceFirst(" ", "").trim():value.trim();
+        }
+    }
+    
+    public static Venta openVentaByCod(String cod) {
+        return (Venta)BDUtils.openVentaByCod(cod);
     }
     /*********************END FUNCTIONS****************************/
     /*********************BEGIN UI PROPERTIES****************************/
     public static int msgStatus(){
-        return PanelUtils.getMsgStatus();
+        return Icons.getMsgStatus();
     }
     
     public static String iconInfo(){
-        return PanelUtils.iconInfo();
+        return Icons.iconInfo();
     }
     
     public static String iconWarn(){
-        return PanelUtils.iconWarn();
+        return Icons.iconWarn();
     }
     
     public static String iconError(){
-        return PanelUtils.iconError();
+        return Icons.iconError();
     }
     /*********************END UI PROPERTIES****************************/
     /*BEGIN NOTIFICATIONS*/
     private static void licMsg(String msg,int status) {
-        Notification.showMsg("Error de licencia", msg, status);
+        OptionPane.showMsg("Error de licencia", msg, status);
+    }
+    
+    public static void mensajeAccessDenied() {
+        OptionPane.showMsg("Acceso denegado", "No tienes permisos suficientes para realizar esta operación", 2);
+    }
+
+    public static void mensajeLicenceAccessDenied() {
+        OptionPane.showMsg("Cambie su licencia", "La versión de su licencia no tiene esta opción disponible", 2);
+    }
+    
+    public static void mensajeLicenceExpired() {
+        OptionPane.showMsg("Renueve su licencia", "La versión de su licencia se encuentra expirada.\n"
+                + "Algunas opciones no estarán disponibles.", 2);
+    }
+    
+    public static void showMessageFunctionNonActive() {
+        OptionPane.showMsg("Función no activada", "Esta opción no se encuentra disponible", 2);
+    }
+    
+    public static void mensajeExcepcion(String error, int status) {
+        JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado:\n"+error, "Error critico", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static void showMsgOnEmptyTable(JComboBox cbo, JTextField txt, String registry){
+        String end = "os";
+        registry = (!registry.endsWith("s"))? registry+"s":registry;
+        end = (registry.endsWith("as"))? "as":end;
+        if(txt.getText().length() > 1){
+            OptionPane.showMsg("No existen "+registry, "No existen registros disponibles que contengan la palabra \""+txt.getText()+"\"",1);
+        }else{
+            if(registry.toLowerCase().contains("fichas")){
+                if(cbo.getSelectedIndex() == 5){
+                    OptionPane.showMsg("No existen "+registry, "No existen "+registry+" eliminad"+end+".",1);
+                }else{
+                    OptionPane.showMsg("No existen "+registry, "No existen "+registry+" registrad"+end+".",1);
+                }
+            }else{
+                if(cbo.getSelectedIndex() == 0){
+                    OptionPane.showMsg("No existen "+registry, "No existen "+registry+" registrad"+end+".",1);
+                }else{
+                    OptionPane.showMsg("No existen "+registry, "No existen "+registry+" eliminad"+end+".",1);
+                }
+            }
+        }
     }
     /*END NOTIFICATIONS*/
 }

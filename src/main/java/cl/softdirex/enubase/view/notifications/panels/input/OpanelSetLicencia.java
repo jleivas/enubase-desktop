@@ -9,8 +9,8 @@ import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.Boton;
 import cl.softdirex.enubase.utils.GV;
 import cl.softdirex.enubase.utils.WebUtils;
-import cl.softdirex.enubase.utils.PanelUtils;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.utils.Icons;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 
 
 /**
@@ -134,7 +134,7 @@ public class OpanelSetLicencia extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDropDbMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDropDbMouseClicked
-        if(Notification.getConfirmation("Borrar base de datos", "¿Desea borrar la base de datos y volver a intentar mas tarde?", 1)){
+        if(OptionPane.getConfirmation("Borrar base de datos", "¿Desea borrar la base de datos y volver a intentar mas tarde?", 1)){
             BDUtils.dropDB();
             System.exit(0);
         }else{
@@ -143,11 +143,11 @@ public class OpanelSetLicencia extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDropDbMouseClicked
 
     private void btnDropDbMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDropDbMouseEntered
-        btnDropDb.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnDropDb.getIcon().toString()))));
+        btnDropDb.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnDropDb.getIcon().toString()))));
     }//GEN-LAST:event_btnDropDbMouseEntered
 
     private void btnDropDbMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDropDbMouseExited
-        btnDropDb.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnDropDb.getIcon().toString()))));
+        btnDropDb.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnDropDb.getIcon().toString()))));
     }//GEN-LAST:event_btnDropDbMouseExited
 
     private void btnDropDbMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDropDbMousePressed
@@ -158,16 +158,16 @@ public class OpanelSetLicencia extends javax.swing.JPanel {
         if(WebUtils.isOnline()){
             GV.licenciaComprobateOnline(txtLicencia.getText());
         }else{
-            Notification.showMsg("No se puede comprobar", "Conéctese a internet para comprobar la licencia", 2);
+            OptionPane.showMsg("No se puede comprobar", "Conéctese a internet para comprobar la licencia", 2);
         }
     }//GEN-LAST:event_btnLoadMouseClicked
 
     private void btnLoadMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoadMouseEntered
-        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnLoad.getIcon().toString()))));
+        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnLoad.getIcon().toString()))));
     }//GEN-LAST:event_btnLoadMouseEntered
 
     private void btnLoadMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoadMouseExited
-        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnLoad.getIcon().toString()))));
+        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnLoad.getIcon().toString()))));
     }//GEN-LAST:event_btnLoadMouseExited
 
     private void btnLoadMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoadMousePressed
@@ -175,7 +175,7 @@ public class OpanelSetLicencia extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLoadMousePressed
 
     private void btnCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseClicked
-        if(Notification.getConfirmation("Cancelar todo", "¿Desea cancelar todo y volver a intentar mas tarde?", 1)){
+        if(OptionPane.getConfirmation("Cancelar todo", "¿Desea cancelar todo y volver a intentar mas tarde?", 1)){
             System.exit(0);
         }else{
             return;
@@ -183,11 +183,11 @@ public class OpanelSetLicencia extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelMouseClicked
 
     private void btnCancelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseEntered
-        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnCancel.getIcon().toString()))));
+        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnCancel.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelMouseEntered
 
     private void btnCancelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseExited
-        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnCancel.getIcon().toString()))));
+        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnCancel.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelMouseExited
 
     private void btnCancelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMousePressed

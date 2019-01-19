@@ -5,7 +5,7 @@
  */
 package cl.softdirex.enubase.view.notifications.panels;
 
-import cl.softdirex.enubase.utils.PanelUtils;
+import cl.softdirex.enubase.utils.Icons;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
@@ -16,13 +16,13 @@ import java.io.File;
  */
 public class OPanel extends javax.swing.JFrame {
     private static String SLB = File.separator;
-    private static String ICON_PATH = PanelUtils.ICON_LOGO;
+    private static String ICON_PATH = Icons.ICON_LOGO;
     /**
      * Creates new form OPanel
      */
     public OPanel() {
         initComponents();
-        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(PanelUtils.ICON_LOGO));
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(Icons.ICON_LOGO));
         setIconImage(icon);
         this.setLocationRelativeTo(null);
     }
@@ -41,6 +41,7 @@ public class OPanel extends javax.swing.JFrame {
         OpanelContent = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jpSuperior.setBackground(new java.awt.Color(51, 0, 102));

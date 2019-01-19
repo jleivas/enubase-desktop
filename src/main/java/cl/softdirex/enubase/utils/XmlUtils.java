@@ -5,7 +5,7 @@
  */
 package cl.softdirex.enubase.utils;
 
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -52,7 +52,7 @@ public class XmlUtils {
             Element user = document.createElement("usr"); 
             //creamos un nuevo elemento. usr contiene name
             Element name= document.createElement("name");
-            Text vName = document.createTextNode(VarUtils.getUserName()); 
+            Text vName = document.createTextNode(GlobalValuesVariables.getUserName()); 
             /**************************LICENCE******************************/
             Element lic = document.createElement("lic"); 
             //creamos un nuevo elemento. lic contiene st y date
@@ -60,9 +60,9 @@ public class XmlUtils {
             Element code= document.createElement("code");
             Element date= document.createElement("date");
             //Ingresamos la info. 
-            Text vSt = document.createTextNode(GV.enC(""+VarUtils.getLicenciaTipoPlan()));
-            Text vCode = document.createTextNode(GV.enC(VarUtils.getLicenceCode()));
-            Text vDate = document.createTextNode(GV.enC(VarUtils.getExpDate())); 
+            Text vSt = document.createTextNode(GV.enC(""+GlobalValuesVariables.getLicenciaTipoPlan()));
+            Text vCode = document.createTextNode(GV.enC(GlobalValuesVariables.getLicenceCode()));
+            Text vDate = document.createTextNode(GV.enC(GlobalValuesVariables.getExpDate())); 
             /**************************NETWORK******************************/
             Element network = document.createElement("network"); 
             //creamos un nuevo elemento. lic contiene st y date
@@ -70,9 +70,9 @@ public class XmlUtils {
             Element uri= document.createElement("uri");
             Element port= document.createElement("port");
             //Ingresamos la info. 
-            Text vEquipo = document.createTextNode(GV.enC(VarUtils.getEquipo()));
-            Text vUri = document.createTextNode(GV.enC(VarUtils.apiUriLicence()));
-            Text vPort = document.createTextNode(GV.enC(VarUtils.urlUriPort()));
+            Text vEquipo = document.createTextNode(GV.enC(GlobalValuesVariables.getEquipo()));
+            Text vUri = document.createTextNode(GV.enC(GlobalValuesVariables.apiUriLicence()));
+            Text vPort = document.createTextNode(GV.enC(GlobalValuesVariables.urlUriPort()));
             
              /**************************REGISTRY******************************/
             Element registry = document.createElement("registry"); 
@@ -87,13 +87,13 @@ public class XmlUtils {
             Element msgFile = document.createElement("message_file");
             //Ingresamos la info. 
             Text vOffice = document.createTextNode(GV.enC(StEntities.getNombreOficina()));
-            Text vCompany = document.createTextNode(GV.enC(VarUtils.getCompanyName()));
-            Text vInventary = document.createTextNode(GV.enC(VarUtils.getInventarioName()));
-            Text vLastUpdate = document.createTextNode(GV.enC(GV.dateToString(VarUtils.getLastUpdate(), "dd-mm-yyyy")));
-            Text vCompanyDesc = document.createTextNode(GV.enC(VarUtils.getCompanyDescription()));
-            Text vCompanyRut = document.createTextNode(GV.enC(VarUtils.getCompanyRut()));
-            Text vCompanyGiro = document.createTextNode(GV.enC(VarUtils.getCompanyGiro()));
-            Text vMsgMessage = document.createTextNode(GV.enC(VarUtils.getMessageFile()));
+            Text vCompany = document.createTextNode(GV.enC(GlobalValuesVariables.getCompanyName()));
+            Text vInventary = document.createTextNode(GV.enC(GlobalValuesVariables.getInventarioName()));
+            Text vLastUpdate = document.createTextNode(GV.enC(GV.dateToString(GlobalValuesVariables.getLastUpdate(), "dd-mm-yyyy")));
+            Text vCompanyDesc = document.createTextNode(GV.enC(GlobalValuesVariables.getCompanyDescription()));
+            Text vCompanyRut = document.createTextNode(GV.enC(GlobalValuesVariables.getCompanyRut()));
+            Text vCompanyGiro = document.createTextNode(GV.enC(GlobalValuesVariables.getCompanyGiro()));
+            Text vMsgMessage = document.createTextNode(GV.enC(GlobalValuesVariables.getMessageFile()));
             
             /**************USER*******************************************/
             //Asignamos la versión de nuestro XML
@@ -218,7 +218,7 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    VarUtils.setUserName(element.getElementsByTagName("name").item(0)
+                    GlobalValuesVariables.setUserName(element.getElementsByTagName("name").item(0)
                             .getTextContent());
                 }
             }
@@ -233,9 +233,9 @@ public class XmlUtils {
                     Element element = (Element) nodo;
                     String fInteger = GV.dsC(element.getElementsByTagName("st").item(0).getTextContent());
                     st = Integer.parseInt((GV.getStr(fInteger).isEmpty())?"0":fInteger);
-                    VarUtils.setLicenciaTipoPlan(st);
-                    VarUtils.setLicenceCode(GV.dsC(element.getElementsByTagName("code").item(0).getTextContent()));
-                    VarUtils.setExpDate(GV.dsC(element.getElementsByTagName("date").item(0).getTextContent()));
+                    GlobalValuesVariables.setLicenciaTipoPlan(st);
+                    GlobalValuesVariables.setLicenceCode(GV.dsC(element.getElementsByTagName("code").item(0).getTextContent()));
+                    GlobalValuesVariables.setExpDate(GV.dsC(element.getElementsByTagName("date").item(0).getTextContent()));
                 }
             }
             
@@ -246,11 +246,11 @@ public class XmlUtils {
                 Node nodo = filas.item(temp);
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
-                    VarUtils.setCurrentEquipo(GV.dsC(element.getElementsByTagName("equipo")
+                    GlobalValuesVariables.setCurrentEquipo(GV.dsC(element.getElementsByTagName("equipo")
                             .item(0).getTextContent()));
-                    VarUtils.setApiUriLicence(GV.dsC(element.getElementsByTagName("uri")
+                    GlobalValuesVariables.setApiUriLicence(GV.dsC(element.getElementsByTagName("uri")
                             .item(0).getTextContent()));
-                    VarUtils.setApiUriPort(GV.dsC(element.getElementsByTagName("port")
+                    GlobalValuesVariables.setApiUriPort(GV.dsC(element.getElementsByTagName("port")
                             .item(0).getTextContent()));
                 }
             }
@@ -264,13 +264,13 @@ public class XmlUtils {
                 if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nodo;
                     StEntities.setOficina(GV.dsC(element.getElementsByTagName("office").item(0).getTextContent()));
-                    VarUtils.setCompanyName(GV.dsC(element.getElementsByTagName("company").item(0).getTextContent()));
-                    VarUtils.setInventarioLocal(GV.dsC(element.getElementsByTagName("inventary").item(0).getTextContent()));
-                    VarUtils.setLastUpdateFromXml(GV.stringToDate(GV.dsC(element.getElementsByTagName("last_update_bd").item(0).getTextContent())));
-                    VarUtils.setCompanyDescription(GV.dsC(element.getElementsByTagName("company_description").item(0).getTextContent()));
-                    VarUtils.setCompanyRut(GV.dsC(element.getElementsByTagName("company_rut").item(0).getTextContent()));
-                    VarUtils.setCompanyGiro(GV.dsC(element.getElementsByTagName("company_giro").item(0).getTextContent()));
-                    VarUtils.setMessageFile(GV.dsC(element.getElementsByTagName("message_file").item(0).getTextContent()));
+                    GlobalValuesVariables.setCompanyName(GV.dsC(element.getElementsByTagName("company").item(0).getTextContent()));
+                    GlobalValuesVariables.setInventarioLocal(GV.dsC(element.getElementsByTagName("inventary").item(0).getTextContent()));
+                    GlobalValuesVariables.setLastUpdateFromXml(GV.stringToDate(GV.dsC(element.getElementsByTagName("last_update_bd").item(0).getTextContent())));
+                    GlobalValuesVariables.setCompanyDescription(GV.dsC(element.getElementsByTagName("company_description").item(0).getTextContent()));
+                    GlobalValuesVariables.setCompanyRut(GV.dsC(element.getElementsByTagName("company_rut").item(0).getTextContent()));
+                    GlobalValuesVariables.setCompanyGiro(GV.dsC(element.getElementsByTagName("company_giro").item(0).getTextContent()));
+                    GlobalValuesVariables.setMessageFile(GV.dsC(element.getElementsByTagName("message_file").item(0).getTextContent()));
                 }
             }
         } catch (Exception e) {
@@ -295,13 +295,13 @@ public class XmlUtils {
                     Element element = (Element) nodo;
                     String fInteger = GV.dsC(element.getElementsByTagName("cont")
                             .item(0).getTextContent());
-                    Date vReg = GV.stringToDate(VarUtils.getFechaDefault());
+                    Date vReg = GV.stringToDate(GlobalValuesVariables.getFechaDefault());
                     vReg = GV.stringToDate(GV.dsC(element.getElementsByTagName("reg")
                             .item(0).getTextContent()));
                     int value =0;
                     try{value = Integer.parseInt(fInteger);}catch(Exception e){value = -1;}
                     value=compobarSyncCount(value,vReg);
-                    VarUtils.setSyncCount(value);
+                    GlobalValuesVariables.setSyncCount(value);
                 }
             }
         } catch (Exception e) {
@@ -323,7 +323,7 @@ public class XmlUtils {
             Element upt = document.createElement("upt"); 
             Element cont= document.createElement("cont");
             Element reg= document.createElement("reg");
-            Text vCont = document.createTextNode(GV.enC(""+VarUtils.getSyncCount())); 
+            Text vCont = document.createTextNode(GV.enC(""+GlobalValuesVariables.getSyncCount())); 
             Text vReg = document.createTextNode(GV.enC(GV.dateToString(new Date(), 
                     "dd-mm-yyyy"))); 
             
@@ -364,10 +364,10 @@ public class XmlUtils {
                     Element element = (Element) nodo;
                     st = Integer.parseInt(GV.dsC(element.getElementsByTagName("st")
                             .item(0).getTextContent()));
-                    VarUtils.setLicenciaTipoPlan(st);
-                    VarUtils.setLicenceCode(GV.dsC(element.getElementsByTagName("code")
+                    GlobalValuesVariables.setLicenciaTipoPlan(st);
+                    GlobalValuesVariables.setLicenceCode(GV.dsC(element.getElementsByTagName("code")
                             .item(0).getTextContent()));
-                    VarUtils.setExpDate(GV.dsC(element.getElementsByTagName("date")
+                    GlobalValuesVariables.setExpDate(GV.dsC(element.getElementsByTagName("date")
                             .item(0).getTextContent()));
                 }
             }
@@ -433,10 +433,10 @@ public class XmlUtils {
     
     public static boolean readXMLOnline() {
         cargarDatosLicencia();
-        if(VarUtils.getLicenciaTipoPlan()!=VarUtils.licenciaTipoFree()){
+        if(GlobalValuesVariables.getLicenciaTipoPlan()!=GlobalValuesVariables.licenciaTipoFree()){
             try{
                 int cont=0;
-                URL url = new URL(GV.getStr(VarUtils.apiUriLicence()));
+                URL url = new URL(GV.getStr(GlobalValuesVariables.apiUriLicence()));
                 //URLConnection conn = url.openConnection();
                 BufferedReader br = new BufferedReader(
                         new InputStreamReader(url.openStream())
@@ -477,7 +477,7 @@ public class XmlUtils {
                                         (Element) primerNombreElementoLista.item(0);
                         NodeList primerNombre = primerNombreElemento.getChildNodes();
                         id = ((Node) primerNombre.item(0)).getNodeValue().toString();
-                        if(id.equals(VarUtils.getLicenceCode())){
+                        if(id.equals(GlobalValuesVariables.getLicenceCode())){
                             cont++;
                             NodeList segundoNombreElementoLista =
                                         primerElemento.getElementsByTagName("st");
@@ -493,18 +493,18 @@ public class XmlUtils {
                             Element tercerNombreElemento =
                                             (Element) tercerNombreElementoLista.item(0);
                             NodeList tercerNombre = tercerNombreElemento.getChildNodes();
-                            VarUtils.setLicenciaTipoPlan(st);
-                            VarUtils.setExpDate(((Node) tercerNombre.item(0)).getNodeValue()
+                            GlobalValuesVariables.setLicenciaTipoPlan(st);
+                            GlobalValuesVariables.setExpDate(((Node) tercerNombre.item(0)).getNodeValue()
                                     .toString());
                             crearRegistroLocal();
                         }
                     }
                 }
                 if(cont == 0){
-                    Notification.showMsg("Error de licencia", 
+                    OptionPane.showMsg("Error de licencia", 
                             "Esta es una copia fraudulenta del software original.",2);
-                    VarUtils.setLicenciaTipoPlan(0);
-                    VarUtils.setLicenceCode("free");
+                    GlobalValuesVariables.setLicenciaTipoPlan(0);
+                    GlobalValuesVariables.setLicenceCode("free");
                     crearRegistroLocal();
                 }
                 return true;
@@ -525,7 +525,7 @@ public class XmlUtils {
     private static int compobarSyncCount(int value, Date vReg) {
         if(value<0)return -1;
         if(GV.dateToString(vReg, "dd-mm-yyyy").equals(
-                GV.stringToDate(VarUtils.getFechaDefault())))
+                GV.stringToDate(GlobalValuesVariables.getFechaDefault())))
         {
             return -1;
         }
@@ -654,22 +654,22 @@ public class XmlUtils {
     
     public static String imprimirDatosLeidos(){
         return "\n"+
-        "Username: "+VarUtils.getUserName()+"\n"+
-        "tp: "+VarUtils.getLicenciaTipoPlan()+"\n"+
-        "code: "+VarUtils.getLicenceCode()+"\n"+
-        "expdate: "+VarUtils.getExpDate()+"\n"+
-        "equipo: "+VarUtils.getEquipo()+"\n"+
-        "uri: "+VarUtils.apiUriLicence()+"\n"+
-        "port: "+VarUtils.urlUriPort()+"\n"+
-        "lastupdate: "+GV.dateToString(VarUtils.getLastUpdate(), "dd-mm-yyyy")+"\n"+
+        "Username: "+GlobalValuesVariables.getUserName()+"\n"+
+        "tp: "+GlobalValuesVariables.getLicenciaTipoPlan()+"\n"+
+        "code: "+GlobalValuesVariables.getLicenceCode()+"\n"+
+        "expdate: "+GlobalValuesVariables.getExpDate()+"\n"+
+        "equipo: "+GlobalValuesVariables.getEquipo()+"\n"+
+        "uri: "+GlobalValuesVariables.apiUriLicence()+"\n"+
+        "port: "+GlobalValuesVariables.urlUriPort()+"\n"+
+        "lastupdate: "+GV.dateToString(GlobalValuesVariables.getLastUpdate(), "dd-mm-yyyy")+"\n"+
         
-        "companyname: "+VarUtils.getCompanyName()+"\n"+
-        "companyrut: "+VarUtils.getCompanyRut()+"\n"+
-        "companydescription: "+VarUtils.getCompanyDescription()+"\n"+
-        "companyGiro: "+VarUtils.getCompanyGiro()+"\n"+
+        "companyname: "+GlobalValuesVariables.getCompanyName()+"\n"+
+        "companyrut: "+GlobalValuesVariables.getCompanyRut()+"\n"+
+        "companydescription: "+GlobalValuesVariables.getCompanyDescription()+"\n"+
+        "companyGiro: "+GlobalValuesVariables.getCompanyGiro()+"\n"+
         "officename: "+StEntities.getNombreOficina()+"\n"+
-        "inventary: "+VarUtils.getInventarioName()+"\n"+
-        "messagefile: "+VarUtils.getMessageFile();
+        "inventary: "+GlobalValuesVariables.getInventarioName()+"\n"+
+        "messagefile: "+GlobalValuesVariables.getMessageFile();
     }
 
     public static void deleteXmlFiles() {

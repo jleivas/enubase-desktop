@@ -8,6 +8,7 @@ package cl.softdirex.enubase.utils;
 import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Oficina;
 import cl.softdirex.enubase.entities.User;
+import cl.softdirex.enubase.entities.Venta;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
 public class StEntities {
     public static User USER;
     public static Oficina OFICINA;
+    public static Venta OPEN_VENTA= new Venta();
     
     public static void setOficina(Oficina oficina){
         OFICINA = oficina;
@@ -123,5 +125,9 @@ public class StEntities {
             }
         }
         return "no registrado";
+    }
+
+    public static void setOpenVenta(Venta venta) {
+        OPEN_VENTA = venta;
     }
 }

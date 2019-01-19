@@ -5,7 +5,7 @@
  */
 package cl.softdirex.enubase.utils;
 
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.util.Date;
 
 /**
@@ -25,11 +25,11 @@ public class HelpUtils {
                 + "Si no tiene éxito, contáctese con su proveedor de software";
     }
     
-    private static String getResetPass() {
-        return VarUtils.getProjectName()+GV.dateToString(new Date(), "yyyy");
+    public static String getResetPass() {
+        return GlobalValuesVariables.getProjectName()+GV.dateToString(new Date(), "yyyy");
     }
 
     public static void showKeySuggestion() {
-        Notification.showMsg("Sugerencia de clave", HelpUtils.helpUserPassAccessDenied(), 1);
+        OptionPane.showMsg("Sugerencia de clave", HelpUtils.helpUserPassAccessDenied(), 1);
     }
 }

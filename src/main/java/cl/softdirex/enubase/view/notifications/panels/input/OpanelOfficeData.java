@@ -10,12 +10,12 @@ import cl.softdirex.enubase.entities.Inventario;
 import cl.softdirex.enubase.entities.Oficina;
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.PanelUtils;
+import cl.softdirex.enubase.utils.Icons;
 import cl.softdirex.enubase.utils.StEntities;
-import cl.softdirex.enubase.utils.VarUtils;
+import cl.softdirex.enubase.utils.GlobalValuesVariables;
 import cl.softdirex.enubase.utils.SubProcess;
 import cl.softdirex.enubase.utils.XmlUtils;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -259,9 +259,9 @@ public class OpanelOfficeData extends javax.swing.JPanel {
 
     private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
         if(OPTION == 0){
-            Notification.closeOptionPanel();
+            OptionPane.closeOptionPanel();
         }else{
-            if(Notification.getConfirmation("Cancelar todo", "¿Desea cancelar todo y volver a intentar mas tarde?", 1)){
+            if(OptionPane.getConfirmation("Cancelar todo", "¿Desea cancelar todo y volver a intentar mas tarde?", 1)){
                 BDUtils.dropDB();
                 System.exit(0);
             }else{
@@ -271,11 +271,11 @@ public class OpanelOfficeData extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnCancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseEntered
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseEntered
 
     private void btnCancelarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseExited
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnCancelar.getIcon().toString()))));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnCancelar.getIcon().toString()))));
     }//GEN-LAST:event_btnCancelarMouseExited
 
     private void btnCancelarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMousePressed
@@ -291,11 +291,11 @@ public class OpanelOfficeData extends javax.swing.JPanel {
     }//GEN-LAST:event_btnGuardarMouseClicked
 
     private void btnGuardarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseEntered
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getEnteredIcon(btnGuardar.getIcon().toString()))));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnGuardar.getIcon().toString()))));
     }//GEN-LAST:event_btnGuardarMouseEntered
 
     private void btnGuardarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseExited
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource(PanelUtils.getExitedIcon(btnGuardar.getIcon().toString()))));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnGuardar.getIcon().toString()))));
     }//GEN-LAST:event_btnGuardarMouseExited
 
     private void btnGuardarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMousePressed
@@ -306,7 +306,7 @@ public class OpanelOfficeData extends javax.swing.JPanel {
         int largo = 25;
         if(txtTelefono.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", "El telefono solo debe contener hasta 25 caracteres", JOptionPane.WARNING_MESSAGE);
+            OptionPane.showMsg("Error de ingreso de datos", "El telefono solo debe contener hasta 25 caracteres", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtTelefonoKeyTyped
 
@@ -315,7 +315,7 @@ public class OpanelOfficeData extends javax.swing.JPanel {
         
         if(txtMail.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", "El email solo debe contener 45 digitos", JOptionPane.WARNING_MESSAGE);
+            OptionPane.showMsg("Error de ingreso de datos", "El email solo debe contener 45 digitos", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtMailKeyTyped
 
@@ -323,7 +323,7 @@ public class OpanelOfficeData extends javax.swing.JPanel {
         int largo = 45;
         if(txtWeb.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", "El sitio web solo debe contener hasta 45 caracteres", JOptionPane.WARNING_MESSAGE);
+            OptionPane.showMsg("Error de ingreso de datos", "El sitio web solo debe contener hasta 45 caracteres", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtWebKeyTyped
 
@@ -339,7 +339,7 @@ public class OpanelOfficeData extends javax.swing.JPanel {
         int largo = 45;
         if(txtDireccion.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", "La dirección ingresada solo debe contener hasta 45 caracteres", JOptionPane.WARNING_MESSAGE);
+            OptionPane.showMsg("Error de ingreso de datos", "La dirección ingresada solo debe contener hasta 45 caracteres", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtDireccionKeyTyped
 
@@ -355,7 +355,7 @@ public class OpanelOfficeData extends javax.swing.JPanel {
         int largo = 45;
         if(txtCiudad.getText().length() >= largo){
             evt.consume();
-            Notification.showMsg("Error de ingreso de datos", "La ciudad ingresada solo debe contener hasta 45 caracteres", JOptionPane.WARNING_MESSAGE);
+            OptionPane.showMsg("Error de ingreso de datos", "La ciudad ingresada solo debe contener hasta 45 caracteres", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_txtCiudadKeyTyped
 
@@ -397,10 +397,10 @@ public class OpanelOfficeData extends javax.swing.JPanel {
                     + "-Dirección\n"
                     + "-Ciudad\n"
                     + "Complete los campos restantes para continuar.";
-            Notification.showMsg("Faltan campos obligatorios", msgReject, 2);
+            OptionPane.showMsg("Faltan campos obligatorios", msgReject, 2);
             return;
         }
-        if(Notification.getConfirmation("Confirmar y cerrar", "Para finalizar correctamente la operación el sistema se cerrará.\n"
+        if(OptionPane.getConfirmation("Confirmar y cerrar", "Para finalizar correctamente la operación el sistema se cerrará.\n"
                 + "Si confirma los datos, deberá volver a iniciar el programa.\n"
                 + "¿Estas seguro que los datos son correctos?", 1)){
             String officeName = "Local "+ciudad;
@@ -408,7 +408,7 @@ public class OpanelOfficeData extends javax.swing.JPanel {
             Oficina of = new Oficina(0, officeName, direccion, ciudad, telefono, "", mail, web, 1, null, 0);
             Dao load = new Dao();
             SubProcess.report("Nuevo registro", "Reporte de nueva instalación de "
-                    +VarUtils.getProjectName()+" "+VarUtils.getVersion()+"\n"
+                    +GlobalValuesVariables.getProjectName()+" "+GlobalValuesVariables.getVersion()+"\n"
                     + XmlUtils.imprimirDatosLeidos());
             try {
                 load.add(of);
@@ -417,13 +417,13 @@ public class OpanelOfficeData extends javax.swing.JPanel {
                         1, null, 0);
                 load.add(inv);
                 StEntities.setOficina(officeName);
-                VarUtils.setInventarioLocal(inventarioName);
-                Notification.closeOptionPanel();
+                GlobalValuesVariables.setInventarioLocal(inventarioName);
+                OptionPane.closeOptionPanel();
                 XmlUtils.crearRegistroLocal();
                 System.exit(0);
             } catch (InstantiationException | IllegalAccessException ex) {
                 Logger.getLogger(OpanelOfficeData.class.getName()).log(Level.SEVERE, null, ex);
-                Notification.showMsg("Error al inicio", "No se pudo conectar con la base de datos\n"
+                OptionPane.showMsg("Error al inicio", "No se pudo conectar con la base de datos\n"
                         + ex.getMessage(), 3);
             }
         }else{

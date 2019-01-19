@@ -28,8 +28,8 @@ import cl.softdirex.enubase.entities.abstractclasses.SyncStringId;
 import cl.softdirex.enubase.sync.InterfaceSync;
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.VarUtils;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.utils.GlobalValuesVariables;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,7 +67,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Venta: " + object.getCod()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Venta: " + object.getCod()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof VentaDTO){
@@ -87,7 +87,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Venta: " + object.getCod()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Venta: " + object.getCod()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof Cliente){
@@ -107,7 +107,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Cliente: " + object.getNombre()+ "\nId: " + object.getCod()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Cliente: " + object.getNombre()+ "\nId: " + object.getCod()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof Descuento){
@@ -128,7 +128,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Descuento: " + object.getNombre() + "\nId: " + object.getId() + "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Descuento: " + object.getNombre() + "\nId: " + object.getId() + "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof Detalle){
@@ -148,7 +148,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "detalle: " + object.getCod()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "detalle: " + object.getCod()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof Despacho){
@@ -168,7 +168,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "despacho: " + object.getCod()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "despacho: " + object.getCod()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof Equipo){
@@ -188,7 +188,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Equipo: " + object.getNombre()+ "\nId: " + object.getId()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Equipo: " + object.getNombre()+ "\nId: " + object.getId()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof HistorialPago){
@@ -208,7 +208,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Historial de pago: " + object.getCod()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Historial de pago: " + object.getCod()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof Inventario){
@@ -245,7 +245,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Item: " + object.getDescripcion()+ "\nId: " + object.getCod()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Item: " + object.getDescripcion()+ "\nId: " + object.getCod()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof InternMail){
@@ -265,7 +265,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Mensaje: " + object.getAsunto()+ "\nId: " + object.getId() + "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Mensaje: " + object.getAsunto()+ "\nId: " + object.getId() + "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof Oficina){
@@ -286,7 +286,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Oficina: " + object.getNombre()+ "\nId: " + object.getId()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Oficina: " + object.getNombre()+ "\nId: " + object.getId()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof Proveedor){
@@ -307,7 +307,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Proveedor: " + object.getNombre()+ "\nId: " + object.getCod()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Proveedor: " + object.getNombre()+ "\nId: " + object.getCod()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof RegistroBaja){
@@ -328,7 +328,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Registro de Bajas: " + object.getCod()+ "\n\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Registro de Bajas: " + object.getCod()+ "\n\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof TipoPago){
@@ -349,7 +349,7 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Tipo de Pago: " + object.getNombre()+ "\nId: " + object.getId()+ "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Tipo de Pago: " + object.getNombre()+ "\nId: " + object.getId()+ "\nNo se pudo insertar.", 3);
                 return false;
             }
             if(objectParam instanceof User){
@@ -370,10 +370,10 @@ public class Remote implements InterfaceSync{
                         return true;
                     }
                 }
-                Notification.showMsg("Error inseperado en la operación", "Usuario: " + object.getUsername() + "\nId: " + object.getId() + "\nNo se pudo insertar.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "Usuario: " + object.getUsername() + "\nId: " + object.getId() + "\nNo se pudo insertar.", 3);
                 return false;
             }else{
-                Notification.showMsg("Error inseperado en la operación", "El objeto no se pudo insertar.\n\n"+className+" no soporta el tipo de registro enviado.", 3);
+                OptionPane.showMsg("Error inseperado en la operación", "El objeto no se pudo insertar.\n\n"+className+" no soporta el tipo de registro enviado.", 3);
                 return false;
             }
         }catch( ClassNotFoundException | SQLException | NullPointerException ex){
@@ -400,7 +400,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("ven_last_update");
                         hour = datos.getInt("ven_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -423,7 +423,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("ven_last_update");
                         hour = datos.getInt("ven_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -446,7 +446,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("cli_last_update");
                         hour = datos.getInt("cli_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -469,7 +469,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("des_last_update");
                         hour = datos.getInt("des_last_hour");
                     } catch (Exception e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.", 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.", 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -492,7 +492,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("des_last_update");
                         hour = datos.getInt("des_last_hour");
                     } catch (Exception e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.", 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.", 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -515,7 +515,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("dsp_last_update");
                         hour = datos.getInt("dsp_last_hour");
                     } catch (Exception e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.", 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.", 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -538,7 +538,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("eq_last_update");
                         hour = datos.getInt("eq_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -561,7 +561,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("hp_last_update");
                         hour = datos.getInt("hp_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -584,7 +584,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("inv_last_update");
                         hour = datos.getInt("inv_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -607,7 +607,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("itm_last_update");
                         hour = datos.getInt("itm_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -630,7 +630,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("msg_last_update");
                         hour = datos.getInt("msg_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -653,7 +653,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("of_last_update");
                         hour = datos.getInt("of_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -676,7 +676,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("pro_last_update");
                         hour = datos.getInt("pro_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -699,7 +699,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("rb_last_update");
                         hour = datos.getInt("rb_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -722,7 +722,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("tp_last_update");
                         hour = datos.getInt("tp_last_hour");
                     } catch (SQLException e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.\nDetalle: " + e.getMessage(), 3);
                     }
                     if (!GV.objectIsNew(object.getLastUpdate(),object.getLastHour(), dsp_fecha,hour)) {
                         RmBd.cerrar();
@@ -748,7 +748,7 @@ public class Remote implements InterfaceSync{
                         dsp_fecha = datos.getDate("us_last_update");
                         hour = datos.getInt("us_last_hour");
                     } catch (Exception e) {
-                        Notification.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.", 3);
+                        OptionPane.showMsg("Error al convertir fecha", "Se cayó al intentar convertir la fecha.", 3);
                     }
                     if (dsp_fecha == null) {
                         dsp_fecha = new Date();
@@ -771,7 +771,7 @@ public class Remote implements InterfaceSync{
     
     public int getIdEquipo(){
         int id = 0;
-        String sql = "SELECT eq_id  FROM equipo WHERE eq_nombre = '"+VarUtils.getEquipo()+"'";
+        String sql = "SELECT eq_id  FROM equipo WHERE eq_nombre = '"+GlobalValuesVariables.getEquipo()+"'";
         PreparedStatement consulta;
         try {
             consulta = RmBd.obtener().prepareStatement(sql);
@@ -861,13 +861,13 @@ public class Remote implements InterfaceSync{
         idParam = idParam.trim();
         try {
             if(type instanceof Venta){
-                if(!VarUtils.ventaIdParamIsVentaList(idParam) && !VarUtils.ventaIdParamIsIdVenta(idParam)){
+                if(!GlobalValuesVariables.ventaIdParamIsVentaList(idParam) && !GlobalValuesVariables.ventaIdParamIsIdVenta(idParam)){
                     return listar(idParam,new VentaDTO());
                 }
                 String sql = getSqlVenta()+" WHERE venta.ven_id='" + idParam + "'";
                 sql = (idParam.equals("-2"))?getSqlVenta():sql;
-                if(VarUtils.ventaIdParamIsVentaList(idParam)){
-                    sql=getSqlVenta()+VarUtils.cleanIdParam(idParam);
+                if(GlobalValuesVariables.ventaIdParamIsVentaList(idParam)){
+                    sql=getSqlVenta()+GlobalValuesVariables.cleanIdParam(idParam);
                 }
                 
                     PreparedStatement consulta = RmBd.obtener().prepareStatement(sql);
@@ -1043,7 +1043,7 @@ public class Remote implements InterfaceSync{
                 + "(SELECT cliente.cli_estado from cliente where cliente.cli_rut=venta.cliente_cli_rut) as cli_estado, "
                 + "(SELECT cliente.cli_last_update from cliente where cliente.cli_rut=venta.cliente_cli_rut) as cli_last_update, "
                 + "(SELECT cliente.cli_last_hour from cliente where cliente.cli_rut=venta.cliente_cli_rut) as cli_last_hour "
-                + "from venta where ven_estado="+VarUtils.estadoVentaPaid()+" AND (ven_fecha_entrega < '"+GV.dateToString(new Date(), "yyyy-mm-dd")+"' OR ven_fecha_entrega = '"+GV.dateToString(new Date(), "yyyy-mm-dd")+"')";
+                + "from venta where ven_estado="+GlobalValuesVariables.estadoVentaPaid()+" AND (ven_fecha_entrega < '"+GV.dateToString(new Date(), "yyyy-mm-dd")+"' OR ven_fecha_entrega = '"+GV.dateToString(new Date(), "yyyy-mm-dd")+"')";
                 }
                 PreparedStatement consulta = RmBd.obtener().prepareStatement(sql);
                 ResultSet datos = consulta.executeQuery();
@@ -1500,7 +1500,7 @@ public class Remote implements InterfaceSync{
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Local.class.getName()).log(Level.SEVERE, null, ex);
-            Notification.showMsg("Error de conexión", "El sistema está teniendo errores al conectarse a la base de datos "
+            OptionPane.showMsg("Error de conexión", "El sistema está teniendo errores al conectarse a la base de datos "
                     + ""+className+",\n pruebe cerrando todos los procesos y vuelva a intentar, \nde lo contrario reinicie el equipo."
                             + "\n\nDetalle: "+ex, 3);
         }
@@ -1866,7 +1866,7 @@ public class Remote implements InterfaceSync{
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Local.class.getName()).log(Level.SEVERE, null, ex);
-            Notification.showMsg("Error al conectar con base de datos "+className, ""+ex, 3);
+            OptionPane.showMsg("Error al conectar con base de datos "+className, ""+ex, 3);
         }
         return lista;
     }
@@ -1969,7 +1969,7 @@ public class Remote implements InterfaceSync{
         }catch(Exception ex){
             Logger.getLogger(Local.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Notification.showMsg("Instancia no encontrada", "No se encuentra la instancia, se retornará un valor vacío,"
+        OptionPane.showMsg("Instancia no encontrada", "No se encuentra la instancia, se retornará un valor vacío,"
                 + "\nUbicación:"+ className, 3);
         return null;
     }
@@ -2144,8 +2144,8 @@ public class Remote implements InterfaceSync{
             RmBd.cerrar();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Local.class.getName()).log(Level.SEVERE, null, ex);
-            Notification.showMsg(ex.getMessage()+"\nNo se pudo ejecutar la consulta", sql, 3);
-            Notification.closeInfoPanel();
+            OptionPane.showMsg(ex.getMessage()+"\nNo se pudo ejecutar la consulta", sql, 3);
+            OptionPane.closeInfoPanel();
             return false;
         }
         return true;

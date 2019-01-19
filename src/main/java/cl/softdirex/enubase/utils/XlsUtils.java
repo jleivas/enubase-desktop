@@ -10,7 +10,7 @@ import cl.softdirex.enubase.entities.Cliente;
 import cl.softdirex.enubase.entities.Inventario;
 import cl.softdirex.enubase.entities.Item;
 import cl.softdirex.enubase.entities.Venta;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -79,7 +79,7 @@ public class XlsUtils {
         Dao load = new Dao();
         List<Object> lista = load.listar("morosos", new Cliente());
         if(lista.size()<1){
-            Notification.showMsg("Sin datos", "La exportación no se pudo ejecutar: \n"
+            OptionPane.showMsg("Sin datos", "La exportación no se pudo ejecutar: \n"
                     + "No existen registros para guardar.",2);
             return false;
         }
@@ -90,7 +90,7 @@ public class XlsUtils {
         Dao load = new Dao();
         List<Object> lista = load.listar("retirar", new Cliente());
         if(lista.size()<1){
-            Notification.showMsg("Sin datos", "La exportación no se pudo ejecutar: \n"
+            OptionPane.showMsg("Sin datos", "La exportación no se pudo ejecutar: \n"
                     + "No existen registros para guardar.",2);
             return false;
         }
@@ -101,17 +101,17 @@ public class XlsUtils {
         Dao load = new Dao();
         Inventario local = null;
         try {
-            local = ((Inventario)load.get(VarUtils.getInventarioName(), 0, new Inventario()));
+            local = ((Inventario)load.get(GlobalValuesVariables.getInventarioName(), 0, new Inventario()));
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             local = new Inventario();
         }
         local = (local!=null)?local:new Inventario();
-        VarUtils.setInventaryChooser(local.getId());//Se prepara el id del inventario que se usara en la consulta a la base de datos
-        List<Object> lista = load.listar(VarUtils.getSqlLowStock(),new Item());
-        VarUtils.setInventaryChooser(0);//Se reinicia el id temporal del inventario seleccionado
+        GlobalValuesVariables.setInventaryChooser(local.getId());//Se prepara el id del inventario que se usara en la consulta a la base de datos
+        List<Object> lista = load.listar(GlobalValuesVariables.getSqlLowStock(),new Item());
+        GlobalValuesVariables.setInventaryChooser(0);//Se reinicia el id temporal del inventario seleccionado
         JFileChooser archivo = new JFileChooser();
         if(lista.size()<1){
-            Notification.showMsg("No se puede generar archivo", "No existen productos con stock bajo para generar la orden de compra.", 2);
+            OptionPane.showMsg("No se puede generar archivo", "No existen productos con stock bajo para generar la orden de compra.", 2);
             return;
         }
         int resp = archivo.showSaveDialog(archivo);
@@ -122,9 +122,9 @@ public class XlsUtils {
                 String [][] entrada = new String[filas][4];
                 entrada[0][1] = "Orden de compra generada el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
-                entrada[1][1] = VarUtils.getCompanyName();
+                entrada[1][1] = GlobalValuesVariables.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = VarUtils.getProjectName();
+                entrada[2][1] = GlobalValuesVariables.getProjectName();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 entrada[5][0] = "Codigo";
@@ -159,15 +159,15 @@ public class XlsUtils {
     
     public static void saveInventary(){
         Dao load = new Dao();
-        if(VarUtils.getInventaryChooser()==0){
-            Notification.showMsg("No se pudo realizar la operación", "Los datos no han sido ingresados correctamente\n"
+        if(GlobalValuesVariables.getInventaryChooser()==0){
+            OptionPane.showMsg("No se pudo realizar la operación", "Los datos no han sido ingresados correctamente\n"
                     + "Debe seleccionar un invntario", 1);
             return;
         }
         List<Object> lista = load.listar("0", new Item());
         JFileChooser archivo = new JFileChooser();
         if(lista.size()<1){
-            Notification.showMsg("No existen registros para cargar", "No es posible generar un nuevo archivo,\n"
+            OptionPane.showMsg("No existen registros para cargar", "No es posible generar un nuevo archivo,\n"
                     + "no existen productos registrados.",2);
             return;
         }
@@ -179,9 +179,9 @@ public class XlsUtils {
                 String [][] entrada = new String[filas][6];
                 entrada[0][1] = "Registro de inventario generado el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
-                entrada[1][1] = VarUtils.getCompanyName();
+                entrada[1][1] = GlobalValuesVariables.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = VarUtils.getProjectName();
+                entrada[2][1] = GlobalValuesVariables.getProjectName();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 entrada[5][0] = "Codigo";
@@ -225,7 +225,7 @@ public class XlsUtils {
         Dao load = new Dao();
         List<Object> lista = load.listar("0", new Cliente());
         if(lista.size()<1){
-            Notification.showMsg("Sin datos", "La exportación no se pudo ejecutar: \n"
+            OptionPane.showMsg("Sin datos", "La exportación no se pudo ejecutar: \n"
                     + "No existen registros para guardar.",2);
             return false;
         }
@@ -243,9 +243,9 @@ public class XlsUtils {
                 String [][] entrada = new String[filas][7];
                 entrada[0][1] = "Documento generado el "+GV.dateToString(new Date(), "dd de mm del yyyy").replaceFirst("de", "del")+"";
                 entrada[1][0] = "Empresa:";
-                entrada[1][1] = VarUtils.getCompanyName();
+                entrada[1][1] = GlobalValuesVariables.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = VarUtils.getProjectName();
+                entrada[2][1] = GlobalValuesVariables.getProjectName();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 entrada[5][0] = "Rut";
@@ -295,7 +295,7 @@ public class XlsUtils {
     }
 
     private static void msgRejected() {
-        Notification.showMsg("No se generó el archivo", "La operacion ha sido cancelada.",2);
+        OptionPane.showMsg("No se generó el archivo", "La operacion ha sido cancelada.",2);
     }
     
     public static boolean exportarVentasAExcel(List<Object> lista) {
@@ -308,7 +308,7 @@ public class XlsUtils {
             }
         }
         if(ventas.size()<1){
-            Notification.showMsg("No se pudo generar archivo", "No existen registros para guardar, Genere una lista de datos válidos.",2);
+            OptionPane.showMsg("No se pudo generar archivo", "No existen registros para guardar, Genere una lista de datos válidos.",2);
             return false;
         }
         resp = archivo.showSaveDialog(archivo);
@@ -320,9 +320,9 @@ public class XlsUtils {
                 String [][] entrada = new String[filas][columns];
                 entrada[0][1] = "Documento generado el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
-                entrada[1][1] = VarUtils.getCompanyName();
+                entrada[1][1] = GlobalValuesVariables.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = VarUtils.getProjectName();
+                entrada[2][1] = GlobalValuesVariables.getProjectName();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 
@@ -434,7 +434,7 @@ public class XlsUtils {
                         }
                         
                     } catch (WriteException ex) {
-                        Notification.showMsg("Error inesperado", "Se generó un problema al crear las celdas de la planilla\n"
+                        OptionPane.showMsg("Error inesperado", "Se generó un problema al crear las celdas de la planilla\n"
                                 + "Detalle:"+ex, 3);
                     }
                 }
@@ -444,17 +444,17 @@ public class XlsUtils {
             try {
                 woorbook.close();
             } catch (WriteException ex) {
-                Notification.showMsg("Error inesperado", "Se generó un problema al intentar cerrar libro de trabajo\n"
+                OptionPane.showMsg("Error inesperado", "Se generó un problema al intentar cerrar libro de trabajo\n"
                                 + "Detalle:"+ex, 3);
             }
             
         } catch (IOException ex) {
-            Notification.showMsg("Error inesperado", "Se generó un problema al crear planilla Excel\n"
+            OptionPane.showMsg("Error inesperado", "Se generó un problema al crear planilla Excel\n"
                                 + "Detalle:"+ex, 3);
         }
     }
     
     private static void msgDone(){
-        Notification.showMsg("Generación exitosa", "Archivo creado con exito.",1);
+        OptionPane.showMsg("Generación exitosa", "Archivo creado con exito.",1);
     }
 }

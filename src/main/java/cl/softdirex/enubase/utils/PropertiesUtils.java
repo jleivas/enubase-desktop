@@ -17,9 +17,14 @@ import java.util.Properties;
 public class PropertiesUtils {
     private static final String PROPERTIES_PATH = DirectoryUtils.getPropertiesPath()+"envelope.properties";
     private static final String SECURITY_SALT = readPropertie("security.salt");
+    private static final String PAY_PAGE_URL = readPropertie("url.paypage");
     
     public static String getSecuritySalt(){
         return SECURITY_SALT;
+    }
+    
+    public static String getPayPageUrl() {
+        return PAY_PAGE_URL;
     }
     
     private static String readPropertie(String varName){
@@ -35,5 +40,6 @@ public class PropertiesUtils {
         }
 	return prop.getProperty(varName);
     }
+
     
 }

@@ -6,7 +6,7 @@
 package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.dao.Dao;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,7 +58,7 @@ public class SubProcess {
     
     public static void licenciaComprobarOnline(){
         XmlUtils.readXMLOnline();
-        PanelUtils.licenciaShowMessageLicenceStatus();
+        Icons.licenciaShowMessageLicenceStatus();
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
             try {
@@ -68,19 +68,19 @@ public class SubProcess {
                     Thread.sleep(TIME_MIN_COMPROBAR_ONLINE*60000);
                     XmlUtils.readXMLOnline();
                     sumMinutes = sumMinutes + TIME_MIN_COMPROBAR_ONLINE;
-                    diffDate = GV.fechaDiferencia(GV.stringToDate(VarUtils.getExpDate()));
+                    diffDate = GV.fechaDiferencia(GV.stringToDate(GlobalValuesVariables.getExpDate()));
                     if(diffDate == 0 && sumMinutes >= MIN_EXPIRE_TODAY){
                         sumMinutes=0;
-                        PanelUtils.licenciaShowMessageLicenceStatus();
+                        Icons.licenciaShowMessageLicenceStatus();
                     }
                     if(diffDate < 0 && sumMinutes >= MIN_EXPIRED){
                         sumMinutes=0;
-                        PanelUtils.licenciaShowMessageLicenceStatus();
+                        Icons.licenciaShowMessageLicenceStatus();
                     }
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(SubProcess.class.getName()).log(Level.SEVERE, null, ex);
-                Notification.showMsg("Error al comprobar datos en línea", className+"\n"
+                OptionPane.showMsg("Error al comprobar datos en línea", className+"\n"
                         + ex.getMessage(), 3);
             }
         });
@@ -95,7 +95,7 @@ public class SubProcess {
             }
             int porcentaje = 0;
                 while(ejecucion){
-                    porcentaje = VarUtils.getPorc();
+                    porcentaje = GlobalValuesVariables.getPorc();
                     if(porcentaje > 0){
                         txtTitle.setText("Sincronizando dependencias... ("+porcentaje+"%)");
                     }else{
@@ -157,7 +157,7 @@ public class SubProcess {
         try {
             Boton boton = new Boton();
             boton.index();
-            if(Notification.getConfirmation("Sincronizar", "Para efectuar una sincronización debes tener una conexión rápida y estable\n"
+            if(OptionPane.getConfirmation("Sincronizar", "Para efectuar una sincronización debes tener una conexión rápida y estable\n"
                     + "de esta forma evitarás pérdida importante de información.\n\n"
                     + "¿Tu conexión cumple con los requisitos?\n"
                     + "Presione \"SI\" para continuar.", 1)){
@@ -166,7 +166,7 @@ public class SubProcess {
                     BDUtils.sincronizarTodo();
                 });
             }else{
-                Notification.showMsg("Sincronización", "La sincronización ha sido cancelada", 1);
+                OptionPane.showMsg("Sincronización", "La sincronización ha sido cancelada", 1);
             }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(SubProcess.class.getName()).log(Level.SEVERE, null, ex);

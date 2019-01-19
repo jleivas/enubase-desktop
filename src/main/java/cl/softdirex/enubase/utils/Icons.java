@@ -5,10 +5,11 @@
  */
 package cl.softdirex.enubase.utils;
 
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.notifications.panels.MPanel;
 import cl.softdirex.enubase.view.notifications.panels.OPanel;
 import javax.swing.Icon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -16,7 +17,7 @@ import javax.swing.JOptionPane;
  *
  * @author sdx
  */
-public class PanelUtils {
+public class Icons {
     /* Joption Pane del sistema */
     public static MPanel INFOPANEL = new MPanel();
     public static OPanel OPTIONPANEL = new OPanel();
@@ -95,13 +96,13 @@ public class PanelUtils {
         String pagar = "Para evitar este mensaje:\nEntre al sistema y en el menú superior diríjase a \"Herramientas\", seleccione \"Renovar Licencia\"\n"
                 + "y renueve su licencia con el medio de pago que más le acomode.\n"
                 + "Si usted ya había efectuado el pago correspondiente, póngase en contacto con su proveedor.";
-        int expDias = GV.fechaDiferencia(GV.stringToDate(VarUtils.getExpDate())); 
+        int expDias = GV.fechaDiferencia(GV.stringToDate(GlobalValuesVariables.getExpDate())); 
         if(expDias <= 5){
             if(expDias > 1){
-                Notification.showMsg("Renueve su licencia", "Su licencia expirará dentro de "+expDias+" días."+pagar, 2);
+                OptionPane.showMsg("Renueve su licencia", "Su licencia expirará dentro de "+expDias+" días."+pagar, 2);
             }
             if(expDias == 1){
-                Notification.showMsg("Renueve su licencia", "Su licencia expirará mañana.\n\n"+pagar, 2);
+                OptionPane.showMsg("Renueve su licencia", "Su licencia expirará mañana.\n\n"+pagar, 2);
             }
             if(expDias == 0){
                 JOptionPane.showMessageDialog(null,"Su licencia expirará hoy.\n\n"+pagar,"Renueve su licencia", JOptionPane.WARNING_MESSAGE);
@@ -110,5 +111,15 @@ public class PanelUtils {
                 JOptionPane.showMessageDialog(null,"Su licencia ha caducado."+pagar,"Renueve su licencia", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    public static JComboBox<String> getCboTipoUsers(JComboBox<String> cboTipo) {
+        cboTipo.removeAllItems();
+        cboTipo.addItem("Sin Seleccionar");
+        cboTipo.addItem("Jefatura");
+        cboTipo.addItem("Administración");
+        cboTipo.addItem("Ventas");
+        cboTipo.addItem("Inventario");
+        return cboTipo;
     }
 }

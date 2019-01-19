@@ -6,7 +6,7 @@
 package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.entities.reports.SalesVentasJasperReport;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.io.File;
 import java.security.GeneralSecurityException;
 import java.util.Date;
@@ -49,8 +49,8 @@ public class Send {
         }
         String host = "smtp.gmail.com";
         String port = "587";
-        String mailFrom = VarUtils.getMailSystemName();
-        String password = VarUtils.getMailSystemPass();
+        String mailFrom = GlobalValuesVariables.getMailSystemName();
+        String password = GlobalValuesVariables.getMailSystemPass();
  
         // outgoing message information
  
@@ -178,12 +178,12 @@ public class Send {
             height = 50;
             color1 =  color_turquesa;
             String userName = (StEntities.USER != null)?StEntities.USER.getUsername():"No iniciado";
-            String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
-            sendMail("Reporte desde equipo: "+equipo+", Comercial: "+VarUtils.getCompanyName(),
-                    VarUtils.getMailReport(), title, content,
-                    "Usuario: "+userName, VarUtils.getCompanyName(), VarUtils.LOGO_MAIL, 
-                    VarUtils.ICON_USER_MAIL, 
-                    VarUtils.ICON_COMPANY_MAIL);
+            String equipo = GlobalValuesVariables.getEquipo().substring(0,GlobalValuesVariables.getEquipo().indexOf("_"));
+            sendMail("Reporte desde equipo: "+equipo+", Comercial: "+GlobalValuesVariables.getCompanyName(),
+                    GlobalValuesVariables.getMailReport(), title, content,
+                    "Usuario: "+userName, GlobalValuesVariables.getCompanyName(), GlobalValuesVariables.LOGO_MAIL, 
+                    GlobalValuesVariables.ICON_USER_MAIL, 
+                    GlobalValuesVariables.ICON_COMPANY_MAIL);
             width = 100;
             height = 140;
         }
@@ -196,11 +196,11 @@ public class Send {
             color1 =  color_turquesa;
             color2 = color_verde;
             
-            sendMail("["+VarUtils.getProjectName()+"] Nuevo mensaje: "+asunto,
-                    mailDestino, "Tienes un nuevo mensaje en tu buzon de entrada", "Inicia sesión en "+VarUtils.getProjectName()+" para verlo.",
-                    "Usuario: "+StEntities.USER.getNombre(), VarUtils.getCompanyName(), VarUtils.LOGO_MAIL, 
-                    VarUtils.ICON_USER_MAIL, 
-                    VarUtils.ICON_COMPANY_MAIL);
+            sendMail("["+GlobalValuesVariables.getProjectName()+"] Nuevo mensaje: "+asunto,
+                    mailDestino, "Tienes un nuevo mensaje en tu buzon de entrada", "Inicia sesión en "+GlobalValuesVariables.getProjectName()+" para verlo.",
+                    "Usuario: "+StEntities.USER.getNombre(), GlobalValuesVariables.getCompanyName(), GlobalValuesVariables.LOGO_MAIL, 
+                    GlobalValuesVariables.ICON_USER_MAIL, 
+                    GlobalValuesVariables.ICON_COMPANY_MAIL);
             width = 100;
             height = 140;
         }
@@ -211,12 +211,12 @@ public class Send {
             width = 25;
             height = 50;
             color1 =  color_turquesa;
-            String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
-            sendMail("Reporte de ventas desde "+equipo+" ["+VarUtils.getCompanyName()+"]",
+            String equipo = GlobalValuesVariables.getEquipo().substring(0,GlobalValuesVariables.getEquipo().indexOf("_"));
+            sendMail("Reporte de ventas desde "+equipo+" ["+GlobalValuesVariables.getCompanyName()+"]",
                     mail, "Reporte de ventas", salesReport.generateHtml(title),
-                    "Usuario: "+StEntities.USER.getUsername(), VarUtils.getCompanyName(), VarUtils.LOGO_MAIL, 
-                    VarUtils.ICON_USER_MAIL, 
-                    VarUtils.ICON_COMPANY_MAIL);
+                    "Usuario: "+StEntities.USER.getUsername(), GlobalValuesVariables.getCompanyName(), GlobalValuesVariables.LOGO_MAIL, 
+                    GlobalValuesVariables.ICON_USER_MAIL, 
+                    GlobalValuesVariables.ICON_COMPANY_MAIL);
             width = 100;
             height = 140;
         }
@@ -227,8 +227,8 @@ public class Send {
             width = 25;
             height = 50;
             color1 =  color_turquesa;
-            int compra = VarUtils.ITEMS_COMPRA;
-            int venta = VarUtils.ITEMS_VENTA;
+            int compra = GlobalValuesVariables.ITEMS_COMPRA;
+            int venta = GlobalValuesVariables.ITEMS_VENTA;
             String reporte = 
                 "<table style=\"width:100%\">\n" +
                 "  <tr>\n" +
@@ -237,15 +237,15 @@ public class Send {
                 "  </tr>\n" +
                 "  <tr>\n" +
                 "    <td><strong>Stock total de productos</strong></td>\n" +
-                "    <td><strong>"+VarUtils.ITEMS_STOCK+"</strong></td>\n" +
+                "    <td><strong>"+GlobalValuesVariables.ITEMS_STOCK+"</strong></td>\n" +
                 "  </tr>\n" +
                 "  <tr>\n" +
                 "    <td>Productos con stock bajo</td>\n" +
-                "    <td>"+VarUtils.ITEMS_STOCK_BAJO+"</td>\n" +
+                "    <td>"+GlobalValuesVariables.ITEMS_STOCK_BAJO+"</td>\n" +
                 "  </tr>\n" +
                 "  <tr>\n" +
                 "    <td>Productos con stock en cero</td>\n" +
-                "    <td>"+VarUtils.ITEMS_STOCK_CERO+"</td>\n" +
+                "    <td>"+GlobalValuesVariables.ITEMS_STOCK_CERO+"</td>\n" +
                 "  </tr>\n" +
                 "</table>"
                 + "</br></br>"
@@ -268,12 +268,12 @@ public class Send {
                     "  </tr>\n" +
                     "</table>"
                 + "</br><small>El monto calculado en inventario corresponde al precio de referencia ingresado por item.</small>";
-            String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
-            sendMail("Reporte de inventario desde "+equipo+" ["+VarUtils.getCompanyName()+"]",
+            String equipo = GlobalValuesVariables.getEquipo().substring(0,GlobalValuesVariables.getEquipo().indexOf("_"));
+            sendMail("Reporte de inventario desde "+equipo+" ["+GlobalValuesVariables.getCompanyName()+"]",
                     mail, title, reporte,
-                    "Usuario: "+StEntities.USER.getUsername(), VarUtils.getCompanyName(), VarUtils.LOGO_MAIL, 
-                    VarUtils.ICON_USER_MAIL, 
-                    VarUtils.ICON_COMPANY_MAIL);
+                    "Usuario: "+StEntities.USER.getUsername(), GlobalValuesVariables.getCompanyName(), GlobalValuesVariables.LOGO_MAIL, 
+                    GlobalValuesVariables.ICON_USER_MAIL, 
+                    GlobalValuesVariables.ICON_COMPANY_MAIL);
             width = 100;
             height = 140;
         }
@@ -293,7 +293,7 @@ public class Send {
             p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
             p.setProperty("mail.smtp.starttls.enable", "true");
             p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", VarUtils.getMailSystemName());
+            p.setProperty("mail.smtp.user", GlobalValuesVariables.getMailSystemName());
             p.setProperty("mail.smtp.auth", "true");
  
         // creates a new session with an authenticator
@@ -320,7 +320,7 @@ public class Send {
         try{
             Transport.send(msg);
         }catch(Exception e){
-            Notification.showMsg("Error de datos", "No se pudo enviar email al correo electronico: "+toAddress, 3);
+            OptionPane.showMsg("Error de datos", "No se pudo enviar email al correo electronico: "+toAddress, 3);
         }
         
  
@@ -333,13 +333,13 @@ public class Send {
             p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
             p.setProperty("mail.smtp.starttls.enable", "true");
             p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", VarUtils.getMailSystemName());
+            p.setProperty("mail.smtp.user", GlobalValuesVariables.getMailSystemName());
             p.setProperty("mail.smtp.auth", "true");
             
             Session s = Session.getDefaultInstance(p,null);
             BodyPart text = new MimeBodyPart();
-            String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
-            text.setText("Respaldo de base de datos Derby, programa "+VarUtils.getProjectName()+" version "+VarUtils.getVersion()+", equipo: "+equipo);
+            String equipo = GlobalValuesVariables.getEquipo().substring(0,GlobalValuesVariables.getEquipo().indexOf("_"));
+            text.setText("Respaldo de base de datos Derby, programa "+GlobalValuesVariables.getProjectName()+" version "+GlobalValuesVariables.getVersion()+", equipo: "+equipo);
             BodyPart adjunto1=new MimeBodyPart();
             if(directorio1 != null){
                 if(!directorio1.equals("")){
@@ -358,13 +358,13 @@ public class Send {
             }
             
             MimeMessage mensaje = new MimeMessage(s);
-            mensaje.setFrom(new InternetAddress(VarUtils.getMailSystemName()));
-            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(VarUtils.getMailReport()));
-            mensaje.setSubject("Backup: "+VarUtils.getCompanyName()+", System and version: "+VarUtils.getProjectName()+"-"+VarUtils.getVersion());
+            mensaje.setFrom(new InternetAddress(GlobalValuesVariables.getMailSystemName()));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(GlobalValuesVariables.getMailReport()));
+            mensaje.setSubject("Backup: "+GlobalValuesVariables.getCompanyName()+", System and version: "+GlobalValuesVariables.getProjectName()+"-"+GlobalValuesVariables.getVersion());
             mensaje.setContent(m);
             Transport t = s.getTransport("smtp");
             try{
-                t.connect(VarUtils.getMailSystemName(),VarUtils.getMailSystemPass());
+                t.connect(GlobalValuesVariables.getMailSystemName(),GlobalValuesVariables.getMailSystemPass());
             }catch(MessagingException ex){
                 System.out.println("Error en t.connect:"+ex);
             }

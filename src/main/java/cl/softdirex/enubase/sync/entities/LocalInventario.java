@@ -10,10 +10,10 @@ import cl.softdirex.enubase.entities.Detalle;
 import cl.softdirex.enubase.entities.HistorialPago;
 import cl.softdirex.enubase.entities.Item;
 import cl.softdirex.enubase.entities.Venta;
-import cl.softdirex.enubase.entities.utils.InternStockDetail;
+import cl.softdirex.enubase.entities.dto.InternStockDetail;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.VarUtils;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.utils.GlobalValuesVariables;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,7 +49,7 @@ public class LocalInventario {
             }
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(LocalInventario.class.getName()).log(Level.SEVERE, null, ex);
-            Notification.showMsg("Error de excepcion", className + "\n"
+            OptionPane.showMsg("Error de excepcion", className + "\n"
                     + ex.getMessage(),3);
         }
         return false;
@@ -124,18 +124,18 @@ public class LocalInventario {
         ArrayList<Object> lista = new ArrayList<>();
         boolean sincronizar = (idParam.equals(SQL_SYNC));
         updateStockTemporal();
-        String sql = "SELECT * FROM item WHERE itm_id ='" + idParam + "' AND inventario_inv_id = "+VarUtils.getInventaryChooser();
-        if (idParam.equals("0") || idParam.equals(VarUtils.getSqlLowStock())) {
-            sql = "SELECT * FROM item WHERE itm_estado=1 AND inventario_inv_id = "+VarUtils.getInventaryChooser();
+        String sql = "SELECT * FROM item WHERE itm_id ='" + idParam + "' AND inventario_inv_id = "+GlobalValuesVariables.getInventaryChooser();
+        if (idParam.equals("0") || idParam.equals(GlobalValuesVariables.getSqlLowStock())) {
+            sql = "SELECT * FROM item WHERE itm_estado=1 AND inventario_inv_id = "+GlobalValuesVariables.getInventaryChooser();
         }
         if (idParam.equals("-1")) {
-            sql = "SELECT * FROM item WHERE itm_estado=0 AND inventario_inv_id = "+VarUtils.getInventaryChooser();
+            sql = "SELECT * FROM item WHERE itm_estado=0 AND inventario_inv_id = "+GlobalValuesVariables.getInventaryChooser();
         }
         if (idParam.equals("-2")) {
-            sql = "SELECT * FROM item WHERE inventario_inv_id = "+VarUtils.getInventaryChooser();
+            sql = "SELECT * FROM item WHERE inventario_inv_id = "+GlobalValuesVariables.getInventaryChooser();
         }
         if (idParam.equals("st")) {
-            sql = "SELECT * FROM item WHERE (itm_estado=1 AND itm_stock > 0) AND inventario_inv_id = "+VarUtils.getInventaryChooser();
+            sql = "SELECT * FROM item WHERE (itm_estado=1 AND itm_stock > 0) AND inventario_inv_id = "+GlobalValuesVariables.getInventaryChooser();
         }
         if (sincronizar) {
             sql = "SELECT * FROM item";
@@ -223,7 +223,7 @@ public class LocalInventario {
             insert.executeUpdate();
             LcBd.cerrar();
         }catch( ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex){
-            Notification.showMsg("Error inesperado", "Ocurrió un error al intentar borrar los registros temporales del stock\n"
+            OptionPane.showMsg("Error inesperado", "Ocurrió un error al intentar borrar los registros temporales del stock\n"
                     + "en :"+className, 3);
             updateStockTemporal();
             return false;

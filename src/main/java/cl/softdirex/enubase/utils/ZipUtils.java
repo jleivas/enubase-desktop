@@ -26,7 +26,7 @@ public class ZipUtils {
 
     public static void zipperBackup(){
         boolean error = false;
-        String equipo = VarUtils.getEquipo().substring(0,VarUtils.getEquipo().indexOf("_"));
+        String equipo = GlobalValuesVariables.getEquipo().substring(0,GlobalValuesVariables.getEquipo().indexOf("_"));
         String pathBackUpZip = DirectoryUtils.getLocalPath() + File.separator + "backUpFiles_"+equipo;
         File backUpFileZip = new File(pathBackUpZip);
         try {
@@ -45,6 +45,7 @@ public class ZipUtils {
         }
         if(!error && WebUtils.isOnline()){
             Send backUp = new Send();
+            System.out.println(backUpFileZip.getPath()+".zip");
             backUp.sendFileMail(backUpFileZip.getPath()+".zip");
         }
     }

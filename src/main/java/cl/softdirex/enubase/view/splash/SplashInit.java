@@ -40,9 +40,12 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        logo = new javax.swing.JLabel();
         welcomeTitle = new javax.swing.JLabel();
-        loader = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         llabelInfo = new javax.swing.JLabel();
+        loader = new javax.swing.JLabel();
         fondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -50,18 +53,31 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon.png"))); // NOI18N
+        getContentPane().add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
+
         welcomeTitle.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         welcomeTitle.setForeground(java.awt.Color.white);
         welcomeTitle.setText("Bienvenido");
-        getContentPane().add(welcomeTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 230, -1, -1));
+        getContentPane().add(welcomeTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 220, -1, -1));
 
-        loader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/loader.gif"))); // NOI18N
-        getContentPane().add(loader, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 290, 200));
+        jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("enubase");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 50, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Desarrollado por Softdirex");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, -1, -1));
 
         llabelInfo.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         llabelInfo.setForeground(java.awt.Color.white);
         llabelInfo.setText("Iniciando servicios...");
-        getContentPane().add(llabelInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, -1, 20));
+        getContentPane().add(llabelInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 250, -1, 20));
+
+        loader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/circles.gif"))); // NOI18N
+        getContentPane().add(loader, new org.netbeans.lib.awtextra.AbsoluteConstraints(-100, 0, 710, 440));
 
         fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/fondoLoader.jpg"))); // NOI18N
         fondo.setText("jLabel2");
@@ -114,8 +130,11 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel fondo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel llabelInfo;
     private static javax.swing.JLabel loader;
+    private javax.swing.JLabel logo;
     private javax.swing.JLabel welcomeTitle;
     // End of variables declaration//GEN-END:variables
 

@@ -5,7 +5,10 @@
  */
 package cl.softdirex.enubase.utils;
 
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,5 +36,19 @@ public class WebUtils {
     
     public static boolean isOnline(){
         return IS_ONLINE;
+    }
+    
+    public static void goToPayPage(){
+        String url=PropertiesUtils.getPayPageUrl();
+        try {
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+            Send send = new Send();
+            send.sendReportMail(GlobalValuesVariables.getCompanyName()+" está intentando pagar", GlobalValuesVariables.getCompanyName()+" está intentando acceder a la sección de pago webpay,\n"
+                    + "compruebe si el pago fué efectuado para actualizar el plan: \""+GlobalValuesVariables.getLicenceCode()+"\", Estado:"+GV.licenciaEstado());
+        } catch (IOException ex) {
+            Logger.getLogger(WebUtils.class.getName()).log(Level.SEVERE, null, ex);
+            OptionPane.showMsg("No se puede abrir enlace", "Ocurrió un error inesperado al intentar abrir el enlace de pago\n"
+                    + "Póngase en contacto con su proveedor de software.", 3);
+        }
     }
 }

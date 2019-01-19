@@ -5,6 +5,11 @@
  */
 package cl.softdirex.enubase.utils;
 
+import cl.softdirex.enubase.view.notifications.OptionPane;
+import cl.softdirex.enubase.view.os.general.panels.VMessage;
+import cl.softdirex.enubase.view.os.general.panels.VUsuarios;
+import static cl.softdirex.enubase.view.os.other.ContentAdminMac.principalAdminMac;
+import static cl.softdirex.enubase.view.os.windows.ContentAdmin.principalAdmin;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.sql.SQLException;
@@ -30,9 +35,18 @@ public class Boton {
 //        
     }
     
+    public void ventas(int cboOption) throws SQLException, ClassNotFoundException {
+//        if(isWin()){
+//            openView(new VCrearFicha());
+//        }else{
+//            openView(new VCrearFichaMac());
+//        }
+//        
+    }
+    
     public void items() throws SQLException, ClassNotFoundException {
 //        if(GV.tipoUserIventario()){
-//            GV.cursorWAIT();
+//            CursorUtils.cursorWAIT();
 //            if(isWin()){
 //                openView(new VCristales());
 //            }else{
@@ -44,7 +58,7 @@ public class Boton {
     }
     
     public void clientes() throws SQLException, ClassNotFoundException{
-//            GV.cursorWAIT();
+//            CursorUtils.cursorWAIT();
 //            if(isWin()){
 //                openView(new VClientes());
 //            }else{
@@ -55,7 +69,7 @@ public class Boton {
     
     public void descuentos() throws SQLException, ClassNotFoundException{
 //         if(GV.tipoUserAdmin()){
-//            GV.cursorWAIT();
+//            CursorUtils.cursorWAIT();
 //            if(isWin()){
 //                openView(new VDescuentos());
 //            }else{
@@ -68,7 +82,7 @@ public class Boton {
     
     public void oficinas() throws SQLException, ClassNotFoundException {
 //        if(GV.tipoUserAdmin()){
-//            GV.cursorWAIT();
+//            CursorUtils.cursorWAIT();
 //            if(isWin()){
 //                openView(new VOficinas());
 //            }else{
@@ -79,9 +93,32 @@ public class Boton {
 //        }
     }
     
-//    public void inventarios() throws SQLException, ClassNotFoundException {
+    public void mensajes() {
+//        CursorUtils.cursorWAIT();
+//        openView(new VMessages());
+    }
+    
+    public void proveedores() throws SQLException, ClassNotFoundException{
+//        CursorUtils.cursorWAIT();
+//        if(isWin()){
+//            openView(new VInstituciones());
+//        }else{
+//            openView(new VInstitucionesMac());
+//        }
+    }
+    
+    public void venta() throws SQLException, ClassNotFoundException {
+//        CursorUtils.cursorWAIT();
+//        if(isWin()){
+//            openView(new VFicha());
+//        }else{
+//            openView(new VFichaMac());
+//        }
+    }
+    
+    public void inventarios() throws SQLException, ClassNotFoundException {
 //        if(GV.tipoUserIventario()){
-//            GV.cursorWAIT();
+//            CursorUtils.cursorWAIT();
 //            if(isWin()){
 //                openView(new VInventarios());
 //            }else{
@@ -90,11 +127,11 @@ public class Boton {
 //        }else{
 //            accesDenied();
 //        }
-//    }
+    }
 //    
 //    public void lentes() throws SQLException, ClassNotFoundException {
 //        if(GV.tipoUserIventario()){
-//            GV.cursorWAIT();
+//            CursorUtils.cursorWAIT();
 //            if(isWin()){
 //                openView(new VLentes());
 //            }else{
@@ -105,16 +142,13 @@ public class Boton {
 //        }
 //    }
 //    
-//    public void mensajes() {
-//        GV.cursorWAIT();
-//        openView(new VMessages());
-//    }
+
 //    
     
 //    
-//    public void registroBajas() {
+    public void registroBajas() {
 //        if(GV.tipoUserAdmin()){
-//            GV.cursorWAIT();
+//            CursorUtils.cursorWAIT();
 //            if(isWin()){
 //                openView(new VRegistroBajas());
 //            }else{
@@ -123,11 +157,11 @@ public class Boton {
 //        }else{
 //            accesDenied();
 //        }
-//    }
+    }
 //    
-//    public void tipoPagos() throws SQLException, ClassNotFoundException{
+    public void tipoPagos() throws SQLException, ClassNotFoundException{
 //        if(GV.tipoUserAdmin()){
-//            GV.cursorWAIT();
+//            CursorUtils.cursorWAIT();
 //            if(isWin()){
 //                openView(new VTipoPagos());
 //            }else{
@@ -136,71 +170,67 @@ public class Boton {
 //        }else{
 //            accesDenied();
 //        }
-//    }
+    }
 //    
-//    public void usuarios() throws SQLException, ClassNotFoundException {
-//        if(GV.tipoUserAdmin()){
-//            GV.cursorWAIT();
+    public void usuarios() throws SQLException, ClassNotFoundException {
+        if(GV.tipoUserAdmin()){
+            CursorUtils.cursorWAIT();
 //            if(isWin()){
-//                openView(new VUsuarios());
+                openView(new VUsuarios());
 //            }else{
 //                openView(new VUsuariosMac());
 //            }
-//        }else{
-//            accesDenied();
-//        }
-//    }
+        }else{
+            accesDenied();
+        }
+    }
 //    
-//    public void mensajeInfo(String title, String message) {
-//        if(isWin()){
-//            openView(new VMessage(title, message));
-//        }else{
-//            openView(new VMessageMac(title, message));
-//        }
-//    }
-//    
-//    private void openView(JPanel p1){
-//        if(isWin()){
-//            try{
-//                p1.setSize(ancho, alto);
-//                p1.setLocation(locat, locat);
-//                principalAdmin.removeAll();
-//                principalAdmin.add(p1,BorderLayout.CENTER);
-//                principalAdmin.revalidate();
-//                principalAdmin.repaint();
-//            }catch(Exception ex){
-//                OptionPane.showMsg("Error inesperado", "No se ha podido abrir la ventana solicitada, \n"
-//                        + "se enviará un reporte para solucionar este problema,\n"
-//                        + "póngase en contacto con su proveedor de software.", JOptionPane.ERROR_MESSAGE);
-//            }
-//            principalAdmin.setCursor(Cursor.getDefaultCursor());
-//        }else{
-//            try{
-//                p1.setSize(anchoMac, alto);
-//                p1.setLocation(locat, locat);
-//                principalAdminMac.removeAll();
-//                principalAdminMac.add(p1,BorderLayout.CENTER);
-//                principalAdminMac.revalidate();
-//                principalAdminMac.repaint();
-//            }catch(Exception ex){
-//                OptionPane.showMsg("Error inesperado", "No se ha podido abrir la ventana solicitada, \n"
-//                        + "se enviará un reporte para solucionar este problema,\n"
-//                        + "póngase en contacto con su proveedor de software.", JOptionPane.ERROR_MESSAGE);
-//            }
-//            principalAdminMac.setCursor(Cursor.getDefaultCursor());
-//        }
-//    }
-//
-//    private void accesDenied() {
-//        OptionPane.showMsg("Acceso denegado", "No tienes permiso suficiente para acceder a estas opciones.", 2);
-//        GV.cursorDF();
-//    }
+    public void mensajeInfo(String title, String message) {
+        openView(new VMessage(title, message));
+    }
+    
+    private void openView(JPanel p1){
+        if(isWin()){
+            try{
+                p1.setSize(principalAdmin.getWidth(), principalAdmin.getHeight());
+                p1.setLocation(locat, locat);
+                principalAdmin.removeAll();
+                principalAdmin.add(p1,BorderLayout.CENTER);
+                principalAdmin.revalidate();
+                principalAdmin.repaint();
+            }catch(Exception ex){
+                OptionPane.showMsg("Error inesperado", "No se ha podido abrir la ventana solicitada, \n"
+                        + "se enviará un reporte para solucionar este problema,\n"
+                        + "póngase en contacto con su proveedor de software.", JOptionPane.ERROR_MESSAGE);
+            }
+            principalAdmin.setCursor(Cursor.getDefaultCursor());
+        }else{
+            try{
+                p1.setSize(principalAdminMac.getWidth(), principalAdminMac.getHeight());
+                p1.setLocation(locat, locat);
+                principalAdminMac.removeAll();
+                principalAdminMac.add(p1,BorderLayout.CENTER);
+                principalAdminMac.revalidate();
+                principalAdminMac.repaint();
+            }catch(Exception ex){
+                OptionPane.showMsg("Error inesperado", "No se ha podido abrir la ventana solicitada, \n"
+                        + "se enviará un reporte para solucionar este problema,\n"
+                        + "póngase en contacto con su proveedor de software.", JOptionPane.ERROR_MESSAGE);
+            }
+            principalAdminMac.setCursor(Cursor.getDefaultCursor());
+        }
+    }
+
+    private void accesDenied() {
+        OptionPane.showMsg("Acceso denegado", "No tienes permiso suficiente para acceder a estas opciones.", 2);
+        CursorUtils.cursorDF();
+    }
 //
 //    public void salesReport() {
 //        OptionPane.showMsg("crear ventana de reporte", "reporte de ventas", 3);
 //    }
 //    
-//    private boolean isWin(){
-//        return GV.isWindowsOs();
-//    }
+    private boolean isWin(){
+        return GlobalValuesVariables.getIsWindows();
+    }
 }

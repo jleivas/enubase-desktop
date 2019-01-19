@@ -9,8 +9,8 @@ import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.GV;
-import cl.softdirex.enubase.utils.VarUtils;
-import cl.softdirex.enubase.view.notifications.Notification;
+import cl.softdirex.enubase.utils.GlobalValuesVariables;
+import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -73,7 +73,7 @@ public class LcBd{
         
         conn = DriverManager.getConnection("jdbc:derby:"+BDUtils.getLocalBdUrl()+BDUtils.getLocalBdName());
         if(conn == null)
-            Notification.showMsg("Error en Base de datos local", "No se pudo obtener la conexion:\nbd.RmBd::obtener(): ERROR BD.", 3);
+            OptionPane.showMsg("Error en Base de datos local", "No se pudo obtener la conexion:\nbd.RmBd::obtener(): ERROR BD.", 3);
         return conn;
     }
     
@@ -107,7 +107,7 @@ public class LcBd{
                 }
             }
         }catch(SQLException | ClassNotFoundException | ExceptionInInitializerError e){
-         Notification.showMsg("Error al borrar datos de tabla "+tableName,e.getMessage() ,  3);
+         OptionPane.showMsg("Error al borrar datos de tabla "+tableName,e.getMessage() ,  3);
         }
     }
     
@@ -131,7 +131,7 @@ public class LcBd{
                 }
             }
         }catch(SQLException | ClassNotFoundException | ExceptionInInitializerError e){
-         Notification.showMsg("Error al borrar tabla "+tableName,e.getMessage() ,  3);
+         OptionPane.showMsg("Error al borrar tabla "+tableName,e.getMessage() ,  3);
         }
     }
     
@@ -159,8 +159,8 @@ public class LcBd{
                     return false;                }
             }
         }catch(SQLException | ClassNotFoundException | ExceptionInInitializerError e){
-            JOptionPane.showMessageDialog(null,"Ha intentado abrir el programa mas de una vez\n¡"+VarUtils.getProjectName()+" ya se encuentra en ejecución!"
-                    +"\n\nEl sistema se cerrará",VarUtils.getProjectName()+" ya se encuentra en ejecución", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Ha intentado abrir el programa mas de una vez\n¡"+GlobalValuesVariables.getProjectName()+" ya se encuentra en ejecución!"
+                    +"\n\nEl sistema se cerrará",GlobalValuesVariables.getProjectName()+" ya se encuentra en ejecución", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         return true;
@@ -185,10 +185,10 @@ public class LcBd{
          registros = res.getInt("total");
          res.close();
       }catch(SQLException e){
-         Notification.showMsg("Error en LCBD", e.getLocalizedMessage(),3);
+         OptionPane.showMsg("Error en LCBD", e.getLocalizedMessage(),3);
       } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(LcBd.class.getName()).log(Level.SEVERE, null, ex);
-            Notification.showMsg("Error en LCBD", "Detalle:\n"+ex.getLocalizedMessage(),3);
+            OptionPane.showMsg("Error en LCBD", "Detalle:\n"+ex.getLocalizedMessage(),3);
         }
     
     //se crea una matriz con tantas filas y columnas que necesite
@@ -205,9 +205,9 @@ public class LcBd{
             i++;         }
          res.close();
           }catch(SQLException e){
-         Notification.showMsg("Error en LCBD al obtener datos", ""+e.getLocalizedMessage(),3);
+         OptionPane.showMsg("Error en LCBD al obtener datos", ""+e.getLocalizedMessage(),3);
     }   catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Notification.showMsg("Error en LCBD al obtener datos", "Detalle:\n"+ex.getLocalizedMessage(),3);
+            OptionPane.showMsg("Error en LCBD al obtener datos", "Detalle:\n"+ex.getLocalizedMessage(),3);
         }
     return data;
  }
