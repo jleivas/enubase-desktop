@@ -7,6 +7,7 @@ package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.view.notifications.OptionPane;
 import cl.softdirex.enubase.view.os.general.panels.VClientes;
+import cl.softdirex.enubase.view.os.general.panels.VCrearVenta;
 import cl.softdirex.enubase.view.os.general.panels.VDescuentos;
 import cl.softdirex.enubase.view.os.general.panels.VInventarios;
 import cl.softdirex.enubase.view.os.general.panels.VItems;
@@ -35,7 +36,7 @@ public class Boton {
     
     public void index() throws SQLException, ClassNotFoundException {
 //        if(isWin()){
-//            openView(new VCrearFicha());
+            openView(new VCrearVenta());
 //        }else{
 //            openView(new VCrearFichaMac());
 //        }

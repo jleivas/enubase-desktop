@@ -21,6 +21,7 @@ public class StEntities {
     public static User USER;
     public static Oficina OFICINA;
     public static Venta OPEN_VENTA= new Venta();
+    public static Venta ST_VENTA = new Venta();
     
     public static void setOficina(Oficina oficina){
         OFICINA = oficina;
@@ -129,5 +130,9 @@ public class StEntities {
 
     public static void setOpenVenta(Venta venta) {
         OPEN_VENTA = venta;
+    }
+    
+    public static void clearVenta() {
+        ST_VENTA = new Venta();
     }
 }
