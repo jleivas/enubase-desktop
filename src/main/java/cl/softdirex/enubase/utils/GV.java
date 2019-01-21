@@ -1059,8 +1059,8 @@ public class GV {
         if(txt.getText().length() > 1){
             OptionPane.showMsg("No existen "+registry, "No existen registros disponibles que contengan la palabra \""+txt.getText()+"\"",1);
         }else{
-            if(registry.toLowerCase().contains("fichas")){
-                if(cbo.getSelectedIndex() == 5){
+            if(registry.toLowerCase().contains("items")){
+                if(cbo.getSelectedIndex() == 2){
                     OptionPane.showMsg("No existen "+registry, "No existen "+registry+" eliminad"+end+".",1);
                 }else{
                     OptionPane.showMsg("No existen "+registry, "No existen "+registry+" registrad"+end+".",1);

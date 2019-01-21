@@ -70,8 +70,15 @@ public class VItems extends javax.swing.JPanel {
         loadPanels(1);          
         modelo.addColumn("Codigo");
         modelo.addColumn("Descripción");
-        modelo.addColumn("Precio");
+        modelo.addColumn("Neto compra");
+        modelo.addColumn("Total compra");
+        modelo.addColumn("% Utilidad");
+        modelo.addColumn("$ Utilidad");
+        modelo.addColumn("Neto venta");
+        modelo.addColumn("Venta con iva");
+        modelo.addColumn("Stock minimo");
         modelo.addColumn("Stock");
+        
         tblListar.setModel(modelo);
         proveedores = load.listar("0", new Proveedor());
         cargarCbos();
@@ -136,6 +143,7 @@ public class VItems extends javax.swing.JPanel {
         txtInventario1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         cboUnidades = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
         pnl2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
@@ -159,6 +167,7 @@ public class VItems extends javax.swing.JPanel {
         txtStock2 = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         cboUnidades2 = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
         pnl3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
@@ -180,7 +189,7 @@ public class VItems extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Lista de registros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Light", 0, 11))); // NOI18N
 
         cboMostrar.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
-        cboMostrar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activos", "Eliminados" }));
+        cboMostrar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activos", "Stock bajo", "Eliminados" }));
         cboMostrar.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboMostrarItemStateChanged(evt);
@@ -189,13 +198,13 @@ public class VItems extends javax.swing.JPanel {
 
         tblListar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Codigo", "Descripcion", "Precio", "Stock"
+                "Codigo", "Descripcion", "Valor neto compra", "Valor de compra con iva", "% Utilidad", "$ Utilidad", "Valor neto de venta", "Precio venta con iva", "Stock minimo", "Stock"
             }
         ));
         jScrollPane1.setViewportView(tblListar);
@@ -473,58 +482,62 @@ public class VItems extends javax.swing.JPanel {
         cboUnidades.setFont(new java.awt.Font("Segoe UI Light", 1, 11)); // NOI18N
         cboUnidades.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jLabel3.setText("Precio de venta unitario y valor de compra deben ser netos");
+
         javax.swing.GroupLayout pnl1Layout = new javax.swing.GroupLayout(pnl1);
         pnl1.setLayout(pnl1Layout);
         pnl1Layout.setHorizontalGroup(
             pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl1Layout.createSequentialGroup()
-                .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(pnl1Layout.createSequentialGroup()
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(15, 15, 15)
-                            .addComponent(txtCod1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(pnl1Layout.createSequentialGroup()
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(15, 15, 15)
-                            .addComponent(txtDesc1))
-                        .addGroup(pnl1Layout.createSequentialGroup()
-                            .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(21, 21, 21)
-                            .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
-                            .addComponent(txtInventario1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(pnl1Layout.createSequentialGroup()
-                            .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(pnl1Layout.createSequentialGroup()
-                                    .addGap(5, 5, 5)
-                                    .addComponent(cboClasificacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(pnl1Layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(pnl1Layout.createSequentialGroup()
-                                            .addComponent(txtPrecRef1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(4, 4, 4)
-                                            .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(pnl1Layout.createSequentialGroup()
-                                            .addComponent(txtPrecAct1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtStock1)
-                                        .addComponent(txtStockMin1)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl1Layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(cboUnidades, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnl1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15)
+                        .addComponent(txtCod1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnl1Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15)
+                        .addComponent(txtDesc1))
+                    .addGroup(pnl1Layout.createSequentialGroup()
+                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                        .addComponent(txtInventario1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnl1Layout.createSequentialGroup()
+                        .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnl1Layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(cboClasificacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(pnl1Layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(pnl1Layout.createSequentialGroup()
+                                        .addComponent(txtPrecRef1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(4, 4, 4)
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(pnl1Layout.createSequentialGroup()
+                                        .addComponent(txtPrecAct1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtStock1)
+                                    .addComponent(txtStockMin1)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cboUnidades, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGuardar)))
                 .addContainerGap())
         );
         pnl1Layout.setVerticalGroup(
@@ -574,8 +587,13 @@ public class VItems extends javax.swing.JPanel {
                         .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addComponent(jLabel15))))
-                .addGap(6, 6, 6)
-                .addComponent(btnGuardar))
+                .addGroup(pnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnl1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(btnGuardar))
+                    .addGroup(pnl1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3))))
         );
 
         pnl2.setBackground(new java.awt.Color(204, 204, 255));
@@ -601,10 +619,10 @@ public class VItems extends javax.swing.JPanel {
         jLabel25.setText("Clasificacion");
 
         jLabel27.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jLabel27.setText("Precio actual");
+        jLabel27.setText("Precio unitario");
 
         jLabel28.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jLabel28.setText("Precio Ref.");
+        jLabel28.setText("Val. compra/un");
 
         btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Save_50px.png"))); // NOI18N
         btnUpdate.setToolTipText("Modificar");
@@ -689,6 +707,8 @@ public class VItems extends javax.swing.JPanel {
         cboUnidades2.setFont(new java.awt.Font("Segoe UI Light", 1, 11)); // NOI18N
         cboUnidades2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jLabel4.setText("Precio de venta unitario y valor de compra deben ser netos");
+
         javax.swing.GroupLayout pnl2Layout = new javax.swing.GroupLayout(pnl2);
         pnl2.setLayout(pnl2Layout);
         pnl2Layout.setHorizontalGroup(
@@ -733,7 +753,8 @@ public class VItems extends javax.swing.JPanel {
                             .addComponent(txtInventario2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(20, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnCancel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnUpdate)
@@ -781,10 +802,15 @@ public class VItems extends javax.swing.JPanel {
                     .addGroup(pnl2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel32)
                         .addComponent(txtStockMin2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(11, 11, 11)
-                .addGroup(pnl2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnUpdate)
-                    .addComponent(btnCancel))
+                .addGroup(pnl2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnl2Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(pnl2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnUpdate)
+                            .addComponent(btnCancel)))
+                    .addGroup(pnl2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1408,11 +1434,13 @@ public class VItems extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1493,8 +1521,12 @@ public class VItems extends javax.swing.JPanel {
     }
     
     private void load(){
-        if(cboMostrar.getSelectedIndex()==0){//en nueva version cargar ventana completa con lista de clientes estatica global
-            cargarDatos("0");
+        if(cboMostrar.getSelectedIndex()==0 || cboMostrar.getSelectedIndex()==1){//en nueva version cargar ventana completa con lista de clientes estatica global
+            if(cboMostrar.getSelectedIndex()==0){
+                cargarDatos("0");
+            }else{
+                cargarDatos(GlobalValuesVariables.getSqlLowStock());
+            }
             btnStockDown.setVisible(true);
             btnStockUp.setVisible(true);
             btnReporte.setVisible(true);
@@ -1508,7 +1540,7 @@ public class VItems extends javax.swing.JPanel {
     private void cargarDatos(String listar) {
         limpiarTextField();
         loadPanels(1);
-        if(listar.equals("-1")){
+        if(listar.equals("-1") && !listar.equals(GlobalValuesVariables.getSqlLowStock())){
             btnRestaurar.setVisible(true);
             btnEliminar.setVisible(false);
             btnAbrir.setVisible(false);
@@ -1529,16 +1561,43 @@ public class VItems extends javax.swing.JPanel {
             int index=0;
             for (Object object : lista) {
                 Item temp = (Item)object;
-                String precio = (temp.getTipo() == 0)?
-                        GV.strToPrice(temp.getPrecioAct())+" (unidad)":
-                        GV.strToPrice(temp.getPrecioAct())+" ("+unidades.get(temp.getTipo()-1)+")";
+                String netoC = "Imposible calcular";
+                String ivaC = "Imposible calcular";
+                String pUtil = "Imposible calcular";
+                String vUtil = "Imposible calcular";
+                String ivaV = "Imposible calcular";
+                if(temp.getPrecioRef()>0){
+                    netoC = (temp.getTipo() == 0)?
+                            GV.strToPrice(temp.getPrecioRef())+" (unidad)":
+                            GV.strToPrice(temp.getPrecioRef())+" ("+unidades.get(temp.getTipo()-1)+")";
+                    double iva = temp.getPrecioRef()*PropertiesUtils.getIVA()/100.0;
+                    double total = temp.getPrecioRef()+iva;
+                    int totalPrecio = temp.getPrecioAct();
+                    double precioUtilidad = totalPrecio-total;
+                    double utilidad = (precioUtilidad/total)/0.01;
+                    ivaC = GV.strToPrice((int)total);
+                    vUtil = GV.strToPrice((int)precioUtilidad);
+                    pUtil = ((int)utilidad)+"%";
+                }
+                if(temp.getPrecioAct()>0){
+                    double iva = temp.getPrecioAct()*PropertiesUtils.getIVA()/100.0;
+                    double total = temp.getPrecioAct()+iva;
+                    ivaV = GV.strToPrice((int)total);
+                }
                 GV.calcularReporteItems(index, temp);
-                Object[] fila = new Object[4];
+                Object[] fila = new Object[10];
                 fila[0] = temp.getCod();
                 fila[1] = temp.getDescripcion();
-                fila[2] = precio;
-                fila[3] = temp.getStock();
+                fila[2] = netoC;
+                fila[3] = ivaC;
+                fila[4] = pUtil;
+                fila[5] = vUtil;
+                fila[6] = GV.strToPrice(temp.getPrecioAct());
+                fila[7] = ivaV;
+                fila[8] = temp.getStockMin();
+                fila[9] = temp.getStock();
                 modelo.addRow(fila);
+                
                 index++;
             }
             tblListar.updateUI();

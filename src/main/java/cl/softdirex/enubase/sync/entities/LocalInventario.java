@@ -192,6 +192,26 @@ public class LocalInventario {
                             )
                         );
                     }
+                }else if(idParam.equals(GlobalValuesVariables.getSqlLowStock())){
+                    if(stock <= datos.getInt("itm_stock_min")){
+                        lista.add(new Item(
+                                idItem,
+                                datos.getString("itm_foto"),
+                                datos.getString("proveedor_pro_id"),
+                                datos.getInt("itm_tipo"),
+                                datos.getInt("itm_clasificacion"),
+                                datos.getString("itm_descripcion"),
+                                datos.getInt("itm_precio_ref"),
+                                datos.getInt("itm_precio_act"),
+                                stock,
+                                datos.getInt("itm_stock_min"),
+                                datos.getInt("inventario_inv_id"),
+                                datos.getInt("itm_estado"),
+                                lastUpdate,
+                                lastHour
+                            )
+                        );
+                    }
                 }else{
                     lista.add(new Item(
                             idItem,

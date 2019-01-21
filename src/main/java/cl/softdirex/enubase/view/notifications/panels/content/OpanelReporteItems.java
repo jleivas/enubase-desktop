@@ -159,10 +159,10 @@ public class OpanelReporteItems extends javax.swing.JPanel {
                 "REPORTE DE INVENTARIO\n"
                 + "-----------------------\n"
                 + "Stock total de productos: "+GlobalValuesVariables.ITEMS_STOCK+"\n\n"
-                + "Productos con stock bajo: "+GlobalValuesVariables.ITEMS_STOCK_BAJO+"\n"
-                + "Productos con stock en cero: "+GlobalValuesVariables.ITEMS_STOCK_CERO+"\n\n";
+                + "Items con stock bajo: "+GlobalValuesVariables.ITEMS_STOCK_BAJO+"\n"
+                + "Items con stock en cero: "+GlobalValuesVariables.ITEMS_STOCK_CERO+"\n\n";
         String reporteAdmin = 
-                "REPORTE MONETARIO\n"
+                "REPORTE MONETARIO (Valores netos)\n"
                 + "-----------------------\n"
                 + "En inventario: "+GV.strToPrice(compra)+"\n"
                 + "Monto de venta: "+GV.strToPrice(venta)+"\n"
