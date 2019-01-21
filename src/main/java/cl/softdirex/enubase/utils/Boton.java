@@ -12,6 +12,7 @@ import cl.softdirex.enubase.view.os.general.panels.VItems;
 import cl.softdirex.enubase.view.os.general.panels.VMessage;
 import cl.softdirex.enubase.view.os.general.panels.VOficinas;
 import cl.softdirex.enubase.view.os.general.panels.VProveedores;
+import cl.softdirex.enubase.view.os.general.panels.VRegistroBajas;
 import cl.softdirex.enubase.view.os.general.panels.VTipoPagos;
 import cl.softdirex.enubase.view.os.general.panels.VUsuarios;
 import static cl.softdirex.enubase.view.principal.ContentAdmin.principalAdmin;
@@ -151,16 +152,16 @@ public class Boton {
     
 //    
     public void registroBajas() {
-//        if(GV.tipoUserAdmin()){
-//            CursorUtils.cursorWAIT();
+        if(GV.tipoUserAdmin()){
+            CursorUtils.cursorWAIT();
 //            if(isWin()){
-//                openView(new VRegistroBajas());
+                openView(new VRegistroBajas());
 //            }else{
 //                openView(new VRegistroBajasMac());
 //            }
-//        }else{
-//            accesDenied();
-//        }
+        }else{
+            accesDenied();
+        }
     }
 //    
     public void tipoPagos() throws SQLException, ClassNotFoundException{

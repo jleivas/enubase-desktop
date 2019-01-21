@@ -1239,7 +1239,7 @@ public class VItems extends javax.swing.JPanel {
         }
         if(OptionPane.getConfirmation("Reducción de stock", "¿Confirmo que los datos ingresados son correctos?", 2)){
             if(load.decreaseStock(stItem.getCod(), cantidad)){
-                RegistroBaja rb = new RegistroBaja(null, new Date(), stItem.getCod(), cantidad, obs+ "\n [Usuario: "+StEntities.USER.getNombre()+" ID_USER:"+StEntities.USER.getId()+"]", 1, null, 0);
+                RegistroBaja rb = new RegistroBaja(null, new Date(), stItem.getCod()+" | "+stItem.getDescripcion(), cantidad, obs+ "\n [Usuario: "+StEntities.USER.getNombre()+" ID_USER:"+StEntities.USER.getId()+"]", 1, null, 0);
                 if(!load.addFromUI(rb)){
                     cDF();
                     return;

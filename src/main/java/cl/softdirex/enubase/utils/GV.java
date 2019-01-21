@@ -48,7 +48,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -61,6 +63,11 @@ public class GV {
     public static Remote REMOTE_SYNC = new Remote();
     private static Dao load = new Dao();
     /*********************BEGIN FUNCTIONS****************************/
+    public static void spinnerNumberDisable(JSpinner spinnerNumber, int currentValue) {
+        spinnerNumber.setModel(new SpinnerNumberModel(currentValue, currentValue, currentValue, 1));
+        spinnerNumber.setValue(currentValue);
+    }
+    
     public static String obtenerCodEntreLlaves(String arg){
         arg = GV.getStr(arg);
         if(arg.contains("<") && !arg.endsWith("<")){
