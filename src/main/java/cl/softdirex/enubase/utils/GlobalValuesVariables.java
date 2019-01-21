@@ -573,8 +573,12 @@ public class GlobalValuesVariables {
         return PAID;
     }
     
-    public static int cboVentasFilter(){
+    public static int getCboVentasFilter(){
         return CBO_VENTA_FILTER;
+    }
+    
+    public static void setCboVentasFilter(int filter){
+        CBO_VENTA_FILTER = filter;
     }
 
     public static void setIdItemIncreaseStock(String codigo) {

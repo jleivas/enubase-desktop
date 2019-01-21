@@ -23,6 +23,7 @@ import cl.softdirex.enubase.view.notifications.panels.input.OpanelCompanyData;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetLicencia;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetToken;
 import cl.softdirex.enubase.view.principal.ContentAdmin;
+import com.toedter.calendar.JDateChooser;
 import java.awt.event.KeyEvent;
 import java.security.MessageDigest;
 import java.sql.SQLException;
@@ -66,6 +67,14 @@ public class GV {
     public static void spinnerNumberDisable(JSpinner spinnerNumber, int currentValue) {
         spinnerNumber.setModel(new SpinnerNumberModel(currentValue, currentValue, currentValue, 1));
         spinnerNumber.setValue(currentValue);
+    }
+    
+    public static void compileJCalendar(JDateChooser jDate) {
+        if(GV.getStr(jDate.getDateFormatString().replaceAll("[0-9-]", "")).isEmpty()){
+            return;
+        }else{
+            jDate.setDate(null);
+        }
     }
     
     public static String obtenerCodEntreLlaves(String arg){
