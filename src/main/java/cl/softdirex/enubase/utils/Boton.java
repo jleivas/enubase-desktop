@@ -6,7 +6,13 @@
 package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.view.notifications.OptionPane;
+import cl.softdirex.enubase.view.os.general.panels.VDescuentos;
+import cl.softdirex.enubase.view.os.general.panels.VInventarios;
+import cl.softdirex.enubase.view.os.general.panels.VItems;
 import cl.softdirex.enubase.view.os.general.panels.VMessage;
+import cl.softdirex.enubase.view.os.general.panels.VOficinas;
+import cl.softdirex.enubase.view.os.general.panels.VProveedores;
+import cl.softdirex.enubase.view.os.general.panels.VTipoPagos;
 import cl.softdirex.enubase.view.os.general.panels.VUsuarios;
 import static cl.softdirex.enubase.view.principal.ContentAdmin.principalAdmin;
 import java.awt.BorderLayout;
@@ -44,16 +50,16 @@ public class Boton {
     }
     
     public void items() throws SQLException, ClassNotFoundException {
-//        if(GV.tipoUserIventario()){
-//            CursorUtils.cursorWAIT();
+        if(GV.tipoUserIventario()){
+            CursorUtils.cursorWAIT();
 //            if(isWin()){
-//                openView(new VCristales());
+                openView(new VItems());
 //            }else{
 //                openView(new VCristalesMac());
 //            }
-//        }else{
-//            accesDenied();
-//        }
+        }else{
+            accesDenied();
+        }
     }
     
     public void clientes() throws SQLException, ClassNotFoundException{
@@ -67,29 +73,29 @@ public class Boton {
     
     
     public void descuentos() throws SQLException, ClassNotFoundException{
-//         if(GV.tipoUserAdmin()){
+         if(GV.tipoUserAdmin()){
 //            CursorUtils.cursorWAIT();
 //            if(isWin()){
-//                openView(new VDescuentos());
+                openView(new VDescuentos());
 //            }else{
 //                openView(new VDescuentosMac());
 //            }
-//         }else{
-//             accesDenied();
-//         }   
+         }else{
+             accesDenied();
+         }   
     }
     
     public void oficinas() throws SQLException, ClassNotFoundException {
-//        if(GV.tipoUserAdmin()){
+        if(GV.tipoUserAdmin()){
 //            CursorUtils.cursorWAIT();
 //            if(isWin()){
-//                openView(new VOficinas());
+                openView(new VOficinas());
 //            }else{
 //                openView(new VOficinasMac());
 //            }
-//        }else{
-//            accesDenied();
-//        }
+        }else{
+            accesDenied();
+        }
     }
     
     public void mensajes() {
@@ -98,12 +104,11 @@ public class Boton {
     }
     
     public void proveedores() throws SQLException, ClassNotFoundException{
-//        CursorUtils.cursorWAIT();
-//        if(isWin()){
-//            openView(new VInstituciones());
-//        }else{
-//            openView(new VInstitucionesMac());
-//        }
+        if(GV.tipoUserAdmin()){
+            openView(new VProveedores());
+        }else{
+            accesDenied();
+        }
     }
     
     public void venta() throws SQLException, ClassNotFoundException {
@@ -116,16 +121,16 @@ public class Boton {
     }
     
     public void inventarios() throws SQLException, ClassNotFoundException {
-//        if(GV.tipoUserIventario()){
-//            CursorUtils.cursorWAIT();
+        if(GV.tipoUserIventario()){
+            CursorUtils.cursorWAIT();
 //            if(isWin()){
-//                openView(new VInventarios());
+                openView(new VInventarios());
 //            }else{
 //                openView(new VInventariosMac());
 //            }
-//        }else{
-//            accesDenied();
-//        }
+        }else{
+            accesDenied();
+        }
     }
 //    
 //    public void lentes() throws SQLException, ClassNotFoundException {
@@ -159,16 +164,16 @@ public class Boton {
     }
 //    
     public void tipoPagos() throws SQLException, ClassNotFoundException{
-//        if(GV.tipoUserAdmin()){
+        if(GV.tipoUserAdmin()){
 //            CursorUtils.cursorWAIT();
 //            if(isWin()){
-//                openView(new VTipoPagos());
+                openView(new VTipoPagos());
 //            }else{
 //                openView(new VTipoPagosMac());
 //            }
-//        }else{
-//            accesDenied();
-//        }
+        }else{
+            accesDenied();
+        }
     }
 //    
     public void usuarios() throws SQLException, ClassNotFoundException {

@@ -406,7 +406,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icons/mnu_Home_50px.png"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Nueva Ficha"/>
+                <Property name="toolTipText" type="java.lang.String" value="Inicio"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnNuevaVentaMouseClicked"/>
@@ -420,7 +420,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icons/mnu_List_50px.png"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Fichas"/>
+                <Property name="toolTipText" type="java.lang.String" value="Ventas"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnListarVentasMouseClicked"/>
@@ -446,7 +446,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icons/mnu_Supplier_50px.png"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Instituciones"/>
+                <Property name="toolTipText" type="java.lang.String" value="Proveedores"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnProveedoresMouseClicked"/>

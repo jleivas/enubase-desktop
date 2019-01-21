@@ -9,6 +9,7 @@ import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Cliente;
 import cl.softdirex.enubase.entities.Inventario;
 import cl.softdirex.enubase.entities.Item;
+import cl.softdirex.enubase.entities.Proveedor;
 import cl.softdirex.enubase.entities.Venta;
 import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.io.File;
@@ -33,6 +34,12 @@ import jxl.write.WriteException;
  * @author jlleivas
  */
 public class XlsUtils {
+    private static Dao load = new Dao();
+    private static List<Object> proveedores = load.listar("0", new Proveedor());
+    
+    private static List<String> clasificaciones = PropertiesUtils.getClasificaciones();
+    private static List<String> unidades = PropertiesUtils.getUnidades();
+    
     public static void generarExcelRespaldo(String[][] entrada, String name) throws WriteException{
         try {
             WorkbookSettings conf = new WorkbookSettings();
@@ -128,7 +135,7 @@ public class XlsUtils {
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 entrada[5][0] = "Codigo";
-                entrada[5][1] = "Marca";
+                entrada[5][1] = "Proveedor";
                 entrada[5][2] = "Descripcion";
                 entrada[5][3] = "Cantidad";
                 int contFilas = 6;
@@ -138,7 +145,7 @@ public class XlsUtils {
                         if(i==0)
                             entrada[contFilas][i] = temp.getCod();
                         else if(i == 1)
-                            entrada[contFilas][i] = temp.getMarca();
+                            entrada[contFilas][i] = temp.getIdProveedor();
                         else if(i == 2)
                             entrada[contFilas][i] = temp.getDescripcion();
                         else if(i == 3)
@@ -175,37 +182,120 @@ public class XlsUtils {
         if(resp == JFileChooser.APPROVE_OPTION){
             if(lista.size()>0){
                 //[filas][columnas]
-                int filas = lista.size()+6;
-                String [][] entrada = new String[filas][6];
+                int columnas = 15;
+                int filas = lista.size()+columnas;
+                String [][] entrada = new String[filas][columnas];
                 entrada[0][1] = "Registro de inventario generado el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
                 entrada[1][0] = "Empresa:";
                 entrada[1][1] = GlobalValuesVariables.getCompanyName();
                 entrada[2][0] = "Sistema:";
-                entrada[2][1] = GlobalValuesVariables.getProjectName();
+                entrada[2][1] = GlobalValuesVariables.getProjectName()+" "+GlobalValuesVariables.getVersion();
                 entrada[3][0] = "Soporte:";
                 entrada[3][1] = "www.softdirex.cl";
                 entrada[5][0] = "Codigo";
-                entrada[5][1] = "Marca";
-                entrada[5][2] = "Descripcion";
-                entrada[5][3] = "Cantidad";
-                entrada[5][4] = "Valor ref.";
-                entrada[5][5] = "Precio";
+                entrada[5][1] = "Descripción";
+                entrada[5][2] = "Unidad";
+                entrada[5][3] = "Clasificación";
+                entrada[5][4] = "Proveedor";
+                entrada[5][5] = "Contacto";
+                entrada[5][6] = "Precio compra";
+                entrada[5][7] = "Iva";
+                entrada[5][8] = "Total";
+                entrada[5][9] = "% Utilidad";
+                entrada[5][10] = "$ Utilidad";
+                entrada[5][11] = "Neto precio venta";
+                entrada[5][12] = "Precio venta con iva";
+                entrada[5][13] = "Stock minimo";
+                entrada[5][14] = "Stock";
                 int contFilas = 6;
                 for (Object onject : lista) {
                     Item temp = (Item)onject;
-                    for(int i = 0;i< 7; i++){
+                    for(int i = 0;i< columnas; i++){
                         if(i==0)
                             entrada[contFilas][i] = temp.getCod();
                         else if(i == 1)
-                            entrada[contFilas][i] = temp.getMarca();
-                        else if(i == 2)
                             entrada[contFilas][i] = temp.getDescripcion();
-                        else if(i == 3)
+                        else if(i == 2){
+                            String unidad = unidades.get(temp.getTipo()-1);
+                            entrada[contFilas][i] = unidad;
+                        }
+                        else if(i == 3){
+                            String clasificacion = GV.getStr(clasificaciones.get(temp.getClasificacion()-1));
+                            clasificacion = (clasificacion.isEmpty())?"No asignada":clasificacion;
+                            entrada[contFilas][i] = clasificacion;
+                        }
+                        else if(i == 4){
+                            String proveedor = "Sin registrar";
+                            Object proTemp = GV.searchInList(temp.getIdProveedor(), proveedores, new Proveedor());
+                            proveedor = (proTemp != null)?(((Proveedor)proTemp).getNombre()):proveedor;
+                            entrada[contFilas][i] = proveedor;
+                        }
+                        else if(i == 5){
+                            String contacto = "";
+                            Object proTemp = GV.searchInList(temp.getIdProveedor(), proveedores, new Proveedor());
+                            contacto = (proTemp != null)?(((Proveedor)proTemp).getTelefono()):contacto;
+                            contacto = (proTemp != null && contacto.isEmpty())?(((Proveedor)proTemp).getEmail()):contacto;
+                            contacto = (proTemp != null && contacto.isEmpty())?(((Proveedor)proTemp).getWeb()):contacto;
+                            contacto = (contacto.isEmpty())?"Sin registrar":contacto;
+                            entrada[contFilas][i] = contacto;
+                        }
+                        else if(i == 6)
+                            entrada[contFilas][i] = GV.strToPrice(temp.getPrecioRef());
+                        else if(i == 7){
+                            if(temp.getPrecioRef()>0){
+                                double iva = temp.getPrecioRef()*PropertiesUtils.getIVA()/100.0;
+                                entrada[contFilas][i] = GV.strToPrice((int)iva);
+                            }else{
+                                entrada[contFilas][i] = "Imposible calcular";
+                            }
+                        }
+                        else if(i == 8){
+                            if(temp.getPrecioRef()>0){
+                                double iva = temp.getPrecioRef()*PropertiesUtils.getIVA()/100.0;
+                                double total = temp.getPrecioRef()+iva;
+                                entrada[contFilas][i] = GV.strToPrice((int)total);
+                            }else{
+                                entrada[contFilas][i] = "Imposible calcular";
+                            }  
+                        }
+                        else if(i == 9){
+                            if(temp.getPrecioRef()>0){
+                                double iva = temp.getPrecioRef()*PropertiesUtils.getIVA()/100.0;
+                                double total = temp.getPrecioRef()+iva;
+                                int totalPrecio = temp.getPrecioAct();
+                                double precioUtilidad = totalPrecio-total;
+                                double utilidad = (precioUtilidad/total)/0.01;
+                                entrada[contFilas][i] = (int)utilidad+"%";
+                            }else{
+                                entrada[contFilas][i] = "Imposible calcular";
+                            }
+                        }
+                        else if(i == 10){
+                            if(temp.getPrecioRef()>0){
+                                double iva = temp.getPrecioRef()*PropertiesUtils.getIVA()/100.0;
+                                double total = temp.getPrecioRef()+iva;
+                                int totalPrecio = temp.getPrecioAct();
+                                double precioUtilidad = totalPrecio-total;
+                                entrada[contFilas][i] = GV.strToPrice((int)precioUtilidad);
+                            }else{
+                                entrada[contFilas][i] = "Imposible calcular";
+                            }
+                        }
+                        else if(i == 11)
+                            entrada[contFilas][i] = GV.strToPrice(temp.getPrecioAct());
+                        else if(i==12){
+                            if(temp.getPrecioAct()>0){
+                                double iva = temp.getPrecioAct()*PropertiesUtils.getIVA()/100.0;
+                                entrada[contFilas][i] = GV.strToPrice(temp.getPrecioAct()+((int)iva));
+                            }else{
+                                entrada[contFilas][i] = "Imposible calcular";
+                            }
+                        }
+                        else if(i == 13)
+                            entrada[contFilas][i] = ""+temp.getStockMin();
+                        else if(i == 14)
                             entrada[contFilas][i] = ""+temp.getStock();
-                        else if(i == 4)
-                            entrada[contFilas][i] = ""+temp.getPrecioRef();
-                        else if(i == 5)
-                            entrada[contFilas][i] = ""+temp.getPrecioAct();
+                        
                     }
                     contFilas++;
                 }

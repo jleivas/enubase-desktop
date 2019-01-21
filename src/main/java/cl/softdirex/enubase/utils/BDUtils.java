@@ -14,7 +14,6 @@ import cl.softdirex.enubase.entities.Detalle;
 import cl.softdirex.enubase.entities.Equipo;
 import cl.softdirex.enubase.entities.HistorialPago;
 import cl.softdirex.enubase.entities.InternMail;
-import cl.softdirex.enubase.entities.InternStock;
 import cl.softdirex.enubase.entities.Inventario;
 import cl.softdirex.enubase.entities.Item;
 import cl.softdirex.enubase.entities.Oficina;
@@ -149,7 +148,7 @@ public class BDUtils {
     private static String PROVEEDOR = "PRO_ID VARCHAR(25) not null primary key," +
 " PRO_NOMBRE VARCHAR(45)," +
 " PRO_TELEFONO VARCHAR(25)," +
-" PRO_MAIL VARCHAR(45)," +
+" PRO_EMAIL VARCHAR(45)," +
 " PRO_WEB VARCHAR(45)," +
 " PRO_DIRECCION VARCHAR(45)," +
 " PRO_COMUNA VARCHAR(45)," +
@@ -169,7 +168,8 @@ public class BDUtils {
 " INV_LAST_HOUR INTEGER";
     private static String ITEM = "ITM_ID VARCHAR(100) not null primary key," +
 " ITM_FOTO VARCHAR(25)," +
-" ITM_MARCA VARCHAR(45)," +
+" PROVEEDOR_PRO_ID VARCHAR(45)," +
+" ITM_TIPO INTEGER," +
 " ITM_CLASIFICACION INTEGER," +
 " ITM_DESCRIPCION LONG VARCHAR," +
 " ITM_PRECIO_REF INTEGER," +
@@ -315,7 +315,8 @@ public class BDUtils {
 " INV_LAST_HOUR";
     private static String COL_ITEM = "ITM_ID," +
 " ITM_FOTO," +
-" ITM_MARCA," +
+" PROVEEDOR_PRO_ID," +
+" ITM_TIPO," +
 " ITM_CLASIFICACION," +
 " ITM_DESCRIPCION," +
 " ITM_PRECIO_REF," +
@@ -1039,7 +1040,8 @@ public class BDUtils {
             return  "INSERT INTO item VALUES('"
                             + object.getCod()+ "','"
                             + object.getFoto()+ "','"
-                            + object.getMarca()+ "',"
+                            + object.getIdProveedor()+ "',"
+                            + object.getTipo()+ ","
                             + object.getClasificacion()+ ",'"
                             + object.getDescripcion()+ "',"
                             + object.getPrecioRef()+ ","
@@ -1278,8 +1280,9 @@ public class BDUtils {
             Item object = (Item)objectParam;
             java.sql.Date sqlfecha = new java.sql.Date(object.getLastUpdate().getTime());//la transforma a sql.Date
             return  "UPDATE item set itm_foto = '" + object.getFoto()
-                        + "', itm_marca = '" + object.getMarca()
-                        + "', itm_clasificacion = " + object.getClasificacion()
+                        + "', proveedor_pro_id = '" + object.getIdProveedor()
+                        + "', itm_tipo = " + object.getTipo()
+                        + ", itm_clasificacion = " + object.getClasificacion()
                         + ", itm_descripcion = '" + object.getDescripcion()
                         + "', itm_precio_ref = " + object.getPrecioRef()
                         + ", itm_precio_act = " + object.getPrecioAct()

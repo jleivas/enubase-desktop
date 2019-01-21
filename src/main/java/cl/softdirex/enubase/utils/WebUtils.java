@@ -20,7 +20,7 @@ public class WebUtils {
     private static boolean IS_ONLINE = true;
     
     public static void checkIfOnline(){
-        String comando = "ping www.softdirex.cl";//ping -c 1 google.com
+        String comando = "ping www.google.com";//ping -c 1 google.com
         boolean value = false;
         try{
             value = (Runtime.getRuntime().exec (comando).waitFor() == 0);

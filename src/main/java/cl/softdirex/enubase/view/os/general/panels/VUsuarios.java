@@ -379,7 +379,7 @@ public class VUsuarios extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        pnl2.setBackground(new java.awt.Color(255, 204, 255));
+        pnl2.setBackground(new java.awt.Color(204, 204, 255));
         pnl2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Abrir usuario", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Light", 0, 11))); // NOI18N
 
         jLabel10.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N

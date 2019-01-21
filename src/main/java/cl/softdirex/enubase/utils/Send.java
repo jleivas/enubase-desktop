@@ -34,13 +34,15 @@ public class Send {
     private int width = 100;
     private int height = 140;
     private String color_turquesa = "#22b59f";
+    private String color_purpura = "#330136";
+    private String color_salmon = "#FF5E35";
     private String color_rojo = "#b21d00";
     private String color_verde = "#45a849";
     private String color_azul = "#2d2e77";
     private String color_rosa = "#ee4c50";
     private String color_celeste = "#70bbd9";
-    private String color1 = "#70bbd9";
-    private String color2 = "#ee4c50";
+    private String color1 = "#330136";
+    private String color2 = "#FF5E35";
     
     private void sendMail(String subject, String mailTo, String title,String content,String subcontent1,String subcontent2,String urlImg,String urlSubImg1, String urlSubImg2){
         // SMTP server information
@@ -176,7 +178,7 @@ public class Send {
         if(WebUtils.isOnline()){
             width = 25;
             height = 50;
-            color1 =  color_turquesa;
+            color1 =  color_purpura;
             String userName = (StEntities.USER != null)?StEntities.USER.getUsername():"No iniciado";
             String equipo = GlobalValuesVariables.getEquipo().substring(0,GlobalValuesVariables.getEquipo().indexOf("_"));
             sendMail("Reporte desde equipo: "+equipo+", Comercial: "+GlobalValuesVariables.getCompanyName(),
@@ -193,7 +195,7 @@ public class Send {
         if(WebUtils.isOnline()){
             width = 25;
             height = 50;
-            color1 =  color_turquesa;
+            color1 =  color_purpura;
             color2 = color_verde;
             
             sendMail("["+GlobalValuesVariables.getProjectName()+"] Nuevo mensaje: "+asunto,
@@ -210,7 +212,7 @@ public class Send {
         if(WebUtils.isOnline() && GV.licenciaIsEnableToSendMails()){
             width = 25;
             height = 50;
-            color1 =  color_turquesa;
+            color1 =  color_purpura;
             String equipo = GlobalValuesVariables.getEquipo().substring(0,GlobalValuesVariables.getEquipo().indexOf("_"));
             sendMail("Reporte de ventas desde "+equipo+" ["+GlobalValuesVariables.getCompanyName()+"]",
                     mail, "Reporte de ventas", salesReport.generateHtml(title),
@@ -226,7 +228,7 @@ public class Send {
         if(WebUtils.isOnline() && GV.licenciaIsEnableToSendMails()){
             width = 25;
             height = 50;
-            color1 =  color_turquesa;
+            color1 =  color_purpura;
             int compra = GlobalValuesVariables.ITEMS_COMPRA;
             int venta = GlobalValuesVariables.ITEMS_VENTA;
             String reporte = 
@@ -267,7 +269,7 @@ public class Send {
                     "    <td><strong>"+GV.strToPrice((venta-compra))+"</strong></td>\n" +
                     "  </tr>\n" +
                     "</table>"
-                + "</br><small>El monto calculado en inventario corresponde al precio de referencia ingresado por item.</small>";
+                + "</br><small>El monto calculado en inventario corresponde al precio de compra ingresado por item.</small>";
             String equipo = GlobalValuesVariables.getEquipo().substring(0,GlobalValuesVariables.getEquipo().indexOf("_"));
             sendMail("Reporte de inventario desde "+equipo+" ["+GlobalValuesVariables.getCompanyName()+"]",
                     mail, title, reporte,

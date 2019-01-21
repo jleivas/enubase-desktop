@@ -1287,7 +1287,8 @@ public class Remote implements InterfaceSync{
                     lista.add(new Item(
                         datos.getString("itm_id"),
                         datos.getString("itm_foto"),
-                        datos.getString("itm_marca"),
+                        datos.getString("proveedor_pro_id"),
+                        datos.getInt("itm_tipo"),
                         datos.getInt("itm_clasificacion"),
                         datos.getString("itm_descripcion"),
                         datos.getInt("itm_precio_ref"),
@@ -1709,7 +1710,8 @@ public class Remote implements InterfaceSync{
                     lista.add(new Item(
                         datos.getString("itm_id"),
                         datos.getString("itm_foto"),
-                        datos.getString("itm_marca"),
+                        datos.getString("proveedor_pro_id"),
+                        datos.getInt("itm_tipo"),
                         datos.getInt("itm_clasificacion"),
                         datos.getString("itm_descripcion"),
                         datos.getInt("itm_precio_ref"),

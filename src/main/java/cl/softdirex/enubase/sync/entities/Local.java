@@ -1285,7 +1285,8 @@ public class Local implements InterfaceSync {
                     lista.add(new Item(
                         datos.getString("itm_id"),
                         datos.getString("itm_foto"),
-                        datos.getString("itm_marca"),
+                        datos.getString("proveedor_pro_id"),
+                        datos.getInt("itm_tipo"),
                         datos.getInt("itm_clasificacion"),
                         datos.getString("itm_descripcion"),
                         datos.getInt("itm_precio_ref"),
@@ -1382,7 +1383,7 @@ public class Local implements InterfaceSync {
                             datos.getString("pro_id"),
                             datos.getString("pro_nombre"),
                             datos.getString("pro_telefono"),
-                            datos.getString("pro_mail"),
+                            datos.getString("pro_email"),
                             datos.getString("pro_web"),
                             datos.getString("pro_direccion"),
                             datos.getString("pro_comuna"),
@@ -1430,10 +1431,10 @@ public class Local implements InterfaceSync {
                 String sql = "SELECT * FROM tipo_pago WHERE tp_nombre='" + idParam + "'";
                 sql = (GV.isNumeric(idParam))? "SELECT * FROM tipo_pago WHERE tp_id=" + idParam:sql;
                 if (idParam.equals("0")) {
-                    sql = "SELECT * FROM tipo_pago WHERE tp_estado=1 AND tp_id <> 1";
+                    sql = "SELECT * FROM tipo_pago WHERE tp_estado=1";
                 }
                 if (idParam.equals("-1")) {
-                    sql = "SELECT * FROM tipo_pago WHERE tp_estado=0 AND tp_id <> 1";
+                    sql = "SELECT * FROM tipo_pago WHERE tp_estado=0";
                 }
                 if (idParam.equals("-2")) {
                     sql = "SELECT * FROM tipo_pago";
@@ -1707,7 +1708,8 @@ public class Local implements InterfaceSync {
                     lista.add(new Item(
                         datos.getString("itm_id"),
                         datos.getString("itm_foto"),
-                        datos.getString("itm_marca"),
+                        datos.getString("proveedor_pro_id"),
+                        datos.getInt("itm_tipo"),
                         datos.getInt("itm_clasificacion"),
                         datos.getString("itm_descripcion"),
                         datos.getInt("itm_precio_ref"),
@@ -1787,7 +1789,7 @@ public class Local implements InterfaceSync {
                             datos.getString("pro_id"),
                             datos.getString("pro_nombre"),
                             datos.getString("pro_telefono"),
-                            datos.getString("pro_mail"),
+                            datos.getString("pro_email"),
                             datos.getString("pro_web"),
                             datos.getString("pro_direccion"),
                             datos.getString("pro_comuna"),

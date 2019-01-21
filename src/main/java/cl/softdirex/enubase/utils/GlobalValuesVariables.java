@@ -94,6 +94,7 @@ public class GlobalValuesVariables {
     private static int CBO_VENTA_FILTER=0;
     private static String SQL_LOW_STOCK="lowStock";
     private static String ID_PARAM_IS_VENTA_LIST = "LISTAR_VENTAS/";
+    private static String ID_ITEM_INCREASE_STOCK;
     
     public static int ITEMS_STOCK;
     public static int ITEMS_STOCK_BAJO;
@@ -120,7 +121,7 @@ public class GlobalValuesVariables {
     public static String MAIL_PASS= "qwpzedzqucvpyjzt";
     public static String MAIL_REPORT= "softdirex@gmail.com";
     public static String MAIL_LOG = "";
-    public static String LOGO_MAIL = "https://www.softdirex.cl/imgOptics/report/logo.png";
+    public static String LOGO_MAIL = "https://www.softdirex.cl/imgMail/logo_enubase.png";
     public static String ICON_COMPANY_MAIL = "https://www.softdirex.cl/imgOptics/report/company.png";
     public static String ICON_USER_MAIL = "https://www.softdirex.cl/imgOptics/report/user.png";
     
@@ -574,5 +575,13 @@ public class GlobalValuesVariables {
     
     public static int cboVentasFilter(){
         return CBO_VENTA_FILTER;
+    }
+
+    public static void setIdItemIncreaseStock(String codigo) {
+        ID_ITEM_INCREASE_STOCK = codigo;
+    }
+    
+    public static String getIdItemIncreaseStock() {
+        return ID_ITEM_INCREASE_STOCK;
     }
 }

@@ -937,33 +937,40 @@ public class Dao{
         if(object instanceof Item){
             Item obj = (Item)object;
             if(obj.getCod().isEmpty()){
-                OptionPane.showMsg("Faltan datos", "El item debe tener un código válido.", 
+                OptionPane.showMsg("Faltan datos", "El producto debe tener un código válido.", 
                         2);
                 return false;
             }
             if(obj.getClasificacion() == 0){
                 OptionPane.showMsg("Faltan datos", 
-                        "El item debe tener una clasificación asignada.", 2);
+                        "El producto debe tener una clasificación asignada.", 2);
+                return false;
+            }
+            if(obj.getTipo()== 0){
+                OptionPane.showMsg("Faltan datos", 
+                        "El producto debe tener un tipo de unidad asignado.", 2);
                 return false;
             }
             if(obj.getDescripcion().isEmpty()){
                 OptionPane.showMsg("Faltan datos", 
-                        "El item no contiene una descripcion del producto.", 2);
+                        "El producto no contiene una descripcion del producto.", 2);
                 return false;
             }
             if(obj.getInventario() == 0){
                 OptionPane.showMsg("Faltan datos", 
-                        "El item debe tener un inventario asignado.", 2);
+                        "El producto debe tener un inventario asignado.", 2);
                 return false;
             }
-            if(obj.getMarca().isEmpty()){
-                OptionPane.showMsg("Faltan datos", 
-                        "Falta agregar un valor en el campo \"marca\".", 2);
-                return false;
+            if(obj.getIdProveedor().isEmpty()){
+                if(!OptionPane.getConfirmation("Faltan datos","Falta agregar un proveedor válido.\n\n"
+                        + "¿Desea registrar el producto de todas formas?\n"
+                        + "Si confirma los cambios, no se asignará un proveedor a este item." , 2)){
+                    return false;
+                }
             }
             if(obj.getPrecioAct() < 0 || obj.getPrecioRef() < 0){
                 OptionPane.showMsg("Error de datos", 
-                        "Uo de los precios ingresados no son válido.", 2);
+                        "Uno de los precios ingresados no son válido.", 2);
                 return false;
             }
             if(obj.getStock() < 0 || obj.getStockMin() < 0){
@@ -987,6 +994,21 @@ public class Dao{
             return true;
         }
         if(object instanceof TipoPago){
+            return true;
+        }
+        if(object instanceof Proveedor){
+            Proveedor obj = (Proveedor)object;
+            if(GV.getStr(obj.getNombre()).isEmpty()){
+                OptionPane.showMsg("Validaciónd de datos", 
+                        "No se pudo agregar proveedor, debe ingresar un nombre válido,"
+                    + "\nlos registros deben tener como mínimo 3 carácteres.", 2);
+                return false;
+            }
+            if(!GV.validaRut(obj.getCod())){
+                OptionPane.showMsg("Validaciónd de datos", 
+                        "No se pudo agregar proveedor, debe ingresar un rut válido,", 2);
+                return false;
+            }
             return true;
         }
         if(object instanceof User){

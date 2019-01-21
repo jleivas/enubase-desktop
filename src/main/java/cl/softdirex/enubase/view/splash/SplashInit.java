@@ -46,7 +46,6 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
         jLabel2 = new javax.swing.JLabel();
         llabelInfo = new javax.swing.JLabel();
         loader = new javax.swing.JLabel();
-        fondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -78,10 +77,6 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
 
         loader.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/circles.gif"))); // NOI18N
         getContentPane().add(loader, new org.netbeans.lib.awtextra.AbsoluteConstraints(-100, 0, 710, 440));
-
-        fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/fondoLoader.jpg"))); // NOI18N
-        fondo.setText("jLabel2");
-        getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -129,7 +124,6 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel fondo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel llabelInfo;
@@ -142,7 +136,6 @@ public class SplashInit extends javax.swing.JFrame implements Runnable{
     public void run() {
         while(tiempo != null){
             try {
-                
                 Thread.sleep(1000);
                 GV.startSystem();
                 this.dispose();

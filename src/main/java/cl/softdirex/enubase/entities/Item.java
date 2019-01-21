@@ -15,7 +15,8 @@ import java.util.Date;
 public class Item extends SyncStringId{
     //debe incluir el id del inventario en el idString solo por bd remota, no se debe mostrar despues de -
     private String foto;
-    private String marca;
+    private String idProveedor;
+    private int tipo;
     private int clasificacion;
     private String descripcion;
     private int precioRef;
@@ -31,7 +32,8 @@ public class Item extends SyncStringId{
      * 
      * @param cod
      * @param foto
-     * @param marca
+     * @param idProveedor
+     * @param tipo
      * @param clasificacion
      * @param descripcion
      * @param precioRef
@@ -43,9 +45,10 @@ public class Item extends SyncStringId{
      * @param lastUpdate
      * @param lastHour 
      */
-    public Item(String cod, String foto, String marca, int clasificacion, String descripcion, int precioRef, int precioAct, int stock, int stockMin,int inventario, int estado, Date lastUpdate, int lastHour) {
-        setMarca(marca);
+    public Item(String cod, String foto, String idProveedor,int tipo, int clasificacion, String descripcion, int precioRef, int precioAct, int stock, int stockMin,int inventario, int estado, Date lastUpdate, int lastHour) {
+        setIdProveedor(idProveedor);
         setFoto(foto);
+        setTipo(tipo);
         setClasificacion(clasificacion);
         setDescripcion(descripcion);
         setPrecioRef(precioRef);
@@ -57,6 +60,14 @@ public class Item extends SyncStringId{
         setEstado(estado);
         setLastUpdate(lastUpdate);
         setLastHour(lastHour);
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public int getTipo() {
+        return tipo;
     }
 
     public void setFoto(String foto) {
@@ -79,8 +90,8 @@ public class Item extends SyncStringId{
         return inventario;
     }
 
-    public void setMarca(String marca) {
-        this.marca = getStr(marca);
+    public void setIdProveedor(String idProveedor) {
+        this.idProveedor = getStr(idProveedor);
     }
 
     public void setClasificacion(int clasificacion) {
@@ -107,8 +118,8 @@ public class Item extends SyncStringId{
         this.stockMin = stockMin;
     }
 
-    public String getMarca() {
-        return getStr(marca);
+    public String getIdProveedor() {
+        return getStr(idProveedor);
     }
     
     public int getClasificacion() {
@@ -138,7 +149,7 @@ public class Item extends SyncStringId{
     @Override
     public String toString() {
         return "\n -cod: "+getCod()+
-                " - marca:"+this.marca+
+                " - idProveedor:"+this.idProveedor+
                 " - Stock:"+getStock()+
                 " - Stock minimo:"+getStockMin()+
                 " - Estado:"+getEstado()+
@@ -148,7 +159,7 @@ public class Item extends SyncStringId{
     
     public String getSqlInsertStatement(){
         java.sql.Date sqlfecha1 = new java.sql.Date(getLastUpdate().getTime());
-        return "('"+getCod()+"','"+getFoto()+"','"+getMarca()+"',"+getClasificacion()
+        return "('"+getCod()+"','"+getFoto()+"','"+getIdProveedor()+"',"+getTipo()+","+getClasificacion()
                 +",'"+getDescripcion()+"',"+getPrecioRef()+","+getPrecioAct()
                 + ","+getStock()+","+getStockMin()+","+getInventario()+","+getEstado()
                 +",'"+sqlfecha1+"',"+getLastHour()+")";

@@ -88,7 +88,7 @@ public class LocalInventario {
     private static Object selectToSync(String idParam) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException{
         ArrayList<Object> lista = new ArrayList<>();
         updateStockTemporal();
-        String sql = "SELECT itm_id, itm_foto, itm_marca, itm_clasificacion, itm_descripcion, itm_precio_ref, itm_precio_act, itm_stock, itm_stock_min, inventario_inv_id, itm_estado, itm_last_update, itm_last_hour,"
+        String sql = "SELECT itm_id, itm_foto, proveedor_pro_id, itm_tipo, itm_clasificacion, itm_descripcion, itm_precio_ref, itm_precio_act, itm_stock, itm_stock_min, inventario_inv_id, itm_estado, itm_last_update, itm_last_hour,"
                 + "(Select SUM(stock) from intern_stock WHERE id_item = itm_id AND estado = 1) as stock_menos FROM item WHERE itm_id ='" + idParam + "'";
 
         PreparedStatement consulta = LcBd.obtener().prepareStatement(sql);
@@ -101,7 +101,8 @@ public class LocalInventario {
             lista.add(new Item(
                         idItem,
                         datos.getString("itm_foto"),
-                        datos.getString("itm_marca"),
+                        datos.getString("proveedor_pro_id"),
+                        datos.getInt("itm_tipo"),
                         datos.getInt("itm_clasificacion"),
                         datos.getString("itm_descripcion"),
                         datos.getInt("itm_precio_ref"),
@@ -155,7 +156,8 @@ public class LocalInventario {
                 lista.add(new Item(
                         idItem,
                         datos.getString("itm_foto"),
-                        datos.getString("itm_marca"),
+                        datos.getString("proveedor_pro_id"),
+                        datos.getInt("itm_tipo"),
                         datos.getInt("itm_clasificacion"),
                         datos.getString("itm_descripcion"),
                         datos.getInt("itm_precio_ref"),
@@ -175,7 +177,8 @@ public class LocalInventario {
                         lista.add(new Item(
                             idItem,
                             datos.getString("itm_foto"),
-                            datos.getString("itm_marca"),
+                            datos.getString("proveedor_pro_id"),
+                            datos.getInt("itm_tipo"),
                             datos.getInt("itm_clasificacion"),
                             datos.getString("itm_descripcion"),
                             datos.getInt("itm_precio_ref"),
@@ -193,7 +196,8 @@ public class LocalInventario {
                     lista.add(new Item(
                             idItem,
                             datos.getString("itm_foto"),
-                            datos.getString("itm_marca"),
+                            datos.getString("proveedor_pro_id"),
+                            datos.getInt("itm_tipo"),
                             datos.getInt("itm_clasificacion"),
                             datos.getString("itm_descripcion"),
                             datos.getInt("itm_precio_ref"),

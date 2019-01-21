@@ -7,12 +7,14 @@ package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Equipo;
+import cl.softdirex.enubase.entities.Item;
 import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.entities.Venta;
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntId;
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntIdValidaName;
 import cl.softdirex.enubase.entities.abstractclasses.SyncStringId;
 import cl.softdirex.enubase.sync.entities.Local;
+import cl.softdirex.enubase.sync.entities.LocalInventario;
 import cl.softdirex.enubase.sync.entities.Remote;
 import static cl.softdirex.enubase.utils.StEntities.getTipoUsuario;
 import cl.softdirex.enubase.view.init.Acceso;
@@ -21,6 +23,7 @@ import cl.softdirex.enubase.view.notifications.panels.input.OpanelCompanyData;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetLicencia;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetToken;
 import cl.softdirex.enubase.view.principal.ContentAdmin;
+import java.awt.event.KeyEvent;
 import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -58,6 +61,117 @@ public class GV {
     public static Remote REMOTE_SYNC = new Remote();
     private static Dao load = new Dao();
     /*********************BEGIN FUNCTIONS****************************/
+    public static String obtenerCodEntreLlaves(String arg){
+        arg = GV.getStr(arg);
+        if(arg.contains("<") && !arg.endsWith("<")){
+            arg=arg.substring(arg.indexOf("<")+1).replaceAll(">", "");
+            return arg;
+        }
+        return "0";
+    }
+    
+    public static boolean validaRut(String vRut) 
+    { 
+        if(vRut.length() < 9 || vRut.length() > 10){
+            return false;
+        }
+            
+        String vverificador ="-1";
+        
+        String[] parts = vRut.split("-");
+        
+        String vrut = parts[0]; // 123
+        try {
+           vverificador = parts[1]; // 654321
+        } catch (Exception e) {
+            return false;
+        }
+        ////valido que ingrese mas de 1 -
+         
+        
+        try {
+        boolean flag = false; 
+        String rut = vrut.trim(); 
+
+        String posibleVerificador = vverificador.trim(); 
+        int cantidad = rut.length(); 
+        int factor = 2; 
+        int suma = 0; 
+        String verificador = ""; 
+
+        for(int i = cantidad; i > 0; i--) 
+        { 
+            if(factor > 7) 
+            { 
+                factor = 2; 
+            } 
+            suma += (Integer.parseInt(rut.substring((i-1), i)))*factor; 
+            factor++; 
+
+        } 
+        verificador = String.valueOf(11 - suma%11); 
+        if(verificador.equals(posibleVerificador)) 
+        { 
+            flag = true; 
+        } 
+        else 
+        { 
+            if((verificador.equals("10")) && (posibleVerificador.toLowerCase().equals("k"))) 
+            { 
+                flag = true; 
+            } 
+            else 
+            { 
+                if((verificador.equals("11") && posibleVerificador.equals("0"))) 
+                { 
+                    flag = true; 
+                } 
+                else 
+                { 
+                    flag = false; 
+                } 
+            } 
+        } 
+        return flag; 
+        } catch (Exception e) {
+            return false;
+        }        
+    } 
+    
+    public static void sendReporteItemsMail(String email, String title) {
+        Send mail = new Send();
+        mail.sendReportItemsMail(email, title);
+    }
+    
+    public static void calcularReporteItems(int index, Item item) {
+        if(index == 0){
+            GlobalValuesVariables.ITEMS_STOCK = 0;
+            GlobalValuesVariables.ITEMS_STOCK_BAJO = 0;
+            GlobalValuesVariables.ITEMS_STOCK_CERO = 0;
+
+            GlobalValuesVariables.ITEMS_COMPRA = 0;
+            GlobalValuesVariables.ITEMS_VENTA = 0;
+        }
+        if(item != null){
+            if(item.getEstado() > 0){
+                GlobalValuesVariables.ITEMS_STOCK = (item.getStock()>0)?
+                        (GlobalValuesVariables.ITEMS_STOCK + item.getStock())
+                        :GlobalValuesVariables.ITEMS_STOCK;
+                GlobalValuesVariables.ITEMS_STOCK_BAJO = (item.getStockMin() >= item.getStock())?
+                        (GlobalValuesVariables.ITEMS_STOCK_BAJO + 1)
+                        :GlobalValuesVariables.ITEMS_STOCK_BAJO;
+                GlobalValuesVariables.ITEMS_STOCK_CERO = (item.getStock() <= 0)?
+                        (GlobalValuesVariables.ITEMS_STOCK_CERO + 1)
+                        :GlobalValuesVariables.ITEMS_STOCK_CERO;
+                GlobalValuesVariables.ITEMS_COMPRA = (item.getStock() > 0)?
+                        (GlobalValuesVariables.ITEMS_COMPRA + (item.getStock() * item.getPrecioRef()))
+                        :GlobalValuesVariables.ITEMS_COMPRA;
+                GlobalValuesVariables.ITEMS_VENTA = (item.getStock() > 0)?
+                        (GlobalValuesVariables.ITEMS_VENTA + (item.getStock() * item.getPrecioAct()))
+                        :GlobalValuesVariables.ITEMS_VENTA;
+            }
+        }
+    }
     
     public static void cerrarSistema() {
         OptionPane.closeInfoPanel();
@@ -152,7 +266,18 @@ public class GV {
     public static void startSystem(){
         BDUtils.initDB();
         boolean error = false;
-        try{XmlUtils.checkXmlFiles();}catch(Exception e){error = true;licenciaRegistrar();}
+        try{XmlUtils.checkXmlFiles();}catch(Exception e){
+            WebUtils.checkIfOnline();
+            if(WebUtils.isOnline()){
+                error = true;
+                licenciaRegistrar();
+            }else{
+                JOptionPane.showMessageDialog(null, 
+                        "Debes tener conexión a internet para validar la licencia", 
+                        "No tienes acceso a la red", JOptionPane.WARNING_MESSAGE);
+                System.exit(0);
+            }
+        }
         if(!error){
             initValues();
         }
@@ -876,6 +1001,13 @@ public class GV {
     public static Venta openVentaByCod(String cod) {
         return (Venta)BDUtils.openVentaByCod(cod);
     }
+    
+    public static void validaLargo(KeyEvent evt, JTextField txtField, int largo) {
+        if(txtField.getText().length() >= largo){
+            evt.consume();
+            OptionPane.showMsg("Error de ingreso de datos", "El registro solo debe contener hasta "+largo+" caracteres", 2);
+        }
+    }
     /*********************END FUNCTIONS****************************/
     /*********************BEGIN UI PROPERTIES****************************/
     public static int msgStatus(){
@@ -943,4 +1075,13 @@ public class GV {
         }
     }
     /*END NOTIFICATIONS*/
+
+    public static Item getItemLocalInventario(String idItem, int idInventario) {
+        Item item;
+        int oldInventario = GlobalValuesVariables.getInventaryChooser();
+        GlobalValuesVariables.setInventaryChooser(idInventario);
+        item = LocalInventario.getItem(idItem);
+        GlobalValuesVariables.setInventaryChooser(oldInventario);
+        return item;
+    }
 }

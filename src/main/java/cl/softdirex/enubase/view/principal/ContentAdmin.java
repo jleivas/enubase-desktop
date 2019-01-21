@@ -326,7 +326,7 @@ public class ContentAdmin extends javax.swing.JFrame {
         jpLeftBar.setBackground(new java.awt.Color(51, 0, 102));
 
         btnNuevaVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/mnu_Home_50px.png"))); // NOI18N
-        btnNuevaVenta.setToolTipText("Nueva Ficha");
+        btnNuevaVenta.setToolTipText("Inicio");
         btnNuevaVenta.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnNuevaVentaMouseClicked(evt);
@@ -343,7 +343,7 @@ public class ContentAdmin extends javax.swing.JFrame {
         });
 
         btnListarVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/mnu_List_50px.png"))); // NOI18N
-        btnListarVentas.setToolTipText("Fichas");
+        btnListarVentas.setToolTipText("Ventas");
         btnListarVentas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnListarVentasMouseClicked(evt);
@@ -371,7 +371,7 @@ public class ContentAdmin extends javax.swing.JFrame {
         });
 
         btnProveedores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/mnu_Supplier_50px.png"))); // NOI18N
-        btnProveedores.setToolTipText("Instituciones");
+        btnProveedores.setToolTipText("Proveedores");
         btnProveedores.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnProveedoresMouseClicked(evt);
