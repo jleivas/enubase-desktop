@@ -7,6 +7,7 @@ package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,14 +21,18 @@ public class WebUtils {
     private static boolean IS_ONLINE = true;
     
     public static void checkIfOnline(){
-        String comando = "ping www.google.com";//ping -c 1 google.com
-        boolean value = false;
+        String dirWeb = "www.google.com";
+        int puerto = 80;
+        boolean isOnline=false;
         try{
-            value = (Runtime.getRuntime().exec (comando).waitFor() == 0);
-        }catch(IOException | InterruptedException e){
-            value = false;
+            Socket s = new Socket(dirWeb, puerto);
+            if(s.isConnected()){
+                isOnline = true;
+            }
+        }catch(IOException e){
+            isOnline = false;
         }
-        setIsOnline(value);
+        setIsOnline(isOnline);
     }
     
     public static void setIsOnline(boolean value){
