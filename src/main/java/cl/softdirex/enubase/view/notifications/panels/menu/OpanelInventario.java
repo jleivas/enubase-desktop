@@ -208,8 +208,8 @@ public class OpanelInventario extends javax.swing.JPanel {
         cboOption.addItem("Seleccione");
         cboOption.addItem("Asignar inventario local");
         cboOption.addItem("Productos");
-        cboOption.addItem("Exportar inventario");
-        cboOption.addItem("Generar orden de compra");
+        cboOption.addItem("Exportar inventario completo");
+        cboOption.addItem("Exportar inventario con stock bajo");
         cboOption.addItem("Registro de bajas");
     }
 

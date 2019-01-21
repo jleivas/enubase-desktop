@@ -121,63 +121,10 @@ public class XlsUtils {
             OptionPane.showMsg("No se puede generar archivo", "No existen productos con stock bajo para generar la orden de compra.", 2);
             return;
         }
-        int resp = archivo.showSaveDialog(archivo);
-        if(resp == JFileChooser.APPROVE_OPTION){
-            if(lista.size()>0){
-                //[filas][columnas]
-                int filas = lista.size()+6;
-                String [][] entrada = new String[filas][4];
-                entrada[0][1] = "Orden de compra generada el "+GV.dateToString(new Date(), "dd/mm/yyyy")+"";
-                entrada[1][0] = "Empresa:";
-                entrada[1][1] = GlobalValuesVariables.getCompanyName();
-                entrada[2][0] = "Sistema:";
-                entrada[2][1] = GlobalValuesVariables.getProjectName();
-                entrada[3][0] = "Soporte:";
-                entrada[3][1] = "www.softdirex.cl";
-                entrada[5][0] = "Codigo";
-                entrada[5][1] = "Proveedor";
-                entrada[5][2] = "Descripcion";
-                entrada[5][3] = "Cantidad";
-                int contFilas = 6;
-                for (Object object : lista) {
-                    Item temp = (Item)object;
-                    for(int i = 0;i< 7; i++){
-                        if(i==0)
-                            entrada[contFilas][i] = temp.getCod();
-                        else if(i == 1)
-                            entrada[contFilas][i] = temp.getIdProveedor();
-                        else if(i == 2)
-                            entrada[contFilas][i] = temp.getDescripcion();
-                        else if(i == 3)
-                            entrada[contFilas][i] = ""+0;
-                    }
-                    contFilas++;
-                }
-                String ruta = String.valueOf(archivo.getSelectedFile().toString())+"-[Actualizar cantidades].xls";
-                generarExcel(entrada, ruta);
-                msgDone();
-                return;
-            }
-        }else if(resp == JFileChooser.CANCEL_OPTION){
-            msgRejected();
-        }
-        return;
+        exportExcelItems(lista, archivo);
     }
     
-    public static void saveInventary(){
-        Dao load = new Dao();
-        if(GlobalValuesVariables.getInventaryChooser()==0){
-            OptionPane.showMsg("No se pudo realizar la operación", "Los datos no han sido ingresados correctamente\n"
-                    + "Debe seleccionar un invntario", 1);
-            return;
-        }
-        List<Object> lista = load.listar("0", new Item());
-        JFileChooser archivo = new JFileChooser();
-        if(lista.size()<1){
-            OptionPane.showMsg("No existen registros para cargar", "No es posible generar un nuevo archivo,\n"
-                    + "no existen productos registrados.",2);
-            return;
-        }
+    private static void exportExcelItems(List<Object> lista, JFileChooser archivo){
         int resp = archivo.showSaveDialog(archivo);
         if(resp == JFileChooser.APPROVE_OPTION){
             if(lista.size()>0){
@@ -308,7 +255,23 @@ public class XlsUtils {
             msgRejected();
         }
         return;
-
+    }
+    
+    public static void saveInventary(){
+        Dao load = new Dao();
+        if(GlobalValuesVariables.getInventaryChooser()==0){
+            OptionPane.showMsg("No se pudo realizar la operación", "Los datos no han sido ingresados correctamente\n"
+                    + "Debe seleccionar un invntario", 1);
+            return;
+        }
+        List<Object> lista = load.listar("0", new Item());
+        JFileChooser archivo = new JFileChooser();
+        if(lista.size()<1){
+            OptionPane.showMsg("No existen registros para cargar", "No es posible generar un nuevo archivo,\n"
+                    + "no existen productos registrados.",2);
+            return;
+        }
+        exportExcelItems(lista, archivo);
     }
     
     public static boolean saveAllMails() {
