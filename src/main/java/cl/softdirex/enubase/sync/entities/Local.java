@@ -1887,7 +1887,7 @@ public class Local implements InterfaceSync {
             return null;
         }
         try{
-            cod = (cod == null)?""+id:cod;
+            //cod = (cod == null)?""+id:cod;al intentar obtener un tipo de pago por id no lo encuentra
             if(type instanceof Equipo){
                 if(cod != null){
                     if(cod.contains("_") && !cod.startsWith("_") && cod.length() > 2){
