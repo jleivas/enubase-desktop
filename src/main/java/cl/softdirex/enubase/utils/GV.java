@@ -9,7 +9,9 @@ import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Descuento;
 import cl.softdirex.enubase.entities.Despacho;
 import cl.softdirex.enubase.entities.Equipo;
+import cl.softdirex.enubase.entities.HistorialPago;
 import cl.softdirex.enubase.entities.Item;
+import cl.softdirex.enubase.entities.TipoPago;
 import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.entities.Venta;
 import cl.softdirex.enubase.entities.abstractclasses.SyncIntId;
@@ -1131,6 +1133,42 @@ public class GV {
             evt.consume();
             OptionPane.showMsg("Error de ingreso de datos", "El registro solo debe contener hasta "+largo+" caracteres", 2);
         }
+    }
+    
+    /**
+     * debuelbe un arreglo de objetos de tipo string donde [monto][tipoPago][fecha]
+     * @param codFicha
+     * @return 
+     */
+    public static Object[][] listarAbonos(String codFicha) {
+        
+        List<Object> lista = load.listar(convertVentaIdParamToListAbonos(codFicha), new HistorialPago());
+        if(lista.size() == 0){return null;}
+        String[][] abonos = new String[lista.size()][GlobalValuesVariables.TAMANO_COLUMN_ABONOS];
+        int i = 0;
+        
+        TipoPago tp = null;
+        
+        for (Object object : lista) {
+            HistorialPago temp = (HistorialPago)object;
+            try {
+                tp = (TipoPago)load.get(null, temp.getIdTipoPago(), new TipoPago());
+            } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(GV.class.getName()).log(Level.SEVERE, null, ex);
+                tp = null;
+            }
+            abonos[i][GlobalValuesVariables.POS_MONTO] = GV.strToPrice(temp.getAbono());
+            
+            abonos[i][GlobalValuesVariables.POS_NAME] = (tp!=null)? tp.getNombre():GlobalValuesVariables.TIPO_PAGO_NO_REGISTRADO;
+            
+            abonos[i][GlobalValuesVariables.POS_DATE] = GV.dateToString(temp.getFecha(), "dd/mm/yyyy");
+            i++;
+        }
+        return abonos;
+    }
+    
+    public static String convertVentaIdParamToListAbonos(String arg) {
+        return "<"+GV.getStr(arg)+">";
     }
     /*********************END FUNCTIONS****************************/
     /*********************BEGIN UI PROPERTIES****************************/

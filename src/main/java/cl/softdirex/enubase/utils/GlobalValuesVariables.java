@@ -116,6 +116,13 @@ public class GlobalValuesVariables {
     private static final int DELIVERED = 3;
     private static final int WARRANTY = 4;
     
+    /*MOSTRAR ABONOS*/
+    public static String TIPO_PAGO_NO_REGISTRADO = "No registrado";
+    public static int POS_MONTO = 0;
+    public static int POS_NAME = 1;
+    public static int POS_DATE = 2;
+    public static int TAMANO_COLUMN_ABONOS = 3;
+    
     /* Mail */
     public static String MAIL_ADDRES = "sdx.respaldo.bd@gmail.com";
     public static String MAIL_PASS= "qwpzedzqucvpyjzt";

@@ -6,7 +6,9 @@
 package cl.softdirex.enubase.view.os.general.panels;
 
 import cl.softdirex.enubase.dao.Dao;
+import cl.softdirex.enubase.entities.Cliente;
 import cl.softdirex.enubase.entities.Detalle;
+import cl.softdirex.enubase.entities.HistorialPago;
 import cl.softdirex.enubase.entities.Inventario;
 import cl.softdirex.enubase.entities.Item;
 import cl.softdirex.enubase.entities.TipoPago;
@@ -18,12 +20,14 @@ import cl.softdirex.enubase.utils.GlobalValuesVariables;
 import cl.softdirex.enubase.utils.Icons;
 import cl.softdirex.enubase.utils.StEntities;
 import cl.softdirex.enubase.view.notifications.OptionPane;
+import cl.softdirex.enubase.view.principal.ContentAdmin;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,11 +61,15 @@ public class VVenta extends javax.swing.JPanel {
      * Creates new form VNuevaVenta
      */
     public VVenta() {
+        if(!ContentAdmin.lblTitle.getText().toLowerCase().contains("venta")){
+            ContentAdmin.lblTitle.setText("Folio de venta: "+VENTA.getCod()+" efectuada el día "+GV.dateToString(VENTA.getFecha(), "dd.MM.YYYY"));
+        }
         initComponents();
         modelo.addColumn("Codigo");
         modelo.addColumn("Descripción");
         modelo.addColumn("Cantidad");
-        modelo.addColumn("SubTotal");
+        modelo.addColumn("Precio unitario");
+        modelo.addColumn("Total");
         tblListar.setModel(modelo);
         loadStaticObjects();
         cargarCbos();
@@ -75,6 +83,7 @@ public class VVenta extends javax.swing.JPanel {
         lblDescuento.setVisible(false);
         txtDescuento.setVisible(false);
         lblInventario.setText(stInventario.getNombre());
+        loadData();
     }
     
     
@@ -89,19 +98,13 @@ public class VVenta extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        txtEntrega = new javax.swing.JTextField();
         iconCalendar = new javax.swing.JLabel();
         iconPlace = new javax.swing.JLabel();
-        txtFecha = new com.toedter.calendar.JDateChooser();
-        txtHora1 = new javax.swing.JSpinner();
-        txtMinuto1 = new javax.swing.JSpinner();
-        jLabel4 = new javax.swing.JLabel();
-        txtMinuto2 = new javax.swing.JSpinner();
-        jLabel48 = new javax.swing.JLabel();
-        txtHora2 = new javax.swing.JSpinner();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        txtFecha = new javax.swing.JLabel();
         iconClock = new javax.swing.JLabel();
+        txtHora = new javax.swing.JLabel();
+        txtLugar = new javax.swing.JLabel();
+        txtEstado = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         txtRutCliente = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -138,39 +141,22 @@ public class VVenta extends javax.swing.JPanel {
         txtTotal = new javax.swing.JTextField();
         lblMessageStatus = new javax.swing.JLabel();
         btnImprimir = new javax.swing.JLabel();
+        lblInventario = new javax.swing.JLabel();
+        btnAbonar = new javax.swing.JLabel();
+        btnHistorial = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblListar = new javax.swing.JTable();
         jLabel19 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
-        lblInventario = new javax.swing.JLabel();
-        btnAbonar = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tblListar = new javax.swing.JTable();
-        btnHistorial = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Programar despacho", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Light", 1, 14))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Entrega", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Light", 1, 14))); // NOI18N
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        txtEntrega.setToolTipText("Lugar de entrega");
-        txtEntrega.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtEntregaFocusLost(evt);
-            }
-        });
-        txtEntrega.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEntregaActionPerformed(evt);
-            }
-        });
-        txtEntrega.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtEntregaKeyTyped(evt);
-            }
-        });
-        jPanel1.add(txtEntrega, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 310, -1));
 
         iconCalendar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Calendar_25px.png"))); // NOI18N
         iconCalendar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -188,80 +174,9 @@ public class VVenta extends javax.swing.JPanel {
         });
         jPanel1.add(iconPlace, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, 30));
 
-        txtFecha.setMaxSelectableDate(new java.util.Date(32503694492000L));
-        txtFecha.setMinSelectableDate(new java.util.Date(1514779292000L));
-        txtFecha.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtFechaFocusLost(evt);
-            }
-        });
-        txtFecha.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                txtFechaInputMethodTextChanged(evt);
-            }
-        });
-        txtFecha.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                txtFechaPropertyChange(evt);
-            }
-        });
-        txtFecha.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtFechaKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtFechaKeyTyped(evt);
-            }
-        });
-        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 129, -1));
-
-        txtHora1.setModel(new javax.swing.SpinnerNumberModel(0, 0, 23, 1));
-        txtHora1.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtHora1FocusLost(evt);
-            }
-        });
-        jPanel1.add(txtHora1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 60, 49, -1));
-
-        txtMinuto1.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
-        txtMinuto1.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtMinuto1FocusLost(evt);
-            }
-        });
-        jPanel1.add(txtMinuto1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 60, 49, -1));
-
-        jLabel4.setText(":");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, -1, -1));
-
-        txtMinuto2.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
-        txtMinuto2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtMinuto2FocusLost(evt);
-            }
-        });
-        jPanel1.add(txtMinuto2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, 49, 30));
-
-        jLabel48.setText(":");
-        jPanel1.add(jLabel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, -1, 20));
-
-        txtHora2.setModel(new javax.swing.SpinnerNumberModel(0, 0, 23, 1));
-        txtHora2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtHora2FocusLost(evt);
-            }
-        });
-        jPanel1.add(txtHora2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 60, 49, -1));
-
-        jLabel13.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jLabel13.setText("Hasta");
-        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 40, 20));
-
-        jLabel15.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jLabel15.setText("Desde");
-        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 40, 20));
+        txtFecha.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        txtFecha.setText("Fecha");
+        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 320, 20));
 
         iconClock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Clock_25px.png"))); // NOI18N
         iconClock.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -270,6 +185,18 @@ public class VVenta extends javax.swing.JPanel {
             }
         });
         jPanel1.add(iconClock, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, 40));
+
+        txtHora.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        txtHora.setText("Hora");
+        jPanel1.add(txtHora, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 320, 20));
+
+        txtLugar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        txtLugar.setText("Lugar");
+        jPanel1.add(txtLugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 320, 20));
+
+        txtEstado.setFont(new java.awt.Font("Segoe UI Light", 1, 11)); // NOI18N
+        txtEstado.setText("Estado");
+        jPanel1.add(txtEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 340, 20));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Datos de Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Light", 1, 14))); // NOI18N
@@ -560,12 +487,12 @@ public class VVenta extends javax.swing.JPanel {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -668,21 +595,6 @@ public class VVenta extends javax.swing.JPanel {
             }
         });
 
-        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Search_Property_25px_1.png"))); // NOI18N
-
-        txtBuscar.setToolTipText("Buscar");
-        txtBuscar.setBorder(null);
-        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarActionPerformed(evt);
-            }
-        });
-        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtBuscarKeyTyped(evt);
-            }
-        });
-
         lblInventario.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         lblInventario.setText("Inventario");
 
@@ -700,19 +612,6 @@ public class VVenta extends javax.swing.JPanel {
             }
         });
 
-        tblListar.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Codigo", "Descripcion", "Cantidad", "SubTotal"
-            }
-        ));
-        jScrollPane3.setViewportView(tblListar);
-
         btnHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Stack_of_Money_50px.png"))); // NOI18N
         btnHistorial.setToolTipText("Historial de pagos");
         btnHistorial.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -726,6 +625,68 @@ public class VVenta extends javax.swing.JPanel {
                 btnHistorialMouseExited(evt);
             }
         });
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Productos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Light", 1, 14))); // NOI18N
+
+        tblListar.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Codigo", "Descripcion", "Cantidad", "SubTotal"
+            }
+        ));
+        jScrollPane3.setViewportView(tblListar);
+
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Search_Property_25px_1.png"))); // NOI18N
+
+        txtBuscar.setToolTipText("Buscar");
+        txtBuscar.setBorder(null);
+        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarActionPerformed(evt);
+            }
+        });
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyTyped(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel19)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -744,52 +705,36 @@ public class VVenta extends javax.swing.JPanel {
                         .addGap(75, 75, 75))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(jLabel19)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(50, 50, 50)
-                                    .addComponent(lblInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 8, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(84, 84, 84))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel19)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -834,18 +779,6 @@ public class VVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_txtAbonoStateChanged
 
      
-    private void txtEntregaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEntregaKeyTyped
-        int largo = 45;
-        if(txtEntrega.getText().length() >= largo){
-            evt.consume();
-            errorLargo(largo);
-        }
-    }//GEN-LAST:event_txtEntregaKeyTyped
-
-    private void txtEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEntregaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEntregaActionPerformed
-
     private void iconCalendarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconCalendarMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_iconCalendarMouseClicked
@@ -954,46 +887,6 @@ public class VVenta extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_iconPhone1MouseClicked
 
-    private void txtFechaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFechaFocusLost
-        
-    }//GEN-LAST:event_txtFechaFocusLost
-
-    private void txtFechaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFechaKeyTyped
-       
-    }//GEN-LAST:event_txtFechaKeyTyped
-
-    private void txtFechaInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtFechaInputMethodTextChanged
-        
-    }//GEN-LAST:event_txtFechaInputMethodTextChanged
-
-    private void txtFechaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtFechaPropertyChange
-        
-    }//GEN-LAST:event_txtFechaPropertyChange
-
-    private void txtFechaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFechaKeyPressed
-       
-    }//GEN-LAST:event_txtFechaKeyPressed
-
-    private void txtEntregaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEntregaFocusLost
-        
-    }//GEN-LAST:event_txtEntregaFocusLost
-
-    private void txtHora1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHora1FocusLost
-        
-    }//GEN-LAST:event_txtHora1FocusLost
-
-    private void txtMinuto1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMinuto1FocusLost
-        
-    }//GEN-LAST:event_txtMinuto1FocusLost
-
-    private void txtHora2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHora2FocusLost
-        
-    }//GEN-LAST:event_txtHora2FocusLost
-
-    private void txtMinuto2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMinuto2FocusLost
-        
-    }//GEN-LAST:event_txtMinuto2FocusLost
-
     private void txtNombreClienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreClienteFocusLost
 
     }//GEN-LAST:event_txtNombreClienteFocusLost
@@ -1042,7 +935,7 @@ public class VVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_btnImprimirMouseExited
 
     private void btnAbonarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAbonarMouseClicked
-        
+        guardarAbono();
     }//GEN-LAST:event_btnAbonarMouseClicked
 
     private void btnAbonarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAbonarMouseEntered
@@ -1082,15 +975,15 @@ public class VVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_txtBuscarActionPerformed
 
     private void btnHistorialMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistorialMouseClicked
-        // TODO add your handling code here:
+        OptionPane.showMsg("Historial de abonos", mostrarAbonos(VENTA.getCod()), 1);
     }//GEN-LAST:event_btnHistorialMouseClicked
 
     private void btnHistorialMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistorialMouseEntered
-        // TODO add your handling code here:
+        btnHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnHistorial.getIcon().toString()))));
     }//GEN-LAST:event_btnHistorialMouseEntered
 
     private void btnHistorialMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistorialMouseExited
-        // TODO add your handling code here:
+        btnHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnHistorial.getIcon().toString()))));
     }//GEN-LAST:event_btnHistorialMouseExited
 
 
@@ -1111,20 +1004,17 @@ public class VVenta extends javax.swing.JPanel {
     private javax.swing.JLabel iconPlace;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
@@ -1138,13 +1028,11 @@ public class VVenta extends javax.swing.JPanel {
     private javax.swing.JTextField txtComuna;
     private javax.swing.JTextField txtDescuento;
     private javax.swing.JTextField txtDireccionCliente;
-    private javax.swing.JTextField txtEntrega;
-    private com.toedter.calendar.JDateChooser txtFecha;
-    private javax.swing.JSpinner txtHora1;
-    private javax.swing.JSpinner txtHora2;
+    private javax.swing.JLabel txtEstado;
+    private javax.swing.JLabel txtFecha;
+    private javax.swing.JLabel txtHora;
+    private javax.swing.JLabel txtLugar;
     private javax.swing.JTextField txtMailCliente;
-    private javax.swing.JSpinner txtMinuto1;
-    private javax.swing.JSpinner txtMinuto2;
     private javax.swing.JLabel txtNacimiento;
     private javax.swing.JTextField txtNombreCliente;
     private javax.swing.JTextArea txtObs;
@@ -1157,21 +1045,21 @@ public class VVenta extends javax.swing.JPanel {
     private void load(){
         try{
             modelo.setNumRows(0);
-            int index=0;
             for (Object object : detalleVenta) {
                 Detalle temp = (Detalle)object;
-                String ivaV = ""+temp.getPrecioUnitario();
                 Object aux = GV.searchInList(temp.getIdItem(), listItems, new Item());
+                String ivaV = GV.strToPrice(temp.getPrecioUnitario());
+                String ivaT = GV.strToPrice(temp.getPrecioUnitario()*temp.getCantidad());
+                
                 String des = (aux!=null)?((Item)aux).getDescripcion():"";
-                Object[] fila = new Object[4];
+                Object[] fila = new Object[5];
                 fila[0] = temp.getIdItem();
                 fila[1] = des;
                 fila[2] = temp.getCantidad();
                 fila[3] = ivaV;
+                fila[4] = ivaT;
                 
                 modelo.addRow(fila);
-                
-                index++;
             }
             tblListar.updateUI();
             if(tblListar.getRowCount() == 0){
@@ -1309,4 +1197,100 @@ public class VVenta extends javax.swing.JPanel {
         cargarCbos();
     }
     
+    private void loadData(){
+        /*--------CLIENTE*/
+        Cliente cli = VENTA.getCliente();
+        if(cli != null){
+            txtRutCliente.setText(cli.getCod());
+            txtNombreCliente.setText(cli.getNombre());
+            txtTelefonoCliente1.setText(cli.getTelefono1());
+            txtTelefonoCliente2.setText(cli.getTelefono2());
+            txtDireccionCliente.setText(cli.getDireccion());
+            txtComuna.setText(cli.getComuna());
+            txtCiudad.setText(cli.getCiudad());
+            txtMailCliente.setText(cli.getEmail());
+            cboSexo.setSelectedIndex(cli.getSexo());
+            txtNacimiento.setText(GV.dateToString(cli.getNacimiento(), "dd/MM/yyyy"));
+        }
+        /*------DATOS ENTREGA*/
+        txtFecha.setText("Fecha: "+GV.dateToString(VENTA.getFechaEntrega(), "dd.mm.yyyy"));
+        txtHora.setText("Hora: "+VENTA.getHoraEntrega());
+        txtLugar.setText("Lugar: "+VENTA.getLugarEntrega());
+        txtEstado.setText("Estado: "+GlobalValuesVariables.obtenerEstadoVenta(VENTA.getEstado()));
+        /*------OBSERVACIONES*/
+        txtObs.setText(VENTA.getObservacion());
+    }
+    
+    private String mostrarAbonos(String codVenta){
+        String[][] abonos = (String[][])GV.listarAbonos(codVenta);
+        int monto = 0;
+        int i = 0;
+        String desc = "";
+        if(abonos != null){
+            for (i = 0; i < abonos.length; i++) {
+                monto = monto + GV.strToNumber(abonos[i][0]);
+                desc = desc+abonos[i][0]+", Medio de pago: "+abonos[i][1]+", Fecha: "+abonos[i][2]+"\n";
+            }
+        }
+        desc = desc+"-----------------------------------------------------------\n"
+                +"Total abonado: "+GV.strToPrice(monto);
+        return desc;
+    }
+    
+    
+    private void guardarAbono(){
+        if(OptionPane.getConfirmation("Confirmar datos", "¿Estas seguro que deseas registrar un nuevo abono?", 1)){
+            try {
+                CursorUtils.cursorWAIT(this);
+                int saldo = GV.strToNumber(txtSaldo.getText());
+                try {
+                    txtAbono.commitEdit();
+                } catch (ParseException ex) {
+                    Logger.getLogger(VVenta.class.getName()).log(Level.SEVERE, null, ex);
+                    GV.mensajeExcepcion("El saldo ingresado es incorrecto:\n"+ex.getMessage(), 2);
+                    CursorUtils.cursorDF(this);
+                    return;
+                }
+                int abono = (int)txtAbono.getValue();
+                int newSaldo = (saldo-abono);
+                if(newSaldo>=0 && abono > 0){
+                    String medioPago = (cboTipoPago.getSelectedIndex() == 0)? "":cboTipoPago.getSelectedItem().toString();
+                    TipoPago tp = null;
+                    if(!medioPago.isEmpty()){
+                        tp = (TipoPago)load.get(medioPago, 0, new TipoPago());
+                    }
+                    if(tp == null){
+                        OptionPane.showMsg("Operación cancelada", "Para registrar un abono debe ingresar un tipo de pago correcto.",2);
+                        msgRejected("No ha seleccionado un medio de pago.");
+                        CursorUtils.cursorDF(this);
+                        return;
+                    }
+                    
+                    HistorialPago hp = new HistorialPago(null, new Date(), abono, tp.getId(), VENTA.getCod(), 1, null, 0);
+                    VENTA.setSaldo(newSaldo);
+                    if(newSaldo == 0 && (VENTA.getEstado() == GlobalValuesVariables.estadoVentaPending())){
+                        VENTA.setEstado(GlobalValuesVariables.estadoVentaPaid());
+                    }
+                    load.update(VENTA);
+                    load.add(hp);
+                    OptionPane.showMsg("Abono registrado", "Se ha registrado un nuevo abono",1);
+                    loadData();
+                    updatePrice();
+                    CursorUtils.cursorDF(this);
+                    msgRejectedClear();
+                    return;
+                }
+                if(newSaldo < 0){
+                    msgRejected("El abono ingresado excede el saldo.");
+                }
+                OptionPane.showMsg("Operación cancelada", "Para registrar un abono debe ingresar un valor correcto.",2);
+                CursorUtils.cursorDF(this);
+            } catch (InstantiationException | IllegalAccessException | SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(VVenta.class.getName()).log(Level.SEVERE, null, ex);
+                OptionPane.showMsg("Error de sistema", "Ha ocurrido un error interno,\n"
+                        + "Póngase en contacto con ssu proveedor de software para dar solucion a este problema\n"
+                        + "Detalle: Error en VFicha()>btnAbonar()", 3);
+            }
+        }
+    }
 }
