@@ -6,6 +6,7 @@
 package cl.softdirex.enubase.utils;
 
 import cl.softdirex.enubase.dao.Dao;
+import cl.softdirex.enubase.entities.Descuento;
 import cl.softdirex.enubase.entities.Equipo;
 import cl.softdirex.enubase.entities.Item;
 import cl.softdirex.enubase.entities.User;
@@ -64,6 +65,26 @@ public class GV {
     public static Remote REMOTE_SYNC = new Remote();
     private static Dao load = new Dao();
     /*********************BEGIN FUNCTIONS****************************/
+    public static int obtenerDescuentoVenta(Descuento descuento, int total) {
+        int porc = 0;
+        int dscto = 0;
+        if(descuento != null){
+            if(descuento.getPorcetange() > 0){
+                porc = descuento.getPorcetange();
+                dscto = (total * porc)/100;
+            }else{
+                dscto = descuento.getMonto();
+            }
+        }
+        return roundPrice(dscto);
+    }
+    
+    public static int roundPrice(int price) {
+        String temp = ""+price;
+        int lastN = GV.strToNumber(temp.substring(temp.length()-1));
+        return (lastN > 5)? (price-lastN)+10:price-lastN;
+    }
+    
     public static void spinnerNumberDisable(JSpinner spinnerNumber, int currentValue) {
         spinnerNumber.setModel(new SpinnerNumberModel(currentValue, currentValue, currentValue, 1));
         spinnerNumber.setValue(currentValue);

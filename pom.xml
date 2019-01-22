@@ -58,10 +58,7 @@
             <groupId>com.mxrck.autocompleter</groupId>
             <artifactId>autocompleter</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/autocompleter.jar</systemPath>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.toedter/jcalendar -->
         <!-- https://mvnrepository.com/artifact/com.toedter/jcalendar -->
         <dependency>
             <groupId>com.toedter</groupId>

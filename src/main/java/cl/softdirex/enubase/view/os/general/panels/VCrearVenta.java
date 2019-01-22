@@ -96,6 +96,10 @@ public class VCrearVenta extends javax.swing.JPanel {
         CursorUtils.cursorDF(this);
         load();
         updatePrice();
+        cboDescuento.setSelectedIndex(0);
+        cboDescuento.setVisible(false);
+        lblDescuento.setVisible(false);
+        txtDescuento.setVisible(false);
         lblInventario.setText(stInventario.getNombre());
     }
     
@@ -966,11 +970,11 @@ public class VCrearVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_txtSaldoActionPerformed
 
     private void cboDescuentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboDescuentoItemStateChanged
-//        cmpPrecios();
+        updatePrice();
     }//GEN-LAST:event_cboDescuentoItemStateChanged
 
     private void chkDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chkDescuentoKeyTyped
-
+       
     }//GEN-LAST:event_chkDescuentoKeyTyped
 
     private void chkDescuentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chkDescuentoKeyPressed
@@ -1415,6 +1419,7 @@ public class VCrearVenta extends javax.swing.JPanel {
     }
     
     private void removeItem(){
+        msgRejectedClear();
         try{
             int row = tblCarro.getSelectedRow();
             String codigo = tblCarro.getValueAt(row, 0).toString();
@@ -1452,6 +1457,7 @@ public class VCrearVenta extends javax.swing.JPanel {
     }
     
     private void addItem(){
+        msgRejectedClear();
         try{
             int row = tblListar.getSelectedRow();
             String codigo = tblListar.getValueAt(row, 0).toString();
@@ -1523,11 +1529,11 @@ public class VCrearVenta extends javax.swing.JPanel {
     }
     
     private void updatePrice(){
-        int suma =0;
+        int total =0;
         for (int i = 0; i < modelo2.getRowCount(); i++) {
-            suma = suma + GV.strToNumber(modelo2.getValueAt(i, 3).toString());
+            total = GV.roundPrice(total + GV.strToNumber(modelo2.getValueAt(i, 3).toString()));
         }
-        txtTotal.setText(GV.strToPrice(suma));
+        txtTotal.setText(GV.strToPrice(total));
         try {
             txtAbono.commitEdit();
         } catch (ParseException ex) {
@@ -1535,15 +1541,27 @@ public class VCrearVenta extends javax.swing.JPanel {
             txtAbono.setValue(0);
         }
         int abono = (int)txtAbono.getValue();
+        int descuento = 0;
         if(abono >= 0){
-            int total = suma-abono;
-            if(total>=0){
-                txtSaldo.setText(GV.strToPrice(total));
+            
+            if(chkDescuento.isSelected()){
+                String descName = getDescuentoName(cboDescuento.getSelectedItem().toString());
+                Descuento des = (Descuento)GV.searchInList(descName, listDescuentos, new Descuento());
+                descuento = (des!=null)?GV.obtenerDescuentoVenta(des, total):0;
+                txtDescuento.setText(GV.strToPrice(descuento));
+            }
+            if(descuento > total){
+                descuento = total;
+            }
+            txtDescuento.setText(GV.strToPrice(descuento));
+            int saldo = total-descuento;
+            if(abono <= saldo){
+                saldo = saldo-abono;
+                txtSaldo.setText(GV.strToPrice(GV.roundPrice(saldo)));
                 return;
             }
         }
         txtAbono.setValue(0);
-        txtSaldo.setText(GV.strToPrice(suma));
     }
     
     
@@ -1577,6 +1595,11 @@ public class VCrearVenta extends javax.swing.JPanel {
     }
     
     private void guardarVenta(){
+        if(!cmpTipoPago())return;
+        if(modelo2.getRowCount()==0){
+            msgRejected("No tienes productos agregados a la venta");
+            return;
+        }
         List<Detalle> items = new ArrayList<>();
         int total=0;
         for (int i = 0; i < modelo2.getRowCount(); i++) {
@@ -1589,7 +1612,7 @@ public class VCrearVenta extends javax.swing.JPanel {
         int estado = (saldo==0)?2:1;//1: pendiente, 2 pagada, 3 despachada
         int descuento = 0;
         Cliente cli = null;
-        if(!GV.getStr(txtRutCliente.getText()).isEmpty()){
+        if(!clienteNoIngresado()){
             if(!cmpCliente()){
                 return;
             }else{
@@ -1598,8 +1621,34 @@ public class VCrearVenta extends javax.swing.JPanel {
                         txtNacimiento.getDate(), 1, null, 0);
             }
         }
-        Venta venta = new Venta(null, StEntities.USER, cli, new Date(), new Date(), StEntities.getNombreOficina(), 
-                GV.DateToStrHour(new Date()), txtObs.getText(), total, descuento, saldo, null, estado, null, 0);
+        Date fechaEntrega = new Date();
+        String lugarEntrega = StEntities.getNombreOficina();
+        String horaEntrega = GV.DateToStrHour(new Date());
+        if(!datosEntregaNoIngresados()){
+            if(!cmpDatosEntrega()){
+                return;
+            }else{
+                fechaEntrega = txtFecha.getDate();
+                lugarEntrega = GV.getFilterString(txtEntrega.getText());
+                horaEntrega = asigHora();
+            }
+        }
+        
+        Venta venta = new Venta(null, StEntities.USER, cli, new Date(), fechaEntrega, lugarEntrega, 
+                horaEntrega, txtObs.getText(), total, descuento, saldo, null, estado, null, 0);
+        venta.setDetalles(items);
+        HistorialPago hp = new HistorialPago(null, new Date(), (int)txtAbono.getValue(), cboTipoPago.getSelectedIndex(), null, 1, null, 0);
+        if(load.createVenta(venta,hp)){
+            OptionPane.showMsg("Registro creado", "Se ha almacenado un nuevo registro exitosamente", 1);
+        }else{
+            OptionPane.showMsg("Error al registrar", "No se ha podido almacenar un nuevo registro de venta", 3);
+        }
+    }
+    
+    private boolean cmpDatosEntrega(){
+        if(!cmpFechaEntrega())return false;
+        if(!cmpHoraEntrega())return false;
+        return cmpLugarEntrega();
     }
     
     private boolean cmpCliente(){
@@ -1787,7 +1836,7 @@ public class VCrearVenta extends javax.swing.JPanel {
     private boolean cmpFechaEntrega(){
         Date date = txtFecha.getDate();
         if(date == null){
-            return true;
+            return false;
         }
         if(!GV.fechaActualOFutura(date)){
             msgRejected("Debe ingresar una fecha de entrega actual o futura");
@@ -1799,12 +1848,12 @@ public class VCrearVenta extends javax.swing.JPanel {
     private boolean cmpLugarEntrega(){
         if(!GV.getStr(txtEntrega.getText()).isEmpty()){
             String place = GV.getFilterString(txtEntrega.getText());
-            if(place.isEmpty()){
-                msgRejected("Debe ingresar un lugar de entrega, no incluir caracteres especiales.");
-                return false;
+            if(!place.isEmpty()){
+                return true;
             }
-        } 
-        return true;
+        }
+        msgRejected("Debe ingresar un lugar de entrega, no incluir caracteres especiales.");
+        return false;
     }
     
     private boolean cmpHoraEntrega(){
@@ -1881,6 +1930,32 @@ public class VCrearVenta extends javax.swing.JPanel {
         }
         msgRejected("Debe ingresar una fecha de nacimiento válida.");
         return false;
+    }
+    
+    private boolean clienteNoIngresado(){
+        String rut = GV.getFilterString(txtRutCliente.getText());
+        String nombre = GV.getFilterString(txtNombreCliente.getText());
+        String tel1 = GV.getFilterString(txtTelefonoCliente1.getText());
+        String tel2 = GV.getFilterString(txtTelefonoCliente2.getText());
+        String dir = GV.getFilterString(txtDireccionCliente.getText());
+        String comuna = GV.getFilterString(txtComuna.getText());
+        String ciudad = GV.getFilterString(txtCiudad.getText());
+        String email = GV.getFilterString(txtMailCliente.getText());
+        int sexo = cboSexo.getSelectedIndex();
+        String nacimiento = GV.dateToString(txtNacimiento.getDate(), "dd-MM-yyyy");
+        return (rut.isEmpty() && nombre.isEmpty() && tel1.isEmpty() && tel2.isEmpty() && dir.isEmpty() && 
+                comuna.isEmpty() && ciudad.isEmpty() && email.isEmpty() && sexo==0 && nacimiento.equals("date-error"));
+    }
+    
+    private boolean datosEntregaNoIngresados(){
+        String fecha = GV.dateToString(txtFecha.getDate(), "dd-MM-yyyy");
+        commitSpinner();
+        int h1 = (int)txtHora1.getValue();
+        int h2 = (int)txtHora2.getValue();
+        int m1 = (int)txtMinuto1.getValue();
+        int m2 = (int)txtMinuto2.getValue();
+        String lugar = GV.getFilterString(txtEntrega.getText());
+        return (lugar.isEmpty() && h1==0 && h2==0 && m1==0 && m2==0 && fecha.equals("date-error"));
     }
     
     private boolean cmpCamposCliente(){
@@ -1961,47 +2036,8 @@ public class VCrearVenta extends javax.swing.JPanel {
         return value;
     }
     
-    private void botonGuardar(){
-        String warningsText = "";
-        if(!commitSpinner()){
-            return;
-        }
-        if(GV.sincronizacionIsStopped()){//No guardará los datos si hay una sincronización activa
-            if(!cmpFormulario()){
-                warningsText = (GV.getStr(lblMessageStatus.getText()).isEmpty())?"":lblMessageStatus.getText();
-                OptionPane.showMsg("Falta corregir alguna información", warningsText, 2);
-                return;
-            }
-            warningsText = (GV.getStr(lblMessageStatus.getText()).isEmpty())?"":"Observación:"+lblMessageStatus.getText();
-            String confirmText = "Registrar los datos\n" + ((warningsText.isEmpty())? "\n":warningsText+"\n")
-                + "¿Estas seguro que los datos son correctos?";
-            if(OptionPane.getConfirmation("Confirmar registro", confirmText, 1)){
-                asigAllDatas();
-                if(save(VENTA)){
-//                    GV.printVenta(VENTA);
-                    reloadPage();
-                }
-            }
-        }
-    }
-    
-    private boolean save(Venta venta){
-        int abono = (int) txtAbono.getValue();
-        HistorialPago hp = null;
-        
-        if(abono > 0){
-            if(stTipoPago == null){
-                msgRejected("Debe registrar el medio de pago en el abono");
-                return false;
-            }else{
-                String idTp = load.getCurrentCod(new HistorialPago());
-                hp = new HistorialPago(idTp, new Date(), abono, stTipoPago.getId(), venta.getCod(),1, null, 0);
-            }
-        }
-        return load.createVenta(venta,hp);
-    }
-    
     private void logicaChkDescuento(){
+        updatePrice();
         if(chkDescuento.isSelected() && listDescuentos.size() > 0){
             cboDescuento.setVisible(true);
             lblDescuento.setVisible(true);
@@ -2019,44 +2055,5 @@ public class VCrearVenta extends javax.swing.JPanel {
                 OptionPane.showMsg("No se puede añadir descuento", "No existen descuentos registrados, debe ingresarlos en \"Configuracion\" opción \"Descuentos\"", 2);
             }
         }
-//        cmpPrecios();
-    }
-    
-    private void cotizar(){
-        String warningsText = "";
-        if(!commitSpinner()){
-            return;
-        }
-            if(!cmpFormularioQuote()){
-                warningsText = (GV.getStr(lblMessageStatus.getText()).isEmpty())?"":lblMessageStatus.getText();
-                OptionPane.showMsg("Falta corregir alguna información", warningsText, 2);
-                return;
-            }
-            warningsText = (GV.getStr(lblMessageStatus.getText()).isEmpty())?"":"Observación:"+lblMessageStatus.getText();
-            String confirmText = "Ver cotización\n" + ((warningsText.isEmpty())? "\n":warningsText+"\n")
-                + "¿Estas seguro que los datos son correctos?";
-            if(OptionPane.getConfirmation("Confirmar registro", confirmText, 1)){
-                asigAllDatas();
-                try{
-                    load.add(VENTA.getCliente());
-                }catch(InstantiationException | IllegalAccessException ex){
-                   GV.mensajeExcepcion(ex.getMessage(), 3);
-                }
-//                GV.printCotizacion(VENTA);
-                reloadPage();
-                
-            }
-    }
-    
-    private boolean cmpFormularioQuote(){
-        msgRejectedClear();
-        if(!cmpRut())return false;
-        if(!cmpNombre())return false;
-        if(!cmpContactos())return false;
-        if(!cmpCamposCliente())return false;
-        if(!cmpNacimiento())return false;
-        return true;
-    }
-
-    
+    } 
 }
