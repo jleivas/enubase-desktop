@@ -1419,4 +1419,8 @@ public class BDUtils {
         }
         return null;
     }
+    
+    public static void listarVentasByDate(Date date1, Date date2) {
+        LISTA_VENTAS = listarAllVentas(date1, date2, null, null, null);
+    }
 }

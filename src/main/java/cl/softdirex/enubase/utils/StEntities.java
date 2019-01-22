@@ -132,6 +132,10 @@ public class StEntities {
         OPEN_VENTA = venta;
     }
     
+    public static Venta getOpenVenta() {
+        return OPEN_VENTA;
+    }
+    
     public static void clearVenta() {
         ST_VENTA = new Venta();
     }

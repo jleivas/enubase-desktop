@@ -865,7 +865,7 @@ public class Local implements InterfaceSync {
                 String sql = getSqlVenta()+" WHERE venta.ven_id='" + idParam + "'";
                 sql = (idParam.equals("-2"))?getSqlVenta():sql;
                 if(GlobalValuesVariables.ventaIdParamIsVentaList(idParam)){
-                    sql=getSqlVenta()+GlobalValuesVariables.cleanIdParam(idParam);
+                    sql=getSqlVenta()+" "+GlobalValuesVariables.cleanIdParam(idParam);
                 }
                 
                     PreparedStatement consulta = LcBd.obtener().prepareStatement(sql);
@@ -1108,6 +1108,9 @@ public class Local implements InterfaceSync {
                 }
                 if (idParam.equals("-2")) {
                     sql = "SELECT * FROM detalle";
+                }
+                if (idParam.startsWith("ID_VENTA-")) {
+                    sql = "SELECT * FROM detalle WHERE venta_ven_id = '"+idParam.replaceFirst("ID_VENTA-", "")+"'";
                 }
 
                 PreparedStatement consulta = LcBd.obtener().prepareStatement(sql);
@@ -2095,7 +2098,7 @@ public class Local implements InterfaceSync {
                 "usuario.us_tipo," +
                 "usuario.us_estado," +
                 "usuario.us_last_update," +
-                "usuario.us_last_hour," +
+                "usuario.us_last_hour" +
                 " FROM venta" +
                 " LEFT JOIN cliente ON cliente.cli_rut = venta.cliente_cli_rut" +
                 " LEFT JOIN despacho ON despacho.venta_ven_id = venta.ven_id" +

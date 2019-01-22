@@ -137,6 +137,26 @@ public class GlobalValuesVariables {
         return FILTER_LIST;
     }
     
+    public static int estadoVentaDeleted(){
+        return DELETED;
+    }
+    
+    public static int estadoVentaPending(){
+        return PENDING;
+    }
+    
+    public static int estadoVentaPaid(){
+        return PAID;
+    }
+    
+    public static int estadoVentaDelivered(){
+        return DELIVERED;
+    }
+    
+    public static int estadoVentaWarranty(){
+        return WARRANTY;
+    }
+    
     public static String getCompanyDescription(){
         return GV.getStr(COMPANY_DESCRIPTION);
     }
@@ -171,26 +191,6 @@ public class GlobalValuesVariables {
     
     public static void setInventarioLocal(String inventario){
         INVENTARIO_NAME = GV.getStr(inventario);
-    }
-    
-    public static int estadoFichaDeleted(){
-        return DELETED;
-    }
-    
-    public static int estadoFichaPending(){
-        return PENDING;
-    }
-    
-    public static int estadoFichaPaid(){
-        return PAID;
-    }
-    
-    public static int estadoFichaDelivered(){
-        return DELIVERED;
-    }
-    
-    public static int estadoFichaWarranty(){
-        return WARRANTY;
     }
     
     public static void setCompanyName(String nombre) {
@@ -569,10 +569,6 @@ public class GlobalValuesVariables {
         return GV.getStr(arg).trim();
     }
     
-    public static int estadoVentaPaid(){
-        return PAID;
-    }
-    
     public static int getCboVentasFilter(){
         return CBO_VENTA_FILTER;
     }
@@ -587,5 +583,33 @@ public class GlobalValuesVariables {
     
     public static String getIdItemIncreaseStock() {
         return ID_ITEM_INCREASE_STOCK;
+    }
+    
+    public static String obtenerEstadoVenta(int status) {
+        String value = "---";
+        if(status < 0){
+            return "Eliminada";
+        }
+        switch(status){
+            case DELETED:
+                value = "Eliminada";
+                break;
+            case PENDING:
+                value = "Pendiente";
+                break;
+            case PAID:
+                value = "Pagada";
+                break;
+            case WARRANTY:
+                value = "Garantía";
+                break;
+            case DELIVERED:
+                value = "Entregada";
+                break;
+            default:
+                value = "Indefinido";
+                break;
+        }
+        return value;
     }
 }

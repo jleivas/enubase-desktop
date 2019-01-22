@@ -37,6 +37,7 @@ import cl.softdirex.enubase.view.notifications.OptionPane;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -292,9 +293,11 @@ public class Dao{
                         return false;
                     }
                     ((SyncClass)temp).setEstado(((((SyncClass)temp).getEstado())*-1));
-                    String idDetail = null;
-                    for (Detalle det : ((Venta)temp).getDetalles()) {
-                        increaseStock(det.getCod(), det.getCantidad());
+                    List<Object> detalleVenta = listar("ID_VENTA-"+((Venta)temp).getCod(), new Detalle());
+                    if(detalleVenta.size() > 0){
+                        for (Object det : detalleVenta) {
+                            increaseStock(((Detalle)det).getIdItem(), ((Detalle)det).getCantidad());
+                        }
                     }
                 }else{
                     ((SyncClass)temp).setEstado(0);
@@ -592,10 +595,12 @@ public class Dao{
         setLastUpdates(hp);
         setLastUpdates(venta.getCliente());
         setLastUpdates(venta);
-        
+        String idVenta = getCurrentCod(new Venta());
+        venta.setCod(idVenta);
         int maxIdDetalle = GV.LOCAL_SYNC.getMaxId(new Detalle());
         for (Detalle det : venta.getDetalles()) {
             det.setCod(maxIdDetalle+ "-" + GlobalValuesVariables.getIdEquipo());
+            det.setIdVenta(idVenta);
             if(LocalInventario.addObject(det)){
                 String idItem = det.getIdItem();
                 if(!idItem.isEmpty()){

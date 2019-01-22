@@ -17,6 +17,8 @@ import cl.softdirex.enubase.view.os.general.panels.VProveedores;
 import cl.softdirex.enubase.view.os.general.panels.VRegistroBajas;
 import cl.softdirex.enubase.view.os.general.panels.VTipoPagos;
 import cl.softdirex.enubase.view.os.general.panels.VUsuarios;
+import cl.softdirex.enubase.view.os.general.panels.VVenta;
+import cl.softdirex.enubase.view.os.general.panels.VVentas;
 import static cl.softdirex.enubase.view.principal.ContentAdmin.principalAdmin;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -44,12 +46,7 @@ public class Boton {
     }
     
     public void ventas(int cboOption) throws SQLException, ClassNotFoundException {
-//        if(isWin()){
-//            openView(new VCrearFicha());
-//        }else{
-//            openView(new VCrearFichaMac());
-//        }
-//        
+        openView(new VVentas(cboOption));
     }
     
     public void items() throws SQLException, ClassNotFoundException {
@@ -115,12 +112,8 @@ public class Boton {
     }
     
     public void venta() throws SQLException, ClassNotFoundException {
-//        CursorUtils.cursorWAIT();
-//        if(isWin()){
-//            openView(new VFicha());
-//        }else{
-//            openView(new VFichaMac());
-//        }
+        CursorUtils.cursorWAIT();
+        openView(new VVenta());
     }
     
     public void inventarios() throws SQLException, ClassNotFoundException {
