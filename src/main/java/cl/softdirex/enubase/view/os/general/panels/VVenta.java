@@ -20,6 +20,7 @@ import cl.softdirex.enubase.utils.GlobalValuesVariables;
 import cl.softdirex.enubase.utils.Icons;
 import cl.softdirex.enubase.utils.StEntities;
 import cl.softdirex.enubase.view.notifications.OptionPane;
+import cl.softdirex.enubase.view.notifications.panels.content.OpanelViewOrOpenDelivery;
 import cl.softdirex.enubase.view.principal.ContentAdmin;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
@@ -150,6 +151,7 @@ public class VVenta extends javax.swing.JPanel {
         jLabel19 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
+        btnDespachar = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -689,6 +691,20 @@ public class VVenta extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        btnDespachar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Move_Stock_50px.png"))); // NOI18N
+        btnDespachar.setToolTipText("Datos de despacho");
+        btnDespachar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDespacharMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnDespacharMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnDespacharMouseExited(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -698,6 +714,8 @@ public class VVenta extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblMessageStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 824, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDespachar)
+                        .addGap(18, 18, 18)
                         .addComponent(btnImprimir)
                         .addGap(18, 18, 18)
                         .addComponent(btnHistorial)
@@ -743,7 +761,8 @@ public class VVenta extends javax.swing.JPanel {
                         .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnImprimir)
-                            .addComponent(btnHistorial))
+                            .addComponent(btnHistorial)
+                            .addComponent(btnDespachar))
                         .addContainerGap(15, Short.MAX_VALUE))))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -984,9 +1003,22 @@ public class VVenta extends javax.swing.JPanel {
         btnHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnHistorial.getIcon().toString()))));
     }//GEN-LAST:event_btnHistorialMouseExited
 
+    private void btnDespacharMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDespacharMouseClicked
+        infoDespacho();
+    }//GEN-LAST:event_btnDespacharMouseClicked
+
+    private void btnDespacharMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDespacharMouseEntered
+        btnDespachar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnDespachar.getIcon().toString()))));
+    }//GEN-LAST:event_btnDespacharMouseEntered
+
+    private void btnDespacharMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDespacharMouseExited
+        btnDespachar.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnDespachar.getIcon().toString()))));
+    }//GEN-LAST:event_btnDespacharMouseExited
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnAbonar;
+    private javax.swing.JLabel btnDespachar;
     private javax.swing.JLabel btnHistorial;
     private javax.swing.JLabel btnImprimir;
     private javax.swing.JComboBox<String> cboSexo;
@@ -1221,6 +1253,7 @@ public class VVenta extends javax.swing.JPanel {
         txtObs.setText(VENTA.getObservacion());
         /*------DESCUENTO*/
         if(VENTA.getDescuento() > 0){
+            lblDescuento.setVisible(true);
             txtDescuento.setVisible(true);
             txtDescuento.setText(GV.strToPrice(VENTA.getDescuento()));
         }
@@ -1314,5 +1347,16 @@ public class VVenta extends javax.swing.JPanel {
             despacho = "con despacho pendiente";
         }
         txtEstado.setText("Estado: "+GlobalValuesVariables.obtenerEstadoVenta(VENTA.getEstado())+" "+despacho);
+    }
+    
+    private void infoDespacho(){
+        if(VENTA.getEstado() == GlobalValuesVariables.estadoVentaDelivered() ||
+            VENTA.getEstado()==GlobalValuesVariables.estadoVentaPaid() ||
+            VENTA.getEstado() == GlobalValuesVariables.estadoVentaWarranty()){
+            OptionPane.showOptionPanel(new OpanelViewOrOpenDelivery(), OptionPane.titleDeliver());
+        }else{
+            OptionPane.showMsg("No se puede generar reporte", "Para generar un reporte de despacho debe seleccionar una\n"
+                + "venta pagada o en garantía", 2);
+        }
     }
 }
