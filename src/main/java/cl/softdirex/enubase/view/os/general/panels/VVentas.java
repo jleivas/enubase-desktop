@@ -47,8 +47,7 @@ public class VVentas extends javax.swing.JPanel {
     public static int BY_CLIENT=2;
     private static int BY_USER=3;
     private static int BY_USER_DATE=4;
-    private static int BY_CONVENY=5;
-    private static int COLUMNAS_TABLA = 7;
+    private static int COLUMNAS_TABLA = 8;
     TableRowSorter trs;
     DefaultTableModel modelo = new DefaultTableModel() {
            @Override
@@ -70,6 +69,7 @@ public class VVentas extends javax.swing.JPanel {
         modelo.addColumn("Nombre cliente");
         modelo.addColumn("Estado");
         modelo.addColumn("Total");
+        modelo.addColumn("Pagado");
         modelo.addColumn("Vendedor");
         tblListar.setModel(modelo);
         cboFilterOptions.setSelectedIndex(filter);
@@ -125,13 +125,13 @@ public class VVentas extends javax.swing.JPanel {
 
         tblListar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Codigo", "Fecha", "Rut cliente", "Nombre cliente", "Estado", "Total", "Vendedor"
+                "Codigo", "Fecha", "Rut cliente", "Nombre cliente", "Estado", "Total", "Pagado", "Vendedor"
             }
         ));
         jScrollPane1.setViewportView(tblListar);
@@ -764,7 +764,8 @@ public class VVentas extends javax.swing.JPanel {
                     fila[3] = nombre;
                     fila[4] = GlobalValuesVariables.obtenerEstadoVenta(temp.getEstado());
                     fila[5] = GV.strToPrice((temp.getValorTotal()-temp.getDescuento()));
-                    fila[6] = temp.getVendedor().getNombre();
+                    fila[6] = GV.strToPrice((temp.getValorTotal()-temp.getDescuento())-temp.getSaldo());
+                    fila[7] = temp.getVendedor().getNombre();
                     modelo.addRow(fila);
                 }
             }
