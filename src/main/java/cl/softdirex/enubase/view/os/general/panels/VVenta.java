@@ -139,10 +139,10 @@ public class VVenta extends javax.swing.JPanel {
         txtSaldo = new javax.swing.JTextField();
         txtDescuento = new javax.swing.JTextField();
         txtTotal = new javax.swing.JTextField();
+        btnAbonar = new javax.swing.JLabel();
         lblMessageStatus = new javax.swing.JLabel();
         btnImprimir = new javax.swing.JLabel();
         lblInventario = new javax.swing.JLabel();
-        btnAbonar = new javax.swing.JLabel();
         btnHistorial = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -492,7 +492,7 @@ public class VVenta extends javax.swing.JPanel {
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -531,8 +531,8 @@ public class VVenta extends javax.swing.JPanel {
         jPanel7.add(cboTipoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 60, 110, -1));
 
         jLabel27.setFont(new java.awt.Font("Segoe UI Light", 1, 11)); // NOI18N
-        jLabel27.setText("Saldo");
-        jPanel7.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, -1, -1));
+        jLabel27.setText("Saldo Pendiente");
+        jPanel7.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, -1, -1));
 
         lblDescuento.setFont(new java.awt.Font("Segoe UI Light", 1, 11)); // NOI18N
         lblDescuento.setText("Dscto");
@@ -578,6 +578,21 @@ public class VVenta extends javax.swing.JPanel {
         });
         jPanel7.add(txtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 30, 117, -1));
 
+        btnAbonar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Paper_Money_50px.png"))); // NOI18N
+        btnAbonar.setToolTipText("Abonar");
+        btnAbonar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAbonarMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAbonarMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAbonarMouseExited(evt);
+            }
+        });
+        jPanel7.add(btnAbonar, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 90, -1, -1));
+
         lblMessageStatus.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         lblMessageStatus.setText("jLabel1");
 
@@ -597,20 +612,6 @@ public class VVenta extends javax.swing.JPanel {
 
         lblInventario.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         lblInventario.setText("Inventario");
-
-        btnAbonar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Paper_Money_50px.png"))); // NOI18N
-        btnAbonar.setToolTipText("Abonar");
-        btnAbonar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnAbonarMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAbonarMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAbonarMouseExited(evt);
-            }
-        });
 
         btnHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Stack_of_Money_50px.png"))); // NOI18N
         btnHistorial.setToolTipText("Historial de pagos");
@@ -698,11 +699,9 @@ public class VVenta extends javax.swing.JPanel {
                         .addComponent(lblMessageStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 824, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnImprimir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAbonar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(btnHistorial)
-                        .addGap(75, 75, 75))
+                        .addGap(94, 94, 94))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -734,7 +733,7 @@ public class VVenta extends javax.swing.JPanel {
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -744,9 +743,8 @@ public class VVenta extends javax.swing.JPanel {
                         .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnImprimir)
-                            .addComponent(btnAbonar)
                             .addComponent(btnHistorial))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(15, Short.MAX_VALUE))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1074,6 +1072,7 @@ public class VVenta extends javax.swing.JPanel {
     private void updatePrice(){
         int total = VENTA.getValorTotal();
         txtTotal.setText(GV.strToPrice(total));
+        txtSaldo.setText(GV.strToPrice(VENTA.getSaldo()));
         commitSpinner();
         int abono = (int)txtAbono.getValue();
         int descuento = VENTA.getDescuento();
@@ -1082,7 +1081,7 @@ public class VVenta extends javax.swing.JPanel {
             if(descuento > total){
                 descuento = total;
             }
-            int saldo = total-descuento;
+            int saldo = VENTA.getSaldo();
             if(abono <= saldo){
                 saldo = saldo-abono;
                 txtSaldo.setText(GV.strToPrice(GV.roundPrice(saldo)));
@@ -1216,7 +1215,7 @@ public class VVenta extends javax.swing.JPanel {
         txtFecha.setText("Fecha: "+GV.dateToString(VENTA.getFechaEntrega(), "dd.mm.yyyy"));
         txtHora.setText("Hora: "+VENTA.getHoraEntrega());
         txtLugar.setText("Lugar: "+VENTA.getLugarEntrega());
-        txtEstado.setText("Estado: "+GlobalValuesVariables.obtenerEstadoVenta(VENTA.getEstado()));
+        updateEstadoVenta();
         /*------OBSERVACIONES*/
         txtObs.setText(VENTA.getObservacion());
     }
@@ -1242,12 +1241,14 @@ public class VVenta extends javax.swing.JPanel {
         if(OptionPane.getConfirmation("Confirmar datos", "¿Estas seguro que deseas registrar un nuevo abono?", 1)){
             try {
                 CursorUtils.cursorWAIT(this);
-                int saldo = GV.strToNumber(txtSaldo.getText());
+                int saldo = VENTA.getSaldo();
                 try {
                     txtAbono.commitEdit();
                 } catch (ParseException ex) {
                     Logger.getLogger(VVenta.class.getName()).log(Level.SEVERE, null, ex);
                     GV.mensajeExcepcion("El saldo ingresado es incorrecto:\n"+ex.getMessage(), 2);
+                    txtAbono.setValue(0);
+                    updatePrice();
                     CursorUtils.cursorDF(this);
                     return;
                 }
@@ -1262,6 +1263,8 @@ public class VVenta extends javax.swing.JPanel {
                     if(tp == null){
                         OptionPane.showMsg("Operación cancelada", "Para registrar un abono debe ingresar un tipo de pago correcto.",2);
                         msgRejected("No ha seleccionado un medio de pago.");
+                        txtAbono.setValue(0);
+                        updatePrice();
                         CursorUtils.cursorDF(this);
                         return;
                     }
@@ -1270,10 +1273,12 @@ public class VVenta extends javax.swing.JPanel {
                     VENTA.setSaldo(newSaldo);
                     if(newSaldo == 0 && (VENTA.getEstado() == GlobalValuesVariables.estadoVentaPending())){
                         VENTA.setEstado(GlobalValuesVariables.estadoVentaPaid());
+                        updateEstadoVenta();
                     }
                     load.update(VENTA);
                     load.add(hp);
                     OptionPane.showMsg("Abono registrado", "Se ha registrado un nuevo abono",1);
+                    txtAbono.setValue(0);
                     loadData();
                     updatePrice();
                     CursorUtils.cursorDF(this);
@@ -1291,6 +1296,17 @@ public class VVenta extends javax.swing.JPanel {
                         + "Póngase en contacto con ssu proveedor de software para dar solucion a este problema\n"
                         + "Detalle: Error en VFicha()>btnAbonar()", 3);
             }
+        }else{
+            txtAbono.setValue(0);
+            updatePrice();
         }
+    }
+    
+    private void updateEstadoVenta(){
+        String despacho="";
+        if(VENTA.getDespacho().getRut().isEmpty() && VENTA.getEstado() == GlobalValuesVariables.estadoVentaPaid()){
+            despacho = "con despacho pendiente";
+        }
+        txtEstado.setText("Estado: "+GlobalValuesVariables.obtenerEstadoVenta(VENTA.getEstado())+" "+despacho);
     }
 }
