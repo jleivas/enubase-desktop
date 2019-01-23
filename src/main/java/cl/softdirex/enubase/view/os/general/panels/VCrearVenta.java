@@ -8,6 +8,7 @@ package cl.softdirex.enubase.view.os.general.panels;
 import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Cliente;
 import cl.softdirex.enubase.entities.Descuento;
+import cl.softdirex.enubase.entities.Despacho;
 import cl.softdirex.enubase.entities.Detalle;
 import cl.softdirex.enubase.entities.HistorialPago;
 import cl.softdirex.enubase.entities.Inventario;
@@ -814,7 +815,7 @@ public class VCrearVenta extends javax.swing.JPanel {
             }
         });
 
-        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/btn_Ok_50px.png"))); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/accept_50px.png"))); // NOI18N
         btnSave.setToolTipText("Enviar datos");
         btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -861,44 +862,41 @@ public class VCrearVenta extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblMessageStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 824, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCotizar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave)
-                        .addGap(29, 29, 29))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel19)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(50, 50, 50)
+                                    .addComponent(lblInventario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(14, 14, 14)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel19)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGap(50, 50, 50)
-                                            .addComponent(lblInventario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(14, 14, 14)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnAdd)
-                                            .addComponent(btnDelete))
-                                        .addComponent(btnCancel))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 8, Short.MAX_VALUE)))
-                .addGap(84, 84, 84))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnAdd)
+                                    .addComponent(btnDelete))
+                                .addComponent(btnCancel))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(lblMessageStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 824, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCotizar)
+                .addGap(10, 10, 10)
+                .addComponent(btnSave)
+                .addGap(77, 77, 77))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -927,23 +925,16 @@ public class VCrearVenta extends javax.swing.JPanel {
                         .addGap(50, 50, 50)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblMessageStatus)
-                        .addGap(34, 34, 34))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(162, 162, 162)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnCotizar)
-                            .addComponent(btnSave))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(lblMessageStatus)
+                    .addComponent(btnCotizar)
+                    .addComponent(btnSave))
+                .addGap(41, 41, 41))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1594,9 +1585,13 @@ public class VCrearVenta extends javax.swing.JPanel {
     
     private void guardarVenta(){
         try {
-            if(!cmpTipoPago())return;
+            if(!cmpTipoPago()){
+                OptionPane.showMsg("Falta validar la siguiente información", lblMessageStatus.getText(), 2);
+                return;
+            }
             if(modelo2.getRowCount()==0){
                 msgRejected("No tienes productos agregados a la venta");
+                OptionPane.showMsg("Falta validar la siguiente información", lblMessageStatus.getText(), 2);
                 return;
             }
             
@@ -1609,11 +1604,12 @@ public class VCrearVenta extends javax.swing.JPanel {
                 items.add(new Detalle(null, null, modelo2.getValueAt(i, 0).toString(), cantidad, precioUnitario, 1, null, 0));
             }
             int saldo = GV.strToNumber(txtSaldo.getText());
-            int estado = (saldo==0)?2:1;//1: pendiente, 2 pagada, 3 despachada
+            int estadoVenta = (saldo==0)?2:1;//1: pendiente, 2 pagada, 3 despachada
             int descuento = 0;
             Cliente cli = null;
             if(!clienteNoIngresado()){
                 if(!cmpCliente()){
+                    OptionPane.showMsg("Falta validar la siguiente información", lblMessageStatus.getText(), 2);
                     return;
                 }else{
                     cli = new Cliente(txtRutCliente.getText(), txtNombreCliente.getText(), txtTelefonoCliente1.getText(), txtTelefonoCliente2.getText(),
@@ -1624,10 +1620,27 @@ public class VCrearVenta extends javax.swing.JPanel {
             Date fechaEntrega = new Date();
             String lugarEntrega = StEntities.getNombreOficina();
             String horaEntrega = GV.DateToStrHour(new Date());
-            if(!datosEntregaNoIngresados()){
+            Despacho despacho = null;
+            if(datosEntregaNoIngresados()){
+                if(saldo == 0){
+                    String rutCliente = (cli!=null)?cli.getCod():"No informado";
+                    String nombreCliente = (cli!=null)?cli.getNombre():"No informado";
+                    despacho = new Despacho(null, rutCliente, nombreCliente, new Date(), null, 1, null, 0);
+                    estadoVenta = 3;
+                }else{
+                    OptionPane.showMsg("Falta información de despacho", "Debes programar una fecha de despacho para esta venta\n"
+                            + "ya que no se encuentra pagada en su totalidad", 2);
+                    return;
+                } 
+            }else{
                 if(!cmpDatosEntrega()){
+                    OptionPane.showMsg("Falta validar la siguiente información", lblMessageStatus.getText(), 2);
                     return;
                 }else{
+                    if(cli == null){
+                        OptionPane.showMsg("No a registrado un cliente", "Ingrese los datos de un cliente para programar un despacho", 2);
+                        return;
+                    }
                     fechaEntrega = txtFecha.getDate();
                     lugarEntrega = GV.getFilterString(txtEntrega.getText());
                     horaEntrega = asigHora();
@@ -1639,8 +1652,9 @@ public class VCrearVenta extends javax.swing.JPanel {
                     return;
                 }
             }
+            
             Venta venta = new Venta(null, StEntities.USER, cli, new Date(), fechaEntrega, lugarEntrega,
-                    horaEntrega, txtObs.getText(), total, descuento, saldo, null, estado, null, 0);
+                    horaEntrega, txtObs.getText(), total, descuento, saldo, despacho, estadoVenta, null, 0);
             venta.setDetalles(items);
             HistorialPago hp = new HistorialPago(null, new Date(), (int)txtAbono.getValue(), cboTipoPago.getSelectedIndex(), null, 1, null, 0);
             if(load.createVenta(venta,hp)){
@@ -1845,6 +1859,7 @@ public class VCrearVenta extends javax.swing.JPanel {
     private boolean cmpFechaEntrega(){
         Date date = txtFecha.getDate();
         if(date == null){
+            msgRejected("Debe ingresar una fecha de entrega actual o futura");
             return false;
         }
         if(!GV.fechaActualOFutura(date)){
@@ -1918,6 +1933,7 @@ public class VCrearVenta extends javax.swing.JPanel {
         String tel2 = GV.getStr(txtTelefonoCliente2.getText());
         String mail = GV.mailValidate(txtMailCliente.getText());
         if(tel1.isEmpty() && tel2.isEmpty() && mail.isEmpty()){
+            msgRejected("Falta agregar información de contacto del cliente");
             return false;
         }else{
             if(!mail.isEmpty() && GV.mailValidate(mail).isEmpty()){
@@ -1996,7 +2012,13 @@ public class VCrearVenta extends javax.swing.JPanel {
             } 
         }else{
             if(GV.strToNumber(txtTotal.getText()) != 0){
-                msgWarning("No se ha registrado un abono");
+                if(cboTipoPago.getSelectedIndex()==0){
+                    msgWarning("No se ha registrado un abono");
+                    return true;
+                }else{
+                    msgRejected("No se ha registrado un abono");
+                    return true;
+                }  
             }
         }
         msgRejectedClear();

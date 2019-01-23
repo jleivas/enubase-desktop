@@ -597,6 +597,14 @@ public class Dao{
         setLastUpdates(venta);
         String idVenta = getCurrentCod(new Venta());
         venta.setCod(idVenta);
+        if(venta.getDespacho()!=null){
+            if(venta.getDespacho().getFecha() != null){
+                setLastUpdates(venta.getDespacho());
+                venta.getDespacho().setCod(getCurrentCod(new Despacho()));
+                venta.getDespacho().setIdVenta(idVenta);
+                GV.LOCAL_SYNC.add(venta.getCliente());
+            } 
+        }
         int maxIdDetalle = GV.LOCAL_SYNC.getMaxId(new Detalle());
         for (Detalle det : venta.getDetalles()) {
             det.setCod(maxIdDetalle+ "-" + GlobalValuesVariables.getIdEquipo());
