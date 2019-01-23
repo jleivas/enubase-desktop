@@ -10,6 +10,7 @@ import cl.softdirex.enubase.dao.Dao;
 import cl.softdirex.enubase.entities.Cliente;
 import cl.softdirex.enubase.entities.User;
 import cl.softdirex.enubase.entities.Venta;
+import cl.softdirex.enubase.entities.abstractclasses.SyncClass;
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.Boton;
 import cl.softdirex.enubase.utils.CursorUtils;
@@ -194,7 +195,7 @@ public class VVentas extends javax.swing.JPanel {
         });
 
         cboFilterOptions.setFont(new java.awt.Font("Segoe UI Light", 1, 11)); // NOI18N
-        cboFilterOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Por Día", "Por Fechas", "Por Cliente", "Por Vendedor", "Por Vendedor y Fecha", "Por Convenios" }));
+        cboFilterOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Por Día", "Por Fechas", "Por Cliente", "Por Vendedor", "Por Vendedor y Fecha" }));
         cboFilterOptions.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboFilterOptionsItemStateChanged(evt);
@@ -753,25 +754,37 @@ public class VVentas extends javax.swing.JPanel {
         try{
             modelo.setNumRows(0);
             for (Object object : BDUtils.getVentas()) {
-                Venta temp = (Venta)object;
-                String rut = (!temp.getCliente().getCod().isEmpty())?temp.getCliente().getCod():"No registrado";
-                String nombre = (!temp.getCliente().getNombre().isEmpty())?temp.getCliente().getNombre():"No registrado";
-                if(status == -1 && temp.getEstado() > GlobalValuesVariables.estadoVentaDeleted()){
-                    Object[] fila = new Object[COLUMNAS_TABLA];
-                    fila[0] = temp.getCod();
-                    fila[1] = GV.dateToString(temp.getFecha(), "dd/mm/yyyy");
-                    fila[2] = rut;
-                    fila[3] = nombre;
-                    fila[4] = GlobalValuesVariables.obtenerEstadoVenta(temp.getEstado());
-                    fila[5] = GV.strToPrice((temp.getValorTotal()-temp.getDescuento()));
-                    fila[6] = GV.strToPrice((temp.getValorTotal()-temp.getDescuento())-temp.getSaldo());
-                    fila[7] = temp.getVendedor().getNombre();
-                    modelo.addRow(fila);
+                switch(status){//todas(-1),pendientes(1),pagadas(2),entregadas(3),garantias(4),eliminadas(0)
+                    case -1:
+                        if(((SyncClass)object).getEstado() > GlobalValuesVariables.estadoVentaDeleted()){
+                            addRow(object);
+                        }
+                        break;
+                    case 1:
+                        if(((SyncClass)object).getEstado() == GlobalValuesVariables.estadoVentaPending()){
+                            addRow(object);
+                        }
+                        break;
+                    case 2:
+                        if(((SyncClass)object).getEstado() == GlobalValuesVariables.estadoVentaPaid()){
+                            addRow(object);
+                        }
+                        break;
+                    case 3:
+                        if(((SyncClass)object).getEstado() == GlobalValuesVariables.estadoVentaDelivered()){
+                            addRow(object);
+                        }
+                        break;
+                    case 4:
+                        if(((SyncClass)object).getEstado() == GlobalValuesVariables.estadoVentaWarranty()){
+                            addRow(object);
+                        }
+                        break;
                 }
             }
             tblListar.updateUI();
             if(tblListar.getRowCount() == 0 && openDialog){
-                GV.showMsgOnEmptyTable(cboMostrar, txtBuscar, "Ventas");
+                OptionPane.showMsg("Tabla vacía", "No existen registros para mostrar", 1);
             }
         }catch(Exception e){
             OptionPane.showMsg("Ocurrió un error inesperado", "Ocurrió un error inesperado al cargar valores en la tabla, ["+e.getMessage()+"]",3);
@@ -816,5 +829,21 @@ public class VVentas extends javax.swing.JPanel {
 //            }
 //        }
 //    }
+    }
+    
+    private void addRow(Object object){
+        Venta temp = (Venta)object;
+        String rut = (!temp.getCliente().getCod().isEmpty())?temp.getCliente().getCod():"No registrado";
+        String nombre = (!temp.getCliente().getNombre().isEmpty())?temp.getCliente().getNombre():"No registrado";
+        Object[] fila = new Object[COLUMNAS_TABLA];
+        fila[0] = temp.getCod();
+        fila[1] = GV.dateToString(temp.getFecha(), "dd/mm/yyyy");
+        fila[2] = rut;
+        fila[3] = nombre;
+        fila[4] = GlobalValuesVariables.obtenerEstadoVenta(temp.getEstado());
+        fila[5] = GV.strToPrice((temp.getValorTotal()-temp.getDescuento()));
+        fila[6] = GV.strToPrice((temp.getValorTotal()-temp.getDescuento())-temp.getSaldo());
+        fila[7] = temp.getVendedor().getNombre();
+        modelo.addRow(fila);
     }
 }
