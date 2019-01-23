@@ -45,7 +45,7 @@ public class VVenta extends javax.swing.JPanel {
     private Dao load = new Dao();
     private static List<Object> detalleVenta;
     private static Inventario stInventario = null;
-    private static Venta VENTA = StEntities.getOpenVenta();
+    private static Venta VENTA;
     private static List<Object> listItems = new ArrayList<>();
     private static List<Object> listTipoPagos = new ArrayList<>();
     
@@ -61,9 +61,6 @@ public class VVenta extends javax.swing.JPanel {
      * Creates new form VNuevaVenta
      */
     public VVenta() {
-        if(!ContentAdmin.lblTitle.getText().toLowerCase().contains("venta")){
-            ContentAdmin.lblTitle.setText("Folio de venta: "+VENTA.getCod()+" efectuada el día "+GV.dateToString(VENTA.getFecha(), "dd.MM.YYYY"));
-        }
         initComponents();
         modelo.addColumn("Codigo");
         modelo.addColumn("Descripción");
@@ -73,6 +70,9 @@ public class VVenta extends javax.swing.JPanel {
         tblListar.setModel(modelo);
         loadStaticObjects();
         cargarCbos();
+        if(!ContentAdmin.lblTitle.getText().toLowerCase().contains("venta")){
+            ContentAdmin.lblTitle.setText("Folio de venta: "+VENTA.getCod()+" efectuada el día "+GV.dateToString(VENTA.getFecha(), "dd.MM.YYYY"));
+        }
         CursorUtils.cursorDF();
         CursorUtils.cursorDF(this);
         load();
@@ -1179,6 +1179,7 @@ public class VVenta extends javax.swing.JPanel {
     }
     
     private void loadStaticObjects() {
+        VENTA = StEntities.getOpenVenta();
         detalleVenta = load.listar("ID_VENTA-"+VENTA.getCod(), new Detalle());
         stInventario = new Inventario();
         try {
@@ -1218,6 +1219,11 @@ public class VVenta extends javax.swing.JPanel {
         updateEstadoVenta();
         /*------OBSERVACIONES*/
         txtObs.setText(VENTA.getObservacion());
+        /*------DESCUENTO*/
+        if(VENTA.getDescuento() > 0){
+            txtDescuento.setVisible(true);
+            txtDescuento.setText(GV.strToPrice(VENTA.getDescuento()));
+        }
     }
     
     private String mostrarAbonos(String codVenta){
