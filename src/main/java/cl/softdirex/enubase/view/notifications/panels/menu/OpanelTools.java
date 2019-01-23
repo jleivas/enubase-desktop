@@ -140,24 +140,26 @@ public class OpanelTools extends javax.swing.JPanel {
                     OptionPane.showMsg("Debe seleccionar una opción", "No ha seleccionado una opción válida en el combo-box", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case 1://Exportar correos
-                    if(GV.tipoUserAdmin()){
-                        OptionPane.closeOptionPanel();
-                        exportarCorreos();
-                    }else{
-                        GV.mensajeAccessDenied();
-                    }
+                    GV.funcionNoDisponible();
+//                    if(GV.tipoUserAdmin()){
+//                        OptionPane.closeOptionPanel();
+//                        exportarCorreos();
+//                    }else{
+//                        GV.mensajeAccessDenied();
+//                    }
                     break;
                 case 2://Sincronizacion completa
-                    if(GV.tipoUserAdmin()){
-                        OptionPane.closeOptionPanel();
-                        sincronizacionCompleta();
-                    }else{
-                        GV.mensajeAccessDenied();
-                    }
+                    GV.funcionNoDisponible();
+//                    if(GV.tipoUserAdmin()){
+//                        OptionPane.closeOptionPanel();
+//                        sincronizacionCompleta();
+//                    }else{
+//                        GV.mensajeAccessDenied();
+//                    }
                     break;
                 case 3:
-                    WebUtils.goToPayPage();
                     OptionPane.closeOptionPanel();
+                    WebUtils.goToPayPage();
                     break;
                 default:
                     OptionPane.closeOptionPanel();

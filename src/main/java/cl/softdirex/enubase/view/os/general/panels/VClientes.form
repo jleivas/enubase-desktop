@@ -812,7 +812,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/icons8_List_50px.png"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Fichas relacionadas"/>
+            <Property name="toolTipText" type="java.lang.String" value="Ventas registradas"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMostrarFichas1MouseClicked"/>

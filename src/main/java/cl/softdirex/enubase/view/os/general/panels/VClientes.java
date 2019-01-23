@@ -550,7 +550,7 @@ public class VClientes extends javax.swing.JPanel {
         });
 
         btnMostrarFichas1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_List_50px.png"))); // NOI18N
-        btnMostrarFichas1.setToolTipText("Fichas relacionadas");
+        btnMostrarFichas1.setToolTipText("Ventas registradas");
         btnMostrarFichas1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnMostrarFichas1MouseClicked(evt);
@@ -971,7 +971,7 @@ public class VClientes extends javax.swing.JPanel {
 //            Logger.getLogger(VClientes.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        cDF();
-        OptionPane.showMsg("No se puede ejecutar la operación", "Esta función no se encuentra disponible", 2);
+        GV.funcionNoDisponible();
     }//GEN-LAST:event_btnMostrarFichas1MouseClicked
 
     private void btnMostrarFichas1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMostrarFichas1MouseEntered
