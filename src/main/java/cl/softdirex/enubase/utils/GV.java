@@ -69,7 +69,7 @@ public class GV {
     private static Dao load = new Dao();
     /*********************BEGIN FUNCTIONS****************************/
     public static void funcionNoDisponible(){
-        OptionPane.showMsg("Esta función no se encuentra disponible temporalmente", "Para activarla consulte los requisitos y características con su proveedor", 2);
+        OptionPane.showMsg("Función disponible temporalmente", "Para activarla consulte los requisitos y características con su proveedor", 2);
     }
     
     

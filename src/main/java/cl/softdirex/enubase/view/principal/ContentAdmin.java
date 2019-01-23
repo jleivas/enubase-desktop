@@ -296,7 +296,7 @@ public class ContentAdmin extends javax.swing.JFrame {
         jpUpBar.add(lblLicence, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 340, 20));
 
         btnOpenFicha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Opened_Folder_25px.png"))); // NOI18N
-        btnOpenFicha.setToolTipText("Cargar receta oftalmológica");
+        btnOpenFicha.setToolTipText("Cargar venta");
         btnOpenFicha.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnOpenFichaMouseClicked(evt);
@@ -678,28 +678,30 @@ public class ContentAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSyncronizeMouseEntered
 
     private void btnSyncronizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSyncronizeMouseClicked
-        if(!syncEnabled()){
-            if(GV.licenciaExpirada()){
-                GV.mensajeLicenceExpired();
-            }else{
-                if(GV.sincronizacionIsStopped()){
-                    SubProcess.SyncAll();
-                    CursorUtils.cursorDF();
-                }else{
-                    OptionPane.showMsg("Imposible efectuar operación", "Ya se encuentra una sincronización en curso", 2);
-                }
-            } 
-        }
+        GV.funcionNoDisponible();
+//        if(!syncEnabled()){
+//            if(GV.licenciaExpirada()){
+//                GV.mensajeLicenceExpired();
+//            }else{
+//                if(GV.sincronizacionIsStopped()){
+//                    SubProcess.SyncAll();
+//                    CursorUtils.cursorDF();
+//                }else{
+//                    OptionPane.showMsg("Imposible efectuar operación", "Ya se encuentra una sincronización en curso", 2);
+//                }
+//            } 
+//        }
     }//GEN-LAST:event_btnSyncronizeMouseClicked
 
     private void btnOpenFichaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOpenFichaMouseClicked
-        if(!syncEnabled()){
-            if(!GV.licenciaExpirada()){
-                OptionPane.showOptionPanel(new OpanelSelectVentaToOpen(), OptionPane.titleTool());
-            }else{
-                GV.mensajeLicenceExpired();
-            }
-        }
+        GV.funcionNoDisponible();
+//        if(!syncEnabled()){
+//            if(!GV.licenciaExpirada()){
+//                OptionPane.showOptionPanel(new OpanelSelectVentaToOpen(), OptionPane.titleTool());
+//            }else{
+//                GV.mensajeLicenceExpired();
+//            }
+//        }
     }//GEN-LAST:event_btnOpenFichaMouseClicked
 
     private void btnOpenFichaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOpenFichaMouseEntered
