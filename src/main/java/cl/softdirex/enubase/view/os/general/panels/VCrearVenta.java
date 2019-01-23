@@ -1605,7 +1605,7 @@ public class VCrearVenta extends javax.swing.JPanel {
             }
             int saldo = GV.strToNumber(txtSaldo.getText());
             int estadoVenta = (saldo==0)?2:1;//1: pendiente, 2 pagada, 3 despachada
-            int descuento = 0;
+            int descuentoVenta = GV.strToNumber(txtDescuento.getText());
             Cliente cli = null;
             if(!clienteNoIngresado()){
                 if(!cmpCliente()){
@@ -1654,7 +1654,7 @@ public class VCrearVenta extends javax.swing.JPanel {
             }
             
             Venta venta = new Venta(null, StEntities.USER, cli, new Date(), fechaEntrega, lugarEntrega,
-                    horaEntrega, txtObs.getText(), total, descuento, saldo, despacho, estadoVenta, null, 0);
+                    horaEntrega, txtObs.getText(), total, descuentoVenta, saldo, despacho, estadoVenta, null, 0);
             venta.setDetalles(items);
             HistorialPago hp = new HistorialPago(null, new Date(), (int)txtAbono.getValue(), cboTipoPago.getSelectedIndex(), null, 1, null, 0);
             if(load.createVenta(venta,hp)){

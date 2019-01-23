@@ -627,6 +627,7 @@ public class Dao{
         if(hp != null){
             if(hp.getAbono() > 0){
                 hp.setCod(getCurrentCod(hp));
+                hp.setIdVenta(venta.getCod());
                 LocalInventario.addObject(hp);
             }
         }
