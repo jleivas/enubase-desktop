@@ -7,7 +7,6 @@ package cl.softdirex.enubase.view.principal;
 
 import cl.softdirex.enubase.utils.BDUtils;
 import cl.softdirex.enubase.utils.Boton;
-import cl.softdirex.enubase.utils.CursorUtils;
 import cl.softdirex.enubase.utils.GV;
 import cl.softdirex.enubase.utils.StEntities;
 import cl.softdirex.enubase.utils.GlobalValuesVariables;
@@ -15,7 +14,6 @@ import cl.softdirex.enubase.utils.Icons;
 import cl.softdirex.enubase.utils.SubProcess;
 import cl.softdirex.enubase.utils.WebUtils;
 import cl.softdirex.enubase.view.notifications.OptionPane;
-import cl.softdirex.enubase.view.notifications.panels.input.OpanelSelectVentaToOpen;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelUserData;
 import cl.softdirex.enubase.view.notifications.panels.menu.OpanelConfig;
 import cl.softdirex.enubase.view.notifications.panels.menu.OpanelInventario;
@@ -37,7 +35,8 @@ import javax.swing.RootPaneContainer;
  * @author Lenovo G470
  */
 public class ContentAdmin extends javax.swing.JFrame {
-
+    int xMouse;
+    int yMouse;
     Boton boton = new Boton();
     String projectName = GlobalValuesVariables.getProjectName();
     String version = GlobalValuesVariables.getVersion();
@@ -104,7 +103,7 @@ public class ContentAdmin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
+        panelExterno = new javax.swing.JPanel();
         principalAdmin = new javax.swing.JPanel();
         jpUpBar = new javax.swing.JPanel();
         btnSizeWindow = new javax.swing.JLabel();
@@ -137,7 +136,8 @@ public class ContentAdmin extends javax.swing.JFrame {
             }
         });
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        panelExterno.setBackground(new java.awt.Color(255, 255, 255));
+        panelExterno.setAutoscrolls(true);
 
         principalAdmin.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -153,9 +153,22 @@ public class ContentAdmin extends javax.swing.JFrame {
         );
 
         jpUpBar.setBackground(new java.awt.Color(255, 255, 255));
+        jpUpBar.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jpUpBarMouseDragged(evt);
+            }
+        });
+        jpUpBar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jpUpBarMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jpUpBarMousePressed(evt);
+            }
+        });
         jpUpBar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Maximize_Window_25px.png"))); // NOI18N
+        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Restore_Window_25px.png"))); // NOI18N
         btnSizeWindow.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSizeWindowMouseClicked(evt);
@@ -394,7 +407,7 @@ public class ContentAdmin extends javax.swing.JFrame {
                     .addComponent(btnListarVentas)
                     .addComponent(btnClientes)
                     .addComponent(btnProveedores))
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
         jpLeftBarLayout.setVerticalGroup(
             jpLeftBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -410,32 +423,33 @@ public class ContentAdmin extends javax.swing.JFrame {
                 .addContainerGap(399, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelExternoLayout = new javax.swing.GroupLayout(panelExterno);
+        panelExterno.setLayout(panelExternoLayout);
+        panelExternoLayout.setHorizontalGroup(
+            panelExternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelExternoLayout.createSequentialGroup()
                 .addComponent(jpLeftBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelExternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jpUpBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jpSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(principalAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jpUpBar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jpSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(principalAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jpLeftBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        panelExternoLayout.setVerticalGroup(
+            panelExternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelExternoLayout.createSequentialGroup()
+                .addGroup(panelExternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(panelExternoLayout.createSequentialGroup()
+                        .addComponent(jpUpBar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jpSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(principalAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jpLeftBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
+        getContentPane().add(panelExterno, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -450,11 +464,22 @@ public class ContentAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnSizeWindowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSizeWindowMouseClicked
-//        if(this.getState() == JFrame.NORMAL)
-//            this.setState(JFrame.MAXIMIZED_BOTH);
-//        else
-//            this.setState(JFrame.NORMAL);
-//            this.setState(JFrame.MAXIMIZED_BOTH);
+        String img = btnSizeWindow.getIcon().toString();
+        int index = img.indexOf("/icons");
+        img = img.substring(index);
+        if(img.contains("Maximize")){
+            img = img.replaceAll("Maximize", "Restore");
+        }else{
+            img = img.replaceAll("Restore", "Maximize");
+        }
+
+        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource(img)));
+        if(this.getExtendedState()== MAXIMIZED_BOTH){
+            normalizarPantalla();
+        }  
+        else{
+            centrarPantalla();
+        }
     }//GEN-LAST:event_btnSizeWindowMouseClicked
 
     private void btnMessageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMessageMouseClicked
@@ -535,19 +560,11 @@ public class ContentAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMessageMouseExited
 
     private void btnSizeWindowMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSizeWindowMouseEntered
-        String img = btnSizeWindow.getIcon().toString();
-        int index = img.indexOf("/icons");
-        img = img.substring(index);
-        img = img.replaceAll(".png", "_4.png");
-        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource(img)));
+        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getEnteredIcon(btnSizeWindow.getIcon().toString()))));
     }//GEN-LAST:event_btnSizeWindowMouseEntered
 
     private void btnSizeWindowMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSizeWindowMouseExited
-        String img = btnSizeWindow.getIcon().toString();
-        int index = img.indexOf("/icons");
-        img = img.substring(index);
-        img = img.replaceAll("_4.png", ".png");
-        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource(img)));
+        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnSizeWindow.getIcon().toString()))));
     }//GEN-LAST:event_btnSizeWindowMouseExited
 
     private void btnNuevaVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNuevaVentaMouseClicked
@@ -712,6 +729,21 @@ public class ContentAdmin extends javax.swing.JFrame {
         btnOpenFicha.setIcon(new javax.swing.ImageIcon(getClass().getResource(Icons.getExitedIcon(btnOpenFicha.getIcon().toString()))));
     }//GEN-LAST:event_btnOpenFichaMouseExited
 
+    private void jpUpBarMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpUpBarMouseDragged
+        GV.moveWindow(this,evt,xMouse,yMouse);
+    }//GEN-LAST:event_jpUpBarMouseDragged
+
+    private void jpUpBarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpUpBarMousePressed
+        xMouse = evt.getX();
+        yMouse = evt.getY();
+    }//GEN-LAST:event_jpUpBarMousePressed
+
+    private void jpUpBarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpUpBarMouseClicked
+        if(evt.getClickCount() == 2){
+            centrarPantalla();
+        }
+    }//GEN-LAST:event_jpUpBarMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -773,7 +805,6 @@ public class ContentAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel btnSyncronize;
     private javax.swing.JLabel btnTools;
     private javax.swing.JLabel btnUser;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jpLeftBar;
     private javax.swing.JPanel jpSuperior;
     private javax.swing.JPanel jpUpBar;
@@ -781,13 +812,18 @@ public class ContentAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel lblName;
     public static javax.swing.JLabel lblTitle;
     public static javax.swing.JLabel lblUserName;
+    private javax.swing.JPanel panelExterno;
     public static javax.swing.JPanel principalAdmin;
     // End of variables declaration//GEN-END:variables
 
     private void centrarPantalla() {
-        this.setLocationRelativeTo(null);
+        GV.centrarPantalla(this);
     }
-
+    
+    private void normalizarPantalla() {
+        GV.normalizarPantalla(this);
+    }
+    
     private void cerrar() throws SQLException, ClassNotFoundException, InterruptedException{//cerrar con opciones en nueva implementacion
         GV.cerrarSistema();
     }

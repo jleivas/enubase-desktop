@@ -31,9 +31,6 @@ import javax.swing.JPanel;
  * @author home
  */
 public class Boton {
-    private int ancho = 1300;
-    private int anchoMac = 1500;
-    private int alto = 650;
     private int locat = 5;
     
     public void index() throws SQLException, ClassNotFoundException {

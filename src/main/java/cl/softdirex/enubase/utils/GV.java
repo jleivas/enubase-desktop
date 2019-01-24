@@ -28,7 +28,10 @@ import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetLicencia;
 import cl.softdirex.enubase.view.notifications.panels.input.OpanelSetToken;
 import cl.softdirex.enubase.view.principal.ContentAdmin;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Frame;
+import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -52,6 +55,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -1245,5 +1249,21 @@ public class GV {
         item = LocalInventario.getItem(idItem);
         GlobalValuesVariables.setInventaryChooser(oldInventario);
         return item;
+    }
+
+    public static void moveWindow(JFrame frame, MouseEvent evt,int xMouse,int yMouse) {
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        frame.setLocation(x - xMouse, y - yMouse);
+    }
+
+    public static void centrarPantalla(JFrame frame) {
+        frame.setExtendedState(MAXIMIZED_BOTH);
+        frame.setLocationRelativeTo(null);
+    }
+    
+    public static void normalizarPantalla(JFrame frame) {
+        frame.setExtendedState(Frame.NORMAL);
+//        frame.setLocationRelativeTo(null);
     }
 }
