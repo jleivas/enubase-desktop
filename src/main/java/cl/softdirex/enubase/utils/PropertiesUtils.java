@@ -23,13 +23,8 @@ public class PropertiesUtils {
     private static final String PROPERTIES_PATH = DirectoryUtils.getPropertiesPath()+"envelope.properties";
     private static final String CLASIFICACIONES_PATH = DirectoryUtils.getPropertiesPath()+"clasificacion_de_niza.properties";
     private static final String UNIDADES_PATH = DirectoryUtils.getPropertiesPath()+"unidades.properties";
-    private static final String SECURITY_SALT = readPropertie("security.salt");
     private static final String PAY_PAGE_URL = readPropertie("url.paypage");
     private static final int IVA = Integer.parseInt(readPropertie("iva.porcentaje"));
-    
-    public static String getSecuritySalt(){
-        return SECURITY_SALT;
-    }
     
     public static String getPayPageUrl() {
         return PAY_PAGE_URL;

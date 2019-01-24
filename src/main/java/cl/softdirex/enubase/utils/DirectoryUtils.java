@@ -15,7 +15,7 @@ public class DirectoryUtils {
     /* Direcciones de fichero*/
     private static final String BARS = File.separator;
     private static final String LOCAL_PATH = System.getProperty("user.dir")+BARS;
-    private static final String PROPERTIES_PATH = LOCAL_PATH+"src"+BARS+"main"+BARS+"resources"+BARS+"properties"+BARS;
+    private static final String PROPERTIES_PATH = LOCAL_PATH+"properties"+BARS;
     private static final String FILES_PATH = LOCAL_PATH+"files"+BARS;
     private static final String FILES_REPORTS_PATH = "src"+BARS+"reportes"+BARS;
     private static final String REPORT_EXCEL_PATH = LOCAL_PATH+"reports"+BARS+"excel"+BARS;

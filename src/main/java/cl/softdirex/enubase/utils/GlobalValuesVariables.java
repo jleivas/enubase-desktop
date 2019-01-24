@@ -45,7 +45,7 @@ public class GlobalValuesVariables {
     private static SplashProgress sp = null;
     
     /* Seguridad */
-    private static String SALT = PropertiesUtils.getSecuritySalt();//favorite pet
+    private static String SALT = "noGit";//favorite pet
     private static String PASS;
     private static int INTENTOS_ACCESO = 0;
     
