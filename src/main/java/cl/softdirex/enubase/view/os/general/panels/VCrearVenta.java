@@ -1574,6 +1574,8 @@ public class VCrearVenta extends javax.swing.JPanel {
         }
         if(contDscto > 0){
             cboDescuento.setSelectedIndex(0);
+        }else{
+            cboDescuento.addItem("No hay descuentos registrados");
         }
         
         cboTipoPago.removeAllItems();
@@ -2082,9 +2084,9 @@ public class VCrearVenta extends javax.swing.JPanel {
             txtDescuento.setVisible(false);
             if(listDescuentos.isEmpty()){
                 chkDescuento.setSelected(false);
-                cboDescuento.setVisible(true);
-                lblDescuento.setVisible(true);
-                txtDescuento.setVisible(true);
+                cboDescuento.setVisible(false);
+                lblDescuento.setVisible(false);
+                txtDescuento.setVisible(false);
                 OptionPane.showMsg("No se puede añadir descuento", "No existen descuentos registrados, debe ingresarlos en \"Configuracion\" opción \"Descuentos\"", 2);
             }
         }
