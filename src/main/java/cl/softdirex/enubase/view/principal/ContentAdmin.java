@@ -56,6 +56,7 @@ public class ContentAdmin extends javax.swing.JFrame {
         this.lblTitle.setText(projectName);
         
         centrarPantalla();
+        
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource(Icons.ICON_LOGO));
         setIconImage(icon);
         
@@ -464,22 +465,23 @@ public class ContentAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnSizeWindowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSizeWindowMouseClicked
-        String img = btnSizeWindow.getIcon().toString();
-        int index = img.indexOf("/icons");
-        img = img.substring(index);
-        if(img.contains("Maximize")){
-            img = img.replaceAll("Maximize", "Restore");
-        }else{
-            img = img.replaceAll("Restore", "Maximize");
-        }
-
-        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource(img)));
-        if(this.getExtendedState()== MAXIMIZED_BOTH){
-            normalizarPantalla();
-        }  
-        else{
-            centrarPantalla();
-        }
+        GV.funcionNoDisponible();
+//        String img = btnSizeWindow.getIcon().toString();
+//        int index = img.indexOf("/icons");
+//        img = img.substring(index);
+//        if(img.contains("Maximize")){
+//            img = img.replaceAll("Maximize", "Restore");
+//        }else{
+//            img = img.replaceAll("Restore", "Maximize");
+//        }
+//
+//        btnSizeWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource(img)));
+//        if(this.getExtendedState()== MAXIMIZED_BOTH){
+//            normalizarPantalla();
+//        }  
+//        else{
+//            centrarPantalla();
+//        }
     }//GEN-LAST:event_btnSizeWindowMouseClicked
 
     private void btnMessageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMessageMouseClicked
@@ -740,7 +742,7 @@ public class ContentAdmin extends javax.swing.JFrame {
 
     private void jpUpBarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpUpBarMouseClicked
         if(evt.getClickCount() == 2){
-            centrarPantalla();
+            //centrarPantalla();
         }
     }//GEN-LAST:event_jpUpBarMouseClicked
 
