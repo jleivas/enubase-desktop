@@ -25,7 +25,6 @@ public class OpanelSetToken extends javax.swing.JPanel {
     public OpanelSetToken(String key) {
         initComponents();
         KEY = key;
-        txtToken.setText("il6ied5XAHc4iXGbLlNi+R4trn9QMitqUEL7hCyDLz1xAyRSXwiwLWaBYeqI9psc00n85xWXBmmoo2PywGirD3pY60uyAUfR");
     }
 
     /**

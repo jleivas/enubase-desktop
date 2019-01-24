@@ -24,7 +24,6 @@ public class OpanelSetLicencia extends javax.swing.JPanel {
      */
     public OpanelSetLicencia() {
         initComponents();
-        txtLicencia.setText("7I3BGWJw0NkWB27uZBhdAAvDMJqldqNFUlanmPiDI1FNZOqo+NL6mvesJrNHGH6b2HtzjkYOHebmnUEG1AtmVw==");
     }
 
     /**
